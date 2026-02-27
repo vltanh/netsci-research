@@ -131,5 +131,5 @@ check_valid_output "${STG3_DIR}/edge.csv" "Stage 3b (Final Combine)"
 # rm -f "${STG2_DIR}/edge.csv" "${STG3_MATCH_DIR}/degree_matching_edge.csv"
 
 echo "=== Pipeline execution completed successfully! ==="
-echo "Final Network: ${STG3_DIR}/final_edge.csv"
+echo "Final Network: ${STG3_DIR}/edge.csv"
 echo "Provenance JSON: ${STG3_DIR}/sources.json"
