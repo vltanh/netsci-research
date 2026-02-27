@@ -2,6 +2,8 @@ import argparse
 import logging
 import heapq
 import time
+import random
+from collections import deque
 from pathlib import Path
 
 import pandas as pd
@@ -15,6 +17,13 @@ def parse_args():
     parser.add_argument("--ref-edgelist", type=str, required=True)
     parser.add_argument("--ref-clustering", type=str, required=True)
     parser.add_argument("--output-folder", type=str, required=True)
+    parser.add_argument(
+        "--algorithm",
+        type=str,
+        choices=["greedy", "rewire"],
+        default="rewire",
+        help="Choose 'greedy' for max-heap matching or 'rewire' for the configuration model with edge recycling.",
+    )
     return parser.parse_args()
 
 
@@ -57,11 +66,15 @@ def subtract_existing_edges(exist_edgelist_fp, node_id2iid, out_degs):
     return exist_neighbor, out_degs
 
 
-def match_missing_degrees(out_degs, exist_neighbor):
+def match_missing_degrees_greedy(out_degs, exist_neighbor):
+    logging.info("Starting Greedy matching algorithm...")
     available_node_set = {node_iid for node_iid, deg in out_degs.items() if deg > 0}
     available_node_degrees = {
         node_iid: deg for node_iid, deg in out_degs.items() if deg > 0
     }
+
+    initial_missing_stubs = sum(available_node_degrees.values())
+    logging.info(f"Initial missing stubs: {initial_missing_stubs}")
 
     max_heap = [(-degree, node) for node, degree in available_node_degrees.items()]
     heapq.heapify(max_heap)
@@ -100,6 +113,111 @@ def match_missing_degrees(out_degs, exist_neighbor):
     return degree_edges
 
 
+def match_missing_degrees_rewire(out_degs, exist_neighbor, max_retries=10):
+    logging.info("Starting Rewire (Configuration Model) matching algorithm...")
+
+    stubs = []
+    for node_iid, deg in out_degs.items():
+        stubs.extend([node_iid] * int(deg))
+
+    if len(stubs) % 2 != 0:
+        logging.warning(
+            "Odd number of total missing stubs. Dropping one to maintain parity."
+        )
+        stubs.pop()
+
+    logging.info(
+        f"Total missing stubs to pair: {len(stubs)} (Target edges: {len(stubs)//2})"
+    )
+    random.shuffle(stubs)
+
+    valid_edges = set()
+    invalid_edges = deque()
+
+    def make_edge(u, v):
+        return (int(min(u, v)), int(max(u, v)))
+
+    for i in range(0, len(stubs), 2):
+        u, v = stubs[i], stubs[i + 1]
+        e = make_edge(u, v)
+
+        if u == v or e in valid_edges or v in exist_neighbor.get(u, set()):
+            invalid_edges.append(e)
+        else:
+            valid_edges.add(e)
+
+    logging.info(
+        f"Initial pairing complete -> Valid edges: {len(valid_edges)} | Bad edges to rewire: {len(invalid_edges)}"
+    )
+
+    valid_pool = list(valid_edges)
+
+    for attempt in range(max_retries):
+        if not invalid_edges:
+            logging.info("All bad edges resolved! Exiting rewiring loop early.")
+            break
+
+        last_recycle = len(invalid_edges)
+        recycle_counter = last_recycle
+
+        while invalid_edges:
+            recycle_counter -= 1
+            if recycle_counter < 0:
+                if len(invalid_edges) < last_recycle:
+                    last_recycle = len(invalid_edges)
+                    recycle_counter = last_recycle
+                else:
+                    # Stuck on this pass. Break to trigger the next retry attempt.
+                    break
+
+            e1 = invalid_edges.popleft()
+
+            if not valid_pool:
+                invalid_edges.append(e1)
+                break
+
+            idx = random.randrange(len(valid_pool))
+            e2 = valid_pool[idx]
+
+            if random.random() < 0.5:
+                new_e1 = make_edge(e1[0], e2[0])
+                new_e2 = make_edge(e1[1], e2[1])
+            else:
+                new_e1 = make_edge(e1[0], e2[1])
+                new_e2 = make_edge(e1[1], e2[0])
+
+            def is_valid(e):
+                u, v = e
+                return (
+                    u != v
+                    and e not in valid_edges
+                    and v not in exist_neighbor.get(u, set())
+                )
+
+            if is_valid(new_e1) and is_valid(new_e2) and new_e1 != new_e2:
+                valid_edges.remove(e2)
+                valid_pool[idx] = valid_pool[-1]
+                valid_pool.pop()
+
+                valid_edges.add(new_e1)
+                valid_edges.add(new_e2)
+                valid_pool.append(new_e1)
+                valid_pool.append(new_e2)
+            else:
+                invalid_edges.append(e1)
+
+        logging.info(
+            f"After attempt {attempt + 1}: {len(invalid_edges)} bad edges remain."
+        )
+
+    if invalid_edges:
+        logging.warning(
+            f"Finished {max_retries} retries. {len(invalid_edges)} bad edges remain unresolved and will be dropped."
+        )
+
+    return valid_edges
+
+
 def export_degree_matched_edgelist(degree_edges, node_iid2id, output_dir):
     df_out = pd.DataFrame(
         [(node_iid2id[src], node_iid2id[tgt]) for src, tgt in degree_edges],
@@ -111,7 +229,9 @@ def export_degree_matched_edgelist(degree_edges, node_iid2id, output_dir):
 def main():
     args = parse_args()
     setup_logging(Path(args.output_folder) / "run.log")
-    logging.info("--- Starting Stage 6: Degree Matching ---")
+    logging.info(
+        f"--- Starting Stage 6: Degree Matching ({args.algorithm.upper()} mode) ---"
+    )
 
     start = time.perf_counter()
     node_id2iid, node_iid2id, out_degs = load_reference_topologies(
@@ -126,7 +246,15 @@ def main():
     logging.info(f"Subtracted existing edges: {time.perf_counter() - start:.4f}s")
 
     start = time.perf_counter()
-    degree_edges = match_missing_degrees(updated_out_degs, exist_neighbor)
+
+    # Route to the appropriate algorithm based on CLI argument
+    if args.algorithm == "greedy":
+        degree_edges = match_missing_degrees_greedy(updated_out_degs, exist_neighbor)
+    else:
+        degree_edges = match_missing_degrees_rewire(
+            updated_out_degs, exist_neighbor, max_retries=10
+        )
+
     logging.info(
         f"Degree matching complete. Added {len(degree_edges)} edges: {time.perf_counter() - start:.4f}s"
     )
