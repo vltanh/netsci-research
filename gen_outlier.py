@@ -8,8 +8,7 @@ import pandas as pd
 import graph_tool.all as gt
 from scipy.sparse import dok_matrix
 
-
-# --- DATA LOADING ---
+from utils import setup_logging
 
 
 def load_network_data(edgelist_fp: Path, clustering_fp: Path):
@@ -26,9 +25,6 @@ def load_network_data(edgelist_fp: Path, clustering_fp: Path):
     outliers = all_nodes - set(node2cluster_str.keys())
 
     return df_edges, node2cluster_str, all_nodes, outliers
-
-
-# --- SBM PARAMETER PREPARATION ---
 
 
 def prepare_sbm_inputs(df_edges, node2cluster_str, all_nodes, outliers):
@@ -73,9 +69,6 @@ def prepare_sbm_inputs(df_edges, node2cluster_str, all_nodes, outliers):
     return node_iid_to_c_iid, probs.tocsr(), out_degs, node_iid2id
 
 
-# --- SBM GENERATION ---
-
-
 def generate_outlier_subnetwork(b, probs, out_degs):
     if out_degs.sum() > 0:
         g = gt.generate_sbm(
@@ -95,18 +88,12 @@ def generate_outlier_subnetwork(b, probs, out_degs):
     return g
 
 
-# --- EXPORT ---
-
-
 def export_generated_edges(g, node_iid2id, output_dir: Path):
     df_out = pd.DataFrame(
         [(node_iid2id[src], node_iid2id[tgt]) for src, tgt in g.iter_edges()],
         columns=["source", "target"],
     )
     df_out.to_csv(output_dir / "edge_outlier.csv", index=False)
-
-
-# --- MAIN PIPELINE API ---
 
 
 def run_outlier_generation(orig_edgelist_fp, orig_clustering_fp, output_folder):
@@ -116,13 +103,7 @@ def run_outlier_generation(orig_edgelist_fp, orig_clustering_fp, output_folder):
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    logging.basicConfig(
-        filename=output_dir / "outlier_run.log",
-        filemode="w",
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-    )
-    logging.getLogger("").addHandler(logging.StreamHandler())
+    setup_logging(output_dir / "run.log")
 
     logging.info("Generation of Outlier Subnetwork")
     logging.info(f"Network: {orig_edgelist_fp}")
@@ -148,9 +129,6 @@ def run_outlier_generation(orig_edgelist_fp, orig_clustering_fp, output_folder):
     export_generated_edges(g, node_iid2id, output_dir)
     logging.info(f"Post-process: {time.perf_counter() - start:.4f} seconds")
     logging.info("Complete.")
-
-
-# --- CLI ---
 
 
 def parse_args():

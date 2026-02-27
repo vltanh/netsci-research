@@ -8,8 +8,7 @@ import pandas as pd
 from scipy.sparse import dok_matrix
 import graph_tool.all as gt
 
-
-# --- CORE ALGORITHM ---
+from utils import setup_logging
 
 
 def create_edge(u, v):
@@ -90,9 +89,6 @@ def generate_cluster(cluster_nodes, k, deg, probs, node2cluster):
 
     deg[:] = int_deg[:]
     return edges
-
-
-# --- PIPELINE STAGES ---
 
 
 def load_inputs(
@@ -176,9 +172,6 @@ def export_outputs(output_dir, g, node_id2id):
     )
 
 
-# --- MAIN EXECUTION ---
-
-
 def run_ecsbm_generation(
     node_id_path,
     cluster_id_path,
@@ -190,13 +183,7 @@ def run_ecsbm_generation(
 ):
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    logging.basicConfig(
-        filename=Path(output_dir) / "run.log",
-        filemode="w",
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-    )
-    logging.getLogger("").addHandler(logging.StreamHandler())
+    setup_logging(Path(output_dir) / "run.log")
 
     logging.info("Starting EC-SBM Generation Pipeline...")
 

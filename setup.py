@@ -8,8 +8,7 @@ import numpy as np
 import pandas as pd
 from pymincut.pygraph import PyGraph
 
-
-# --- INPUT READERS ---
+from utils import setup_logging
 
 
 def read_clustering(clustering_path):
@@ -36,9 +35,6 @@ def read_edgelist(edgelist_path, nodes):
     return nodes, neighbors
 
 
-# --- MAPPINGS COMPUTATION ---
-
-
 def compute_node_degree(nodes, neighbors):
     node_degree_sorted = sorted(
         [(u, len(neighbors[u])) for u in nodes], reverse=True, key=lambda x: x[1]
@@ -51,9 +47,6 @@ def compute_comm_size(cluster_counts):
     comm_size_sorted = sorted(cluster_counts.items(), reverse=True, key=lambda x: x[1])
     cluster_id2iid = {c: i for i, (c, _) in enumerate(comm_size_sorted)}
     return comm_size_sorted, cluster_id2iid
-
-
-# --- CORE EXPORTS ---
 
 
 def export_node_id(out_dir, node_degree_sorted):
@@ -84,9 +77,6 @@ def export_degree(out_dir, node_degree_sorted):
     )
 
 
-# --- SBM PIPELINE ---
-
-
 def compute_edge_count(nodes, neighbors, node2com, cluster_id2iid):
     edge_counts = defaultdict(int)
     for u in nodes:
@@ -106,9 +96,6 @@ def compute_edge_count(nodes, neighbors, node2com, cluster_id2iid):
 def export_edge_count(out_dir, edge_counts):
     data = [[r, c, w] for (r, c), w in edge_counts.items()]
     pd.DataFrame(data).to_csv(f"{out_dir}/edge_counts.csv", index=False, header=False)
-
-
-# --- ECSBM PIPELINE ---
 
 
 def compute_mincut(nodes, neighbors, node2com, comm_size_sorted, node_id2iid):
@@ -144,9 +131,6 @@ def compute_mincut(nodes, neighbors, node2com, comm_size_sorted, node_id2iid):
 
 def export_mincut(out_dir, mcs):
     pd.DataFrame(mcs).to_csv(f"{out_dir}/mincut.csv", index=False, header=False)
-
-
-# --- LFR / ABCD PIPELINE ---
 
 
 def compute_mixing_parameter(nodes, neighbors, node2com, generator_type):
@@ -199,21 +183,10 @@ def export_mixing_param(out_dir, mixing_param):
         f.write(str(mixing_param))
 
 
-# --- MAIN PIPELINE API ---
-
-
 def setup_generator_inputs(edgelist_path, clustering_path, output_dir, generator):
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    logging.basicConfig(
-        filename=Path(output_dir) / "run.log",
-        filemode="w",
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-    )
-    logging.getLogger("").addHandler(logging.StreamHandler())
-
-    logging.info(f"Starting Setup Pipeline for generator: {generator}")
+    setup_logging(Path(output_dir) / "run.log")
 
     # 1. Read Inputs
     start = time.perf_counter()
@@ -258,9 +231,6 @@ def setup_generator_inputs(edgelist_path, clustering_path, output_dir, generator
         f"Generator-specific outputs export elapsed: {time.perf_counter() - start:.4f} seconds"
     )
     logging.info("Setup complete.")
-
-
-# --- CLI ---
 
 
 def parse_args():
