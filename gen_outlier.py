@@ -130,7 +130,7 @@ def prepare_residual_sbm_inputs(
     return b, probs.tocsr(), out_degs, node_iid2id
 
 
-def rewire_invalid_edges(g, b, max_retries=5):
+def rewire_invalid_edges(g, b, max_retries=1):
     edges = g.get_edges()
     valid_pool = defaultdict(list)
     valid_set = set()
@@ -151,9 +151,11 @@ def rewire_invalid_edges(g, b, max_retries=5):
             valid_set.add(e)
             valid_pool[bp].append(e)
 
-    # Repeat the rewiring process for a fixed number of retries
+    logging.info(f"Initial bad edges before rewiring: {len(invalid_edges)}")
+
     for attempt in range(max_retries):
         if not invalid_edges:
+            logging.info("All bad edges resolved! Exiting rewiring loop early.")
             break
 
         last_recycle = len(invalid_edges)
@@ -166,7 +168,6 @@ def rewire_invalid_edges(g, b, max_retries=5):
                     last_recycle = len(invalid_edges)
                     recycle_counter = last_recycle
                 else:
-                    # Stuck on this pass. Break to trigger the next retry attempt.
                     break
 
             u, v = invalid_edges.popleft()
@@ -213,9 +214,13 @@ def rewire_invalid_edges(g, b, max_retries=5):
             else:
                 invalid_edges.append((u, v))
 
+        logging.info(
+            f"After attempt {attempt + 1}: {len(invalid_edges)} bad edges remain."
+        )
+
     if invalid_edges:
         logging.warning(
-            f"After {max_retries} retries, {len(invalid_edges)} bad edges remain unresolved."
+            f"Finished {max_retries} retries. {len(invalid_edges)} bad edges remain unresolved and will be dropped."
         )
 
     return list(valid_set)
@@ -237,7 +242,7 @@ def generate_residual_subnetwork(b, probs, out_degs, edge_correction_mode):
         g = gt.Graph(directed=False)
 
     if edge_correction_mode == "rewire":
-        valid_edges = rewire_invalid_edges(g, b, max_retries=10)
+        valid_edges = rewire_invalid_edges(g, b, max_retries=1)
         g.clear_edges()
         g.add_edge_list(valid_edges)
 
