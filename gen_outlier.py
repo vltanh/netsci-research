@@ -303,13 +303,13 @@ def parse_args():
         "--outlier-mode",
         type=str,
         choices=["singleton", "combined"],
-        default="singleton",
+        default="combined",
     )
     parser.add_argument(
         "--edge-correction",
         type=str,
         choices=["drop", "rewire"],
-        default="drop",
+        default="rewire",
         help="'drop' removes bad edges (faster but alters degree), 'rewire' swaps them (preserves degree).",
     )
     parser.add_argument("--output-folder", type=str, required=True)
