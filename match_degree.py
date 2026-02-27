@@ -20,9 +20,9 @@ def parse_args():
     parser.add_argument(
         "--algorithm",
         type=str,
-        choices=["greedy", "rewire"],
-        default="rewire",
-        help="Choose 'greedy' for max-heap matching or 'rewire' for the configuration model with edge recycling.",
+        choices=["greedy", "true_greedy", "random_greedy", "rewire"],
+        default="random_greedy",
+        help="Choose 'greedy' for max-heap, 'true_greedy' for true greedy matching, 'random_greedy' for unbiased dynamic filtering, or 'rewire' for the configuration model.",
     )
     return parser.parse_args()
 
@@ -66,8 +66,67 @@ def subtract_existing_edges(exist_edgelist_fp, node_id2iid, out_degs):
     return exist_neighbor, out_degs
 
 
+def match_missing_degrees_random_greedy(out_degs, exist_neighbor):
+    logging.info("Starting Randomized Greedy matching algorithm...")
+
+    available_degrees = {k: v for k, v in out_degs.items() if v > 0}
+    available_nodes = list(available_degrees.keys())
+
+    initial_missing_stubs = sum(available_degrees.values())
+    logging.info(
+        f"Initial missing stubs: {initial_missing_stubs} (Target edges: {initial_missing_stubs // 2})"
+    )
+
+    degree_edges = set()
+    stuck_nodes = set()
+
+    # Loop until no nodes are left to pair
+    while available_nodes:
+        # 1. Pick 'u' randomly, weighted by its remaining missing degree
+        weights = [available_degrees[n] for n in available_nodes]
+        u = random.choices(available_nodes, weights=weights, k=1)[0]
+
+        # 2. Dynamically filter for legally valid targets
+        invalid_targets = exist_neighbor.get(u, set())
+        valid_targets = [
+            n for n in available_nodes if n != u and n not in invalid_targets
+        ]
+
+        # 3. If gridlocked, mark as stuck and remove from pool
+        if not valid_targets:
+            available_nodes.remove(u)
+            stuck_nodes.add(u)
+            continue
+
+        # 4. Pick 'v' randomly from valid targets, weighted by its remaining missing degree
+        v_weights = [available_degrees[n] for n in valid_targets]
+        v = random.choices(valid_targets, weights=v_weights, k=1)[0]
+
+        # 5. Add the edge and update the topology
+        degree_edges.add((min(u, v), max(u, v)))
+        exist_neighbor[u].add(v)
+        exist_neighbor[v].add(u)
+
+        available_degrees[u] -= 1
+        available_degrees[v] -= 1
+
+        # 6. Remove nodes from the active pool if their degrees are fulfilled
+        if available_degrees[u] == 0:
+            available_nodes.remove(u)
+        if available_degrees[v] == 0:
+            available_nodes.remove(v)
+
+    if stuck_nodes:
+        stuck_stubs = sum(available_degrees[n] for n in stuck_nodes)
+        logging.warning(
+            f"Finished with {len(stuck_nodes)} physically gridlocked nodes. {stuck_stubs} missing stubs dropped."
+        )
+
+    return degree_edges
+
+
 def match_missing_degrees_greedy(out_degs, exist_neighbor):
-    logging.info("Starting Greedy matching algorithm...")
+    logging.info("Starting Original Greedy matching algorithm...")
     available_node_set = {node_iid for node_iid, deg in out_degs.items() if deg > 0}
     available_node_degrees = {
         node_iid: deg for node_iid, deg in out_degs.items() if deg > 0
@@ -109,6 +168,76 @@ def match_missing_degrees_greedy(out_degs, exist_neighbor):
 
         del available_node_degrees[available_c_node]
         available_node_set.remove(available_c_node)
+
+    return degree_edges
+
+
+def match_missing_degrees_true_greedy(out_degs, exist_neighbor):
+    logging.info("Starting True Dynamic Greedy matching algorithm...")
+
+    # Track the real-time degree of each node
+    current_degrees = {n: d for n, d in out_degs.items() if d > 0}
+
+    initial_missing_stubs = sum(current_degrees.values())
+    logging.info(
+        f"Initial missing stubs: {initial_missing_stubs} (Target edges: {initial_missing_stubs // 2})"
+    )
+
+    # Initial heap population
+    heap = [(-deg, n) for n, deg in current_degrees.items()]
+    heapq.heapify(heap)
+
+    degree_edges = set()
+    stuck_nodes = set()
+
+    while heap:
+        neg_deg, u = heapq.heappop(heap)
+        deg_u = -neg_deg
+
+        # Lazy Deletion: Ignore stale heap entries
+        if u not in current_degrees or deg_u != current_degrees[u]:
+            continue
+
+        # Dynamically filter for legally valid targets
+        invalid_targets = exist_neighbor.get(u, set())
+        valid_targets = [
+            n for n in current_degrees if n != u and n not in invalid_targets
+        ]
+
+        if not valid_targets:
+            # Node is structurally gridlocked
+            stuck_nodes.add(u)
+            del current_degrees[u]
+            continue
+
+        # TRUE GREEDY: Pick the valid target 'v' that has the HIGHEST remaining degree
+        v = max(valid_targets, key=lambda x: current_degrees[x])
+
+        # Make the edge
+        degree_edges.add((min(u, v), max(u, v)))
+        exist_neighbor[u].add(v)
+        exist_neighbor[v].add(u)
+
+        # Update real-time degrees
+        current_degrees[u] -= 1
+        current_degrees[v] -= 1
+
+        # Push updated states back onto the heap (if they still need edges)
+        if current_degrees[u] > 0:
+            heapq.heappush(heap, (-current_degrees[u], u))
+        else:
+            del current_degrees[u]
+
+        if current_degrees[v] > 0:
+            heapq.heappush(heap, (-current_degrees[v], v))
+        elif v in current_degrees:
+            del current_degrees[v]
+
+    if stuck_nodes:
+        stuck_stubs = sum(out_degs[n] for n in stuck_nodes) - sum(
+            current_degrees.get(n, 0) for n in stuck_nodes
+        )  # Estimate
+        logging.warning(f"Finished with {len(stuck_nodes)} gridlocked nodes.")
 
     return degree_edges
 
@@ -167,7 +296,6 @@ def match_missing_degrees_rewire(out_degs, exist_neighbor, max_retries=10):
                     last_recycle = len(invalid_edges)
                     recycle_counter = last_recycle
                 else:
-                    # Stuck on this pass. Break to trigger the next retry attempt.
                     break
 
             e1 = invalid_edges.popleft()
@@ -250,6 +378,14 @@ def main():
     # Route to the appropriate algorithm based on CLI argument
     if args.algorithm == "greedy":
         degree_edges = match_missing_degrees_greedy(updated_out_degs, exist_neighbor)
+    elif args.algorithm == "true_greedy":
+        degree_edges = match_missing_degrees_true_greedy(
+            updated_out_degs, exist_neighbor
+        )
+    elif args.algorithm == "random_greedy":
+        degree_edges = match_missing_degrees_random_greedy(
+            updated_out_degs, exist_neighbor
+        )
     else:
         degree_edges = match_missing_degrees_rewire(
             updated_out_degs, exist_neighbor, max_retries=10

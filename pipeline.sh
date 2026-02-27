@@ -114,6 +114,7 @@ mkdir -p "${STG3_MATCH_DIR}"
     --input-edgelist "${STG2_DIR}/edge.csv" \
     --ref-edgelist "${input_edgelist}" \
     --ref-clustering "${input_clustering}" \
+    --algorithm true_greedy \
     --output-folder "${STG3_MATCH_DIR}"; } 2> "${STG3_MATCH_DIR}/time_and_err.log"
 
 check_valid_output "${STG3_MATCH_DIR}/degree_matching_edge.csv" "Stage 3a (Degree Match)"
