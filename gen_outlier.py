@@ -130,7 +130,7 @@ def prepare_residual_sbm_inputs(
     return b, probs.tocsr(), out_degs, node_iid2id
 
 
-def rewire_invalid_edges(g, b, max_retries=1):
+def rewire_invalid_edges(g, b, max_retries=10):
     edges = g.get_edges()
     valid_pool = defaultdict(list)
     valid_set = set()
@@ -227,14 +227,12 @@ def rewire_invalid_edges(g, b, max_retries=1):
 
 
 def generate_residual_subnetwork(b, probs, out_degs, edge_correction_mode):
-    micro_ers = edge_correction_mode == "drop"
-
     if out_degs.sum() > 0:
         g = gt.generate_sbm(
             b,
             probs,
             out_degs=out_degs,
-            micro_ers=micro_ers,
+            micro_ers=True,
             micro_degs=True,
             directed=False,
         )
@@ -242,7 +240,7 @@ def generate_residual_subnetwork(b, probs, out_degs, edge_correction_mode):
         g = gt.Graph(directed=False)
 
     if edge_correction_mode == "rewire":
-        valid_edges = rewire_invalid_edges(g, b, max_retries=1)
+        valid_edges = rewire_invalid_edges(g, b, max_retries=10)
         g.clear_edges()
         g.add_edge_list(valid_edges)
 
