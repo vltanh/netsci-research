@@ -1,18 +1,18 @@
 	Command being timed: "python clean_outlier.py --edgelist test/input/topology/edge.csv --clustering test/input/topology/comm-det/sbm+wcc/com.csv --output-folder test/output/topology/ec-sbm/v2//clustered/clean"
-	User time (seconds): 1.55
-	System time (seconds): 0.19
-	Percent of CPU this job got: 178%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.98
+	User time (seconds): 1.56
+	System time (seconds): 0.21
+	Percent of CPU this job got: 171%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.04
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 79888
+	Maximum resident set size (kbytes): 78912
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 16827
-	Voluntary context switches: 1370
-	Involuntary context switches: 323
+	Minor (reclaiming a frame) page faults: 17219
+	Voluntary context switches: 1461
+	Involuntary context switches: 406
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 800

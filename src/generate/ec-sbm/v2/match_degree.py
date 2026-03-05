@@ -21,7 +21,7 @@ def parse_args():
         "--algorithm",
         type=str,
         choices=["greedy", "true_greedy", "random_greedy", "rewire"],
-        default="random_greedy",
+        default="true_greedy",
         help="Choose 'greedy' for max-heap, 'true_greedy' for true greedy matching, 'random_greedy' for unbiased dynamic filtering, or 'rewire' for the configuration model.",
     )
     return parser.parse_args()
