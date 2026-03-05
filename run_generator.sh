@@ -42,7 +42,7 @@ EMPIRICAL_NETWORK_STATS_DIR="data/empirical_networks/stats/${NETWORK_ID}"
 OUT_DIR="data/synthetic_networks/${GENERATOR}/networks/${CLUSTERING_ID}/${NETWORK_ID}/${RUN_ID}/"
 STATS_DIR="data/synthetic_networks/${GENERATOR}/stats/${CLUSTERING_ID}/${NETWORK_ID}/${RUN_ID}"
 
-# New split output paths for stats
+# Split output paths for stats
 SYNTH_CLUSTER_STATS_DIR="${STATS_DIR}/cluster/"
 SYNTH_NETWORK_STATS_DIR="${STATS_DIR}/network/"
 
@@ -63,7 +63,7 @@ run_stats() {
         { /usr/bin/time -v python network_evaluation/network_stats/compute_cluster_stats.py \
             --network "${edge_file}" \
             --community "${com_file}" \
-            --outdir "${cluster_out_dir}"; } 2> "${cluster_out_dir}/cluster_error.log"
+            --outdir "${cluster_out_dir}"; } 2> "${cluster_out_dir}/cluster_time.log"
         touch "${cluster_out_dir}/done"
         echo "Cluster stats completed."
     else
@@ -75,7 +75,7 @@ run_stats() {
         mkdir -p "${network_out_dir}"
         { /usr/bin/time -v python network_evaluation/network_stats/compute_network_stats.py \
             --network "${edge_file}" \
-            --outdir "${network_out_dir}"; } 2> "${network_out_dir}/network_error.log"
+            --outdir "${network_out_dir}"; } 2> "${network_out_dir}/network_time.log"
         touch "${network_out_dir}/done"
         echo "Network stats completed."
     else
@@ -116,21 +116,18 @@ fi
 # ==========================================
 # Compare Statistics
 # ==========================================
-COMPARISON_OUT_CSV="${STATS_DIR}/comparison.csv"
 
-# Validate that required directories exist before running
 if [ -d "${SYNTH_CLUSTER_STATS_DIR}" ] && [ -d "${REFERENCE_STATS_DIR}" ] && \
    [ -d "${SYNTH_NETWORK_STATS_DIR}" ] && [ -d "${EMPIRICAL_NETWORK_STATS_DIR}" ]; then
-    
-    python network_evaluation/compare/compare_stats.py \
+    echo "Comparing stats..."
+    mkdir -p "${STATS_DIR}"
+    { /usr/bin/time -v python network_evaluation/compare/compare_pair.py \
         --cluster-1-folder "${SYNTH_CLUSTER_STATS_DIR}" \
         --cluster-2-folder "${REFERENCE_STATS_DIR}" \
         --network-1-folder "${SYNTH_NETWORK_STATS_DIR}" \
         --network-2-folder "${EMPIRICAL_NETWORK_STATS_DIR}" \
-        --output-file "${COMPARISON_OUT_CSV}" \
-        --is-compare-sequence
-    
-    echo "Comparison results generated at: ${COMPARISON_OUT_CSV}"
+        --output-file "${STATS_DIR}/comparison.csv" \
+        --is-compare-sequence; } 2> "${STATS_DIR}/error.log"
 else
     echo "Warning: Skipping comparison. One or more stat directories do not exist."
     echo "  - Synth Cluster Stats: ${SYNTH_CLUSTER_STATS_DIR}"
