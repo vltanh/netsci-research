@@ -1,5 +1,10 @@
 # Data files
 data
+slurm_output
+slurm_locks
 
 # Python artifacts
 __pycache__
+
+# VSCode artifacts
+.vscode
