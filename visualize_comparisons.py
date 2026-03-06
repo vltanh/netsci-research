@@ -20,13 +20,45 @@ logger = logging.getLogger(__name__)
 # --- Constants ---
 
 STAT_NAME_MAPPING = {
+    # Clustering Scalar Stats
+    "node_coverage": "Node Coverage",
+    "n_outliers": "Number of Outliers",
+    "n_clusters": "Number of Clusters",
+    "n_disconnected_clusters": "Number of Disconnected Clusters",
+    "n_connected_clusters": "Number of Connected Clusters",
+    "n_wellconnected_clusters": "Number of Well-Connected Clusters",
+    # Clustering Node Distribution Stats
+    "mixing_parameter": "Mixing Parameter",
+    # Clustering Cluster Distribution Stats
+    "m": "Number of Internal Edges",
+    "n": "Number of Nodes in Cluster",
+    "c": "Number of Boundary Edges",
+    "conductance": "Conductance",
+    "degree_density": "Degree Density",
+    "edge_density": "Edge Density",
+    "mincut": "Min Cut Sizes",
+    "modularity": "Modularity",
+    # Network Scalar Stats
+    "n_nodes": "Number of Nodes",
     "n_edges": "Number of Edges",
-    "diameter": "Pseudo-Diameter",
+    "n_concomp": "Number of Connected Components",
+    "mean_degree": "Mean Degree",
     "deg_assort": "Degree Assortativity",
-    "local_ccoeff": "Local Clustering Coeff.",
-    "global_ccoeff": "Global Clustering Coeff.",
-    "mincut": "Min Cuts",
+    "mean_kcore": "Mean K-Core",
+    "global_ccoeff": "Global Clustering Coeff",
+    "local_ccoeff": "Avg Local Clustering Coeff",
+    "pseudo_diameter": "Pseudo-Diameter",
+    "char_time": "Characteristic Time",
+    "node_percolation_targeted": "Node Percolation (Targeted)",
+    "node_percolation_random": "Node Percolation (Random)",
+    "frac_giant_ccomp": "Fraction of Giant Connected Component",
+    # Network Distribution Stats
     "degree": "Degree",
+    "local_ccoeff_nodes": "Local Clustering Coeff",
+    "pagerank": "PageRank",
+    "betweenness": "Betweenness Centrality",
+    "kcore": "K-Core",
+    "concomp_sizes": "Connected Component Sizes",
 }
 
 # Map specific (stat_type, distance_type) combinations to acronyms
