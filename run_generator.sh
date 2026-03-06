@@ -10,22 +10,10 @@ if [ -z "$NETWORK_ID" ] || [ -z "$CLUSTERING_ID" ] || [ -z "$GENERATOR" ]; then
     exit 1
 fi
 
-# ==========================================
-# Generator Configuration Parsing
-# ==========================================
-if [[ "${GENERATOR}" == "ec-sbm-v2" ]]; then
-    OUTLIER_MODE="combined"
-    EDGE_CORRECTION="rewire" # Note: Kept as "rewire" matching the python args
-    MATCH_ALGO="true_greedy"
-elif [[ "${GENERATOR}" == "ec-sbm-v1.5" ]]; then
-    OUTLIER_MODE="singleton"
-    EDGE_CORRECTION="drop"
-    MATCH_ALGO="greedy"
-else
-    # Fallback or additional generator mappings can be added here
-    OUTLIER_MODE="combined"
-    EDGE_CORRECTION="rewire"
-    MATCH_ALGO="true_greedy"
+ACCEPTED_GENERATORS=("ec-sbm-v2" "ec-sbm-v2-SDG" "ec-sbm-v1.5")
+if [[ ! " ${ACCEPTED_GENERATORS[@]} " =~ " ${GENERATOR} " ]]; then
+    echo "Error: Unsupported generator '${GENERATOR}'. Accepted generators are: ${ACCEPTED_GENERATORS[*]}"
+    exit 1
 fi
 
 # ==========================================
@@ -39,8 +27,8 @@ REFERENCE_STATS_DIR="data/reference_clusterings/stats/${CLUSTERING_ID}/${NETWORK
 EMPIRICAL_NETWORK_STATS_DIR="data/empirical_networks/stats/${NETWORK_ID}"
 
 # Output directories for the synthetic generation
-OUT_DIR="data/synthetic_networks/${GENERATOR}/networks/${CLUSTERING_ID}/${NETWORK_ID}/${RUN_ID}/"
-STATS_DIR="data/synthetic_networks/${GENERATOR}/stats/${CLUSTERING_ID}/${NETWORK_ID}/${RUN_ID}"
+OUT_DIR="data/synthetic_networks/networks/${GENERATOR}/${CLUSTERING_ID}/${NETWORK_ID}/${RUN_ID}/"
+STATS_DIR="data/synthetic_networks/stats/${GENERATOR}/${CLUSTERING_ID}/${NETWORK_ID}/${RUN_ID}"
 
 # Split output paths for stats
 SYNTH_CLUSTER_STATS_DIR="${STATS_DIR}/cluster/"
@@ -95,6 +83,21 @@ if [ ! -f "${INP_COM}" ]; then echo "CRITICAL: Input clustering missing: ${INP_C
 mkdir -p "${OUT_DIR}"
 
 if [[ "${GENERATOR}" == ec-sbm-v2* ]]; then
+    # Generator Configuration Parsing
+    if [[ "${GENERATOR}" == "ec-sbm-v2" ]]; then
+        OUTLIER_MODE="combined"
+        EDGE_CORRECTION="rewire"
+        MATCH_ALGO="true_greedy"
+    elif [[ "${GENERATOR}" == "ec-sbm-v2-SDG" ]]; then
+        OUTLIER_MODE="singleton"
+        EDGE_CORRECTION="drop"
+        MATCH_ALGO="greedy"
+    else
+        OUTLIER_MODE="combined"
+        EDGE_CORRECTION="rewire"
+        MATCH_ALGO="true_greedy"
+    fi
+
     ./src/generate/ec-sbm/v2/pipeline.sh \
         --input-edgelist "${INP_EDGE}" \
         --input-clustering "${INP_COM}" \
@@ -102,6 +105,11 @@ if [[ "${GENERATOR}" == ec-sbm-v2* ]]; then
         --outlier-mode "${OUTLIER_MODE}" \
         --edge-correction "${EDGE_CORRECTION}" \
         --algorithm "${MATCH_ALGO}"
+elif [[ "${GENERATOR}" == "ec-sbm-v1.5" ]]; then
+    ./src/generate/ec-sbm/v1.5/pipeline.sh \
+        --input-edgelist "${INP_EDGE}" \
+        --input-clustering "${INP_COM}" \
+        --output-dir "${OUT_DIR}"
 else
     echo "Notice: Generator ${GENERATOR} is not an ec-sbm variant. Pipeline skipped."
 fi

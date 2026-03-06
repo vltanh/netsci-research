@@ -112,8 +112,8 @@ def load_inputs(
             node2cluster[node_iid] = c_iid
             clustering.setdefault(c_iid, []).append(node_iid)
 
-    deg = pd.read_csv(degree_path, header=None)[0].values
-    mcs = pd.read_csv(mincut_path, header=None)[0].values
+    deg = pd.read_csv(degree_path, header=None)[0].to_numpy(copy=True)
+    mcs = pd.read_csv(mincut_path, header=None)[0].to_numpy(copy=True)
 
     probs = dok_matrix((num_clusters, num_clusters), dtype=int)
     try:

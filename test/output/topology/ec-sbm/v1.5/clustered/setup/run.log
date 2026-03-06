@@ -1,0 +1,5 @@
+2026-03-05 21:27:10,294 - INFO - Input reading elapsed: 0.0501 seconds
+2026-03-05 21:27:10,296 - INFO - Mappings computation elapsed: 0.0023 seconds
+2026-03-05 21:27:10,318 - INFO - Core outputs export elapsed: 0.0213 seconds
+2026-03-05 21:27:10,379 - INFO - Generator-specific outputs export elapsed: 0.0611 seconds
+2026-03-05 21:27:10,379 - INFO - Setup complete.

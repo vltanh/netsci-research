@@ -1,10 +1,19 @@
 #!/bin/bash
 
 CONCURRENCY_LIMIT=40
-
-mode=$1; shift
 LOG_DIR_BASE="slurm_output"
 TASK_FILE="tasks.txt"
+
+mode=$1; shift
+if [[ "${mode}" == "gen" ]]; then
+    generator=$1; shift
+    echo "Mode: ${mode}, Generator: ${generator}"
+elif [[ "${mode}" == "cd-real" ]]; then
+    echo "Mode: ${mode}"
+else
+    echo "Unknown mode: ${mode}"
+    exit 1
+fi
 
 : > "$TASK_FILE"
 
@@ -14,7 +23,7 @@ do
     if [[ "${mode}" == "cd-real" ]]; then
         methods=("$@")
         for method in "${methods[@]}"; do
-            job_name="ecsbmv2_${mode}_${network_id}_${method}"
+            job_name="${mode}_${network_id}_${method}"
             script="run_cd_real.sh"
             args="${method} ${network_id}"
             log_path="${LOG_DIR_BASE}/${mode}/${method}/${network_id}"
@@ -24,10 +33,10 @@ do
     elif [[ "${mode}" == "gen" ]]; then
         clusterings=("$@")
         for clustering_id in "${clusterings[@]}"; do
-            job_name="ecsbmv2_${mode}_${network_id}_${clustering_id}"
+            job_name="${mode}_${generator}_${network_id}_${clustering_id}"
             script="run_generator.sh"
-            args="ec-sbm-v2 ${network_id} ${clustering_id}"
-            log_path="${LOG_DIR_BASE}/${mode}/${network_id}/${clustering_id}"
+            args="${generator} ${network_id} ${clustering_id}"
+            log_path="${LOG_DIR_BASE}/${mode}/${generator}/${network_id}/${clustering_id}"
             
             echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
         done
