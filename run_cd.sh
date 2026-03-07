@@ -1,70 +1,114 @@
 #!/bin/bash
 
-# ==========================================
-# Community Detection Evaluation Pipeline
-# ==========================================
+# ==============================================================================
+# Community Detection Evaluation Pipeline (run_cd.sh)
+# ==============================================================================
+# Computes base clusterings, selects best SBM models, refines via constrained
+# clustering, and evaluates statistics (and accuracy for synthetic networks).
 #
-# Pipeline Stages & Scripts Used
-# ------------------------------------------------------
-# 1. Base Clustering: Computes the initial community structure.
-#    - Leiden:  python src/comm-det/leiden/run_leiden.py
-#    - Infomap: python src/comm-det/infomap/run_infomap.py
-#    - IKC:     python src/comm-det/ikc/run_ikc.py
-#    - SBM:     python src/comm-det/sbm/run_sbm.py
-#    - SBM Best Model Selection: python src/comm-det/sbm/choose_best_sbm.py
-# 
-# 2. Statistics Computation: Calculates network metrics for the estimated clustering.
-#    - Script: python network_evaluation/network_stats/compute_cluster_stats.py
+# USAGE:
+#   Real:  ./run_cd.sh <algorithm> <network_id> [real]
+#   Synth: ./run_cd.sh <algorithm> <network_id> <generator> <gt_clustering> [run_id]
 #
-# 3. Accuracy Evaluation (Synthetic Only): Compares estimated clustering against ground truth.
-#    - Script: python network_evaluation/commdet_acc/compute_cd_accuracy.py
+# PATH LEGEND:
+#   [INP_EDGE]
+#       Real  -> data/empirical_networks/netzschleuder/<network_id>/<network_id>.csv
+#       Synth -> data/synthetic_networks/networks/<generator>/<gt_clustering>/<network_id>/<run_id>/edge.csv
+#   [GT_COM]
+#       Synth -> data/reference_clusterings/clusterings/<gt_clustering>/<network_id>/com.csv
+#   [OUT_ROOT]
+#       Real  -> data/reference_clusterings
+#       Synth -> data/estimated_clusterings/<generator>/<gt_clustering>
+#   [SUB_PATH]
+#       Real  -> <network_id>
+#       Synth -> <network_id>/<run_id>
 #
-# 4. Post-Processing: Refines the base clustering via Constrained Clustering variants (CC, WCC, CM).
-#    - Binary: ./constrained-clustering/constrained_clustering
+# ------------------------------------------------------------------------------
+# STEP 1: Base Clustering
+# ------------------------------------------------------------------------------
+# Computes the initial community structure using the specified algorithm.
+#   - Scripts: src/comm-det/{leiden,infomap,ikc,sbm}/run_*.py
 #
-# 5. Post-Processing Evaluation: Re-runs the Statistics and Accuracy evaluations on the refined outputs.
-#    - Uses the same scripts from Stages 2 & 3.
+# [Inputs]
+#   - Network Edge List : [INP_EDGE]
+# [Outputs]
+#   - Base Clustering   : [OUT_ROOT]/clusterings/<algo>/[SUB_PATH]/com.csv
 #
-# ==========================================
-# Expected Directory Structure (Inputs & Outputs)
-# ==========================================
+# ------------------------------------------------------------------------------
+# STEP 2: SBM Best Model Selection (Only if algo is sbm-flat-best or sbm-nested-best)
+# ------------------------------------------------------------------------------
+# Evaluates entropy across pre-computed SBM variants (dc, ndc, pp) to pick the best.
+#   - Script: src/comm-det/sbm/choose_best_sbm.py
 #
-# CASE 1: Real Networks (Default or dataset_type="real")
-# ------------------------------------------------------
-# [Input]
-# data/empirical_networks/netzschleuder/<network_id>/<network_id>.csv
+# [Inputs]
+#   - SBM Variant Coms  : [OUT_ROOT]/clusterings/sbm-<variant>/[SUB_PATH]/com.csv
+#   - SBM Entropies     : [OUT_ROOT]/clusterings/sbm-<variant>/[SUB_PATH]/entropy.txt
+# [Outputs]
+#   - Selection Log     : [OUT_ROOT]/clusterings/<algo>/[SUB_PATH]/best_model.txt
+#   - Symlinks          : Creates symlinks to the winning model's com.csv, stats, 
+#                         and acc directories to bypass redundant computations.
 #
-# [Output]
-# COMMDET_BASE = data/reference_clusterings/
-# ├── clusterings/<algo>[+post_processing]/<network_id>/com.csv
-# └── stats/<algo>[+post_processing]/<network_id>/done
+# ------------------------------------------------------------------------------
+# STEP 3: Statistics Computation
+# ------------------------------------------------------------------------------
+# Calculates network metrics for the estimated base clustering.
+#   - Script: network_evaluation/network_stats/compute_cluster_stats.py
 #
+# [Inputs]
+#   - Network Edge List : [INP_EDGE]
+#   - Base Clustering   : (Generated in Step 1)
+# [Outputs]
+#   - Stats Directory   : [OUT_ROOT]/stats/<algo>/[SUB_PATH]/
 #
-# CASE 2: Synthetic Networks (<generator> <gt_clustering> [run_id=0])
-# ------------------------------------------------------
-# [Input]
-# data/synthetic_networks/networks/<generator>/<gt_clustering>/<network_id>/<run_id>/edge.csv
-# data/reference_clusterings/clusterings/<gt_clustering>/<network_id>/com.csv (Ground Truth)
+# ------------------------------------------------------------------------------
+# STEP 4: Accuracy Evaluation (Synthetic Networks Only)
+# ------------------------------------------------------------------------------
+# Compares the estimated base clustering against the ground truth.
+#   - Script: network_evaluation/commdet_acc/compute_cd_accuracy.py
 #
-# [Output]
-# COMMDET_BASE = data/estimated_clusterings/<generator>/<gt_clustering>/
-# ├── clusterings/<algo>[+post_processing]/<network_id>/<run_id>/com.csv
-# ├── stats/<algo>[+post_processing]/<network_id>/<run_id>/done
-# └── acc/<algo>[+post_processing]/<network_id>/<run_id>/done
+# [Inputs]
+#   - Network Edge List : [INP_EDGE]
+#   - Base Clustering   : (Generated in Step 1)
+#   - Ground Truth Coms : [GT_COM]
+# [Outputs]
+#   - Acc Directory     : [OUT_ROOT]/acc/<algo>/[SUB_PATH]/
 #
-# ==========================================
+# ------------------------------------------------------------------------------
+# STEP 5: Post-Processing (CC, WCC, CM)
+# ------------------------------------------------------------------------------
+# Refines the base clustering via Constrained Clustering variants.
+#   - Binary: ./constrained-clustering/constrained_clustering
+#
+# [Inputs]
+#   - Network Edge List : [INP_EDGE]
+#   - Base Clustering   : (Generated in Step 1)
+# [Outputs]
+#   - Refined Clustering: [OUT_ROOT]/clusterings/<algo>+<pp>/[SUB_PATH]/com.csv
+#
+# ------------------------------------------------------------------------------
+# STEP 6: Post-Processing Evaluation
+# ------------------------------------------------------------------------------
+# Re-runs the Statistics and Accuracy evaluations on the refined clustering outputs.
+#   - Scripts: Uses the same Python scripts from Steps 3 and 4.
+#
+# [Inputs]
+#   - Network Edge List : [INP_EDGE]
+#   - Refined Clustering: (Generated in Step 5)
+#   - Ground Truth Coms : [GT_COM] (Synth only)
+# [Outputs]
+#   - Stats Directory   : [OUT_ROOT]/stats/<algo>+<pp>/[SUB_PATH]/
+#   - Acc Directory     : [OUT_ROOT]/acc/<algo>+<pp>/[SUB_PATH]/ (Synth only)
+# ==============================================================================
 
 # Constants
 TIMEOUT="3d"
 
-# Usage for real networks:      ./run_cd_real.sh <algorithm> <network_id> [real]
-# Usage for synthetic networks: ./run_cd_real.sh <algorithm> <network_id> <generator> <gt_clustering> [run_id]
 algo=$1
 network_id=$2
 
 # Flags
 IS_RUN_CC=1
-IS_RUN_WCC=0
+IS_RUN_WCC=1
 IS_RUN_CM=1
 
 case ${algo} in
@@ -174,9 +218,9 @@ fi
 # 1. Run Base Clustering
 # ==========================================
 suffix="${algo}"
-out_dir="${base_root_clusterings}/${suffix}/${out_subpath}/"
-stats_dir="${base_root_stats}/${suffix}/${out_subpath}/"
-acc_dir="${base_root_acc}/${suffix}/${out_subpath}/"
+out_dir="${base_root_clusterings}/${suffix}/${out_subpath}"
+stats_dir="${base_root_stats}/${suffix}/${out_subpath}"
+acc_dir="${base_root_acc}/${suffix}/${out_subpath}"
 
 base_com="${out_dir}/com.csv"
 base_dens="${out_dir}/density.csv"
@@ -360,9 +404,9 @@ fi
 # ==========================================
 if [ "${IS_RUN_CC}" -eq 1 ]; then
     suffix="${algo}+cc"
-    out_cc_dir="${base_root_clusterings}/${suffix}/${out_subpath}/"
-    stats_cc_dir="${base_root_stats}/${suffix}/${out_subpath}/"
-    acc_cc_dir="${base_root_acc}/${suffix}/${out_subpath}/"
+    out_cc_dir="${base_root_clusterings}/${suffix}/${out_subpath}"
+    stats_cc_dir="${base_root_stats}/${suffix}/${out_subpath}"
+    acc_cc_dir="${base_root_acc}/${suffix}/${out_subpath}"
     cc_com="${out_cc_dir}/com.csv"
     cc_done="${out_cc_dir}/done"
     
@@ -396,9 +440,9 @@ fi
 # ==========================================
 if [ "${IS_RUN_WCC}" -eq 1 ]; then
     suffix="${algo}+wcc"
-    out_wcc_dir="${base_root_clusterings}/${suffix}/${out_subpath}/"
-    stats_wcc_dir="${base_root_stats}/${suffix}/${out_subpath}/"
-    acc_wcc_dir="${base_root_acc}/${suffix}/${out_subpath}/"
+    out_wcc_dir="${base_root_clusterings}/${suffix}/${out_subpath}"
+    stats_wcc_dir="${base_root_stats}/${suffix}/${out_subpath}"
+    acc_wcc_dir="${base_root_acc}/${suffix}/${out_subpath}"
     wcc_com="${out_wcc_dir}/com.csv"
     wcc_done="${out_wcc_dir}/done"
     
@@ -432,9 +476,9 @@ fi
 # ==========================================
 if [ "${IS_RUN_CM}" -eq 1 ]; then
     suffix="${algo}+cm"
-    out_cm_dir="${base_root_clusterings}/${suffix}/${out_subpath}/"
-    stats_cm_dir="${base_root_stats}/${suffix}/${out_subpath}/"
-    acc_cm_dir="${base_root_acc}/${suffix}/${out_subpath}/"
+    out_cm_dir="${base_root_clusterings}/${suffix}/${out_subpath}"
+    stats_cm_dir="${base_root_stats}/${suffix}/${out_subpath}"
+    acc_cm_dir="${base_root_acc}/${suffix}/${out_subpath}"
     cm_com="${out_cm_dir}/com.csv"
     cm_done="${out_cm_dir}/done"
     
