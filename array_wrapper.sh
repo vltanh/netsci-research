@@ -8,7 +8,12 @@
 #SBATCH --constraint="AE7713"
 #SBATCH --signal=B:SIGUSR1@60
 
-TASK_FILE="tasks.txt"
+TASK_FILE=$1
+
+if [[ -z "${TASK_FILE}" ]] || [[ ! -f "${TASK_FILE}" ]]; then
+    echo "CRITICAL ERROR: Task file '${TASK_FILE}' not provided or not found!"
+    exit 1
+fi
 
 # Retrieve and Parse Task
 TASK_LINE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${TASK_FILE}")

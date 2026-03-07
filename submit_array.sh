@@ -40,7 +40,10 @@
 
 CONCURRENCY_LIMIT=40
 LOG_DIR_BASE="slurm_output"
-TASK_FILE="tasks.txt"
+
+# Create a unique task file name using the current timestamp and script Process ID ($$)
+mkdir -p task_files
+TASK_FILE="task_files/tasks_$(date +%Y%m%d_%H%M%S)_$$.txt"
 
 # Default variables
 mode=""
@@ -154,4 +157,4 @@ if [[ "$total_tasks" -eq 0 ]]; then
 fi
 
 echo "Submitting array for ${total_tasks} tasks (Max Concurrency: ${CONCURRENCY_LIMIT})..."
-sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh
+sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh "${TASK_FILE}"

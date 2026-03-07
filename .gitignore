@@ -1,6 +1,7 @@
 # Data files
 data
 plots
+task_files
 slurm_output
 slurm_locks
 
