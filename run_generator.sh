@@ -63,7 +63,7 @@ run_stats() {
         mkdir -p "${network_out_dir}"
         { /usr/bin/time -v python network_evaluation/network_stats/compute_network_stats.py \
             --network "${edge_file}" \
-            --outdir "${network_out_dir}"; } 2> "${network_out_dir}/network_time.log"
+            --outdir "${network_out_dir}"; } 1> "${network_out_dir}/out.log" 2> "${network_out_dir}/network_time.log"
         touch "${network_out_dir}/done"
         echo "Network stats completed."
     else
@@ -135,7 +135,7 @@ if [ -d "${SYNTH_CLUSTER_STATS_DIR}" ] && [ -d "${REFERENCE_STATS_DIR}" ] && \
         --network-1-folder "${SYNTH_NETWORK_STATS_DIR}" \
         --network-2-folder "${EMPIRICAL_NETWORK_STATS_DIR}" \
         --output-file "${STATS_DIR}/comparison.csv" \
-        --is-compare-sequence; } 2> "${STATS_DIR}/error.log"
+        --is-compare-sequence; } 1> "${STATS_DIR}/out.log" 2> "${STATS_DIR}/error.log"
 else
     echo "Warning: Skipping comparison. One or more stat directories do not exist."
     echo "  - Synth Cluster Stats: ${SYNTH_CLUSTER_STATS_DIR}"
@@ -144,4 +144,5 @@ else
     echo "  - Ref Network Stats:   ${EMPIRICAL_NETWORK_STATS_DIR}"
 fi
 
+echo "Process completed for ${GENERATOR} on ${NETWORK_ID} (Clustering: ${CLUSTERING_ID}, Run: ${RUN_ID})"
 echo "[gen] ${GENERATOR} ${NETWORK_ID} ${CLUSTERING_ID} ${RUN_ID}" >> complete.log

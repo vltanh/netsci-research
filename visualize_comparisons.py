@@ -53,12 +53,12 @@ STAT_NAME_MAPPING = {
     "node_percolation_random": "Node Percolation (Random)",
     "frac_giant_ccomp": "Fraction of Giant Connected Component",
     # Network Distribution Stats
-    "degree": "Degree",
-    "local_ccoeff_nodes": "Local Clustering Coeff",
-    "pagerank": "PageRank",
-    "betweenness": "Betweenness Centrality",
-    "kcore": "K-Core",
-    "concomp_sizes": "Connected Component Sizes",
+    "degree": "Degree of Nodes",
+    "local_ccoeff_nodes": "Clustering Coeffs of Nodes",
+    "pagerank": "PageRank of Nodes",
+    "betweenness": "Betweenness Centrality of Nodes",
+    "kcore": "K-Core of Nodes",
+    "concomp_sizes": "Sizes of Connected Components",
 }
 
 # Map specific (stat_type, distance_type) combinations to acronyms
@@ -66,7 +66,7 @@ DISTANCE_MAPPING = {
     ("scalar", "rel_diff"): "SRD",
     ("scalar", "abs_diff"): "SAD",
     ("sequence", "rmse"): "RMSE",
-    ("sequence", "mae"): "MAE",
+    ("sequence", "mean_l1"): "MAE",
     ("distribution", "emd"): "EMD",
     ("distribution", "ks"): "KS",
 }
@@ -295,7 +295,7 @@ def plot_boxplots(
                 boxprops={"edgecolor": "black", "linewidth": 1.5},
                 whiskerprops={"color": "black", "linewidth": 1.5},
                 capprops={"color": "black", "linewidth": 1.5},
-                medianprops={"color": "red", "linewidth": 1},
+                medianprops={"color": "red", "linewidth": 1.5},
                 meanprops={
                     "marker": "^",
                     "markerfacecolor": "green",
@@ -318,7 +318,7 @@ def plot_boxplots(
 
         # Increase x-tick label size since it now shows the Stat name
         ax.tick_params(axis="x", labelsize=14, bottom=False)
-        ax.axhline(y=0.0, color="red", linestyle="--", linewidth=1, alpha=0.7)
+        ax.axhline(y=0.0, color="blue", linestyle="--", linewidth=1, alpha=0.8)
 
         if ax.get_legend() is not None:
             ax.get_legend().remove()

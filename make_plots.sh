@@ -54,33 +54,51 @@ python visualize_comparisons.py \
         "EC-SBMv2 x Leiden-Mod+CM" \
         "EC-SBMv1.5 x Leiden-Mod+CM" \
     --stats \
-        degree \
         n_edges \
         deg_assort \
-        diameter \
         global_ccoeff \
         local_ccoeff \
+        pseudo_diameter \
+        char_time \
+        node_percolation_targeted \
+        node_percolation_random \
+        degree \
+        local_ccoeff_nodes \
+        pagerank \
+        kcore \
     --types \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
         sequence \
-        scalar \
-        scalar \
-        scalar \
-        scalar \
-        scalar \
+        sequence \
+        sequence \
+        sequence \
     --metrics \
+        rel_diff \
+        abs_diff \
+        abs_diff \
+        abs_diff \
+        rel_diff \
+        abs_diff \
+        abs_diff \
+        abs_diff \
         rmse \
-        rel_diff \
-        abs_diff \
-        rel_diff \
-        abs_diff \
-        abs_diff \
-    --network-fp data/networks_train.txt \
-    --output-dir plots/ec-sbm/train/ \
+        rmse \
+        rmse \
+        rmse \
+    --network-fp data/networks_verysmall.txt \
+    --output-dir plots/ec-sbm/very_small/ \
     --output-fn network \
     --hide-fliers
 
 # python visualize_comparisons.py \
-#     --data-fp plots/ec-sbm-v2/agg_comp.csv \
+#     --data-fp plots/ec-sbm/agg_comp.csv \
 #     --generators \
 #         ec-sbm-v2 \
 #         ec-sbm-v2 \
@@ -103,27 +121,45 @@ python visualize_comparisons.py \
 #         "EC-SBMv2 x Leiden-Mod" \
 #         "EC-SBMv2 x Leiden-Mod+CM" \
 #     --stats \
-#         degree \
 #         n_edges \
 #         deg_assort \
-#         diameter \
 #         global_ccoeff \
 #         local_ccoeff \
+#         pseudo_diameter \
+#         char_time \
+#         node_percolation_targeted \
+#         node_percolation_random \
+#         degree \
+#         local_ccoeff_nodes \
+#         pagerank \
+#         kcore \
 #     --types \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
 #         sequence \
-#         scalar \
-#         scalar \
-#         scalar \
-#         scalar \
-#         scalar \
+#         sequence \
+#         sequence \
+#         sequence \
 #     --metrics \
+#         rel_diff \
+#         abs_diff \
+#         abs_diff \
+#         abs_diff \
+#         rel_diff \
+#         abs_diff \
+#         abs_diff \
+#         abs_diff \
 #         rmse \
-#         rel_diff \
-#         abs_diff \
-#         rel_diff \
-#         abs_diff \
-#         abs_diff \
+#         rmse \
+#         rmse \
+#         rmse \
 #     --network-fp data/networks_train.txt \
-#     --output-dir plots/ec-sbm-v2/train/ \
+#     --output-dir plots/ec-sbm/v2/train/ \
 #     --output-fn network \
 #     --hide-fliers
