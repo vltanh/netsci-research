@@ -190,8 +190,8 @@ if [ ! -f "${base_done}" ]; then
             { timeout "${TIMEOUT}" /usr/bin/time -v python src/comm-det/leiden/run_leiden.py \
                 --edgelist "${inp_edge}" \
                 --output-directory "${out_dir}" \
-                --model cpm -\
-                -resolution "${leiden_res}"; } 2> "${out_dir}/error.log"
+                --model cpm \
+                --resolution "${leiden_res}"; } 2> "${out_dir}/error.log"
         elif [[ ${leiden_model} == mod ]]; then
             mkdir -p "${out_dir}"
             { timeout "${TIMEOUT}" /usr/bin/time -v python src/comm-det/leiden/run_leiden.py \
