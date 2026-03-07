@@ -1,13 +1,66 @@
 #!/bin/bash
 
+# ==========================================
+# Community Detection Evaluation Pipeline
+# ==========================================
+#
+# Pipeline Stages & Scripts Used
+# ------------------------------------------------------
+# 1. Base Clustering: Computes the initial community structure.
+#    - Leiden:  python src/comm-det/leiden/run_leiden.py
+#    - Infomap: python src/comm-det/infomap/run_infomap.py
+#    - IKC:     python src/comm-det/ikc/run_ikc.py
+#    - SBM:     python src/comm-det/sbm/run_sbm.py
+#    - SBM Best Model Selection: python src/comm-det/sbm/choose_best_sbm.py
+# 
+# 2. Statistics Computation: Calculates network metrics for the estimated clustering.
+#    - Script: python network_evaluation/network_stats/compute_cluster_stats.py
+#
+# 3. Accuracy Evaluation (Synthetic Only): Compares estimated clustering against ground truth.
+#    - Script: python network_evaluation/commdet_acc/compute_cd_accuracy.py
+#
+# 4. Post-Processing: Refines the base clustering via Constrained Clustering variants (CC, WCC, CM).
+#    - Binary: ./constrained-clustering/constrained_clustering
+#
+# 5. Post-Processing Evaluation: Re-runs the Statistics and Accuracy evaluations on the refined outputs.
+#    - Uses the same scripts from Stages 2 & 3.
+#
+# ==========================================
+# Expected Directory Structure (Inputs & Outputs)
+# ==========================================
+#
+# CASE 1: Real Networks (Default or dataset_type="real")
+# ------------------------------------------------------
+# [Input]
+# data/empirical_networks/netzschleuder/<network_id>/<network_id>.csv
+#
+# [Output]
+# COMMDET_BASE = data/reference_clusterings/
+# ├── clusterings/<algo>[+post_processing]/<network_id>/com.csv
+# └── stats/<algo>[+post_processing]/<network_id>/done
+#
+#
+# CASE 2: Synthetic Networks (<generator> <gt_clustering> [run_id=0])
+# ------------------------------------------------------
+# [Input]
+# data/synthetic_networks/networks/<generator>/<gt_clustering>/<network_id>/<run_id>/edge.csv
+# data/reference_clusterings/clusterings/<gt_clustering>/<network_id>/com.csv (Ground Truth)
+#
+# [Output]
+# COMMDET_BASE = data/estimated_clusterings/<generator>/<gt_clustering>/
+# ├── clusterings/<algo>[+post_processing]/<network_id>/<run_id>/com.csv
+# ├── stats/<algo>[+post_processing]/<network_id>/<run_id>/done
+# └── acc/<algo>[+post_processing]/<network_id>/<run_id>/done
+#
+# ==========================================
+
 # Constants
 TIMEOUT="3d"
 
-# Usage: ./run_cd_real.sh <algorithm> <network_id> [dataset_type]
-# dataset_type defaults to "real", otherwise formatted as "<generator>/<gt-clustering>"
+# Usage for real networks:      ./run_cd_real.sh <algorithm> <network_id> [real]
+# Usage for synthetic networks: ./run_cd_real.sh <algorithm> <network_id> <generator> <gt_clustering> [run_id]
 algo=$1
 network_id=$2
-dataset_type=${3:-"real"}
 
 # Flags
 IS_RUN_CC=1
@@ -24,19 +77,29 @@ esac
 # ==========================================
 # Input/Output Path Routing (Real vs Synthetic)
 # ==========================================
-if [ "${dataset_type}" == "real" ]; then
+if [ "$#" -le 2 ] || [ "$3" == "real" ]; then
     is_real=1
+    dataset_type="real"
     inp_edge="data/empirical_networks/netzschleuder/${network_id}/${network_id}.csv"
     COMMDET_BASE="data/reference_clusterings"
     out_subpath="${network_id}"
     gt_file="" # Not applicable for real networks
 else
     is_real=0
-    generator=$(echo "${dataset_type}" | cut -d'/' -f1)
-    gt_clustering=$(echo "${dataset_type}" | cut -d'/' -f2)
-    inp_edge="data/synthetic_networks/networks/${generator}/${gt_clustering}/${network_id}/0/edge.csv"
+    generator=$3
+    gt_clustering=$4
+    run_id=${5:-0} # Default to 0 if not provided
+    dataset_type="${generator}/${gt_clustering} (run: ${run_id})"
+
+    if [ -z "${generator}" ] || [ -z "${gt_clustering}" ]; then
+        echo "Error: For synthetic networks, you must provide generator and gt-clustering."
+        echo "Usage: $0 <algo> <network_id> <generator> <gt_clustering> [run_id]"
+        exit 1
+    fi
+
+    inp_edge="data/synthetic_networks/networks/${generator}/${gt_clustering}/${network_id}/${run_id}/edge.csv"
     COMMDET_BASE="data/estimated_clusterings/${generator}/${gt_clustering}"
-    out_subpath="${network_id}/0"
+    out_subpath="${network_id}/${run_id}"
     gt_file="data/reference_clusterings/clusterings/${gt_clustering}/${network_id}/com.csv"
 fi
 
@@ -89,7 +152,7 @@ run_accuracy() {
 }
 
 echo "============================"
-echo "${algo} ${network_id} (${dataset_type})"
+echo "${algo} ${network_id} | Dataset: ${dataset_type}"
 
 leiden_model=""
 leiden_res=""
@@ -159,11 +222,11 @@ if [ ! -f "${base_done}" ]; then
                 --method "${sbm_model}"; } 2> "${out_dir}/error.log"
         elif [[ ${sbm_model} == "flat-best" ]]; then
             echo "Running flat-best (selecting best of dc, ndc, pp)..."
-            mkdir -p "${out_dir}"
             sbm_flat_dc_root="${base_root_clusterings}/sbm-flat-dc/${out_subpath}"
             sbm_flat_ndc_root="${base_root_clusterings}/sbm-flat-ndc/${out_subpath}"
             sbm_flat_pp_root="${base_root_clusterings}/sbm-flat-pp/${out_subpath}"
             
+            mkdir -p "${out_dir}"
             { timeout "${TIMEOUT}" /usr/bin/time -v python src/comm-det/sbm/choose_best_sbm.py \
                 --entropy_files "${sbm_flat_dc_root}/entropy.txt" "${sbm_flat_ndc_root}/entropy.txt" "${sbm_flat_pp_root}/entropy.txt" \
                 --com_files "${sbm_flat_dc_root}/com.csv" "${sbm_flat_ndc_root}/com.csv" "${sbm_flat_pp_root}/com.csv" \
@@ -177,10 +240,10 @@ if [ ! -f "${base_done}" ]; then
             fi
         elif [[ ${sbm_model} == "nested-best" ]]; then
             echo "Running nested-best (selecting best of dc, ndc)..."
-            mkdir -p "${out_dir}"
             sbm_nested_dc_root="${base_root_clusterings}/sbm-nested-dc/${out_subpath}"
             sbm_nested_ndc_root="${base_root_clusterings}/sbm-nested-ndc/${out_subpath}"
             
+            mkdir -p "${out_dir}"
             { timeout "${TIMEOUT}" /usr/bin/time -v python src/comm-det/sbm/choose_best_sbm.py \
                 --entropy_files "${sbm_nested_dc_root}/entropy.txt" "${sbm_nested_ndc_root}/entropy.txt" \
                 --com_files "${sbm_nested_dc_root}/com.csv" "${sbm_nested_ndc_root}/com.csv" \
@@ -303,9 +366,9 @@ if [ "${IS_RUN_CC}" -eq 1 ]; then
     cc_com="${out_cc_dir}/com.csv"
     cc_done="${out_cc_dir}/done"
     
-    mkdir -p "${out_cc_dir}"
     if [ ! -f "${cc_done}" ]; then
         echo "Running CC..."
+        mkdir -p "${out_cc_dir}"
         { timeout "${TIMEOUT}" /usr/bin/time -v ./constrained-clustering/constrained_clustering \
             MincutOnly \
             --edgelist "${inp_edge}" \
@@ -339,9 +402,9 @@ if [ "${IS_RUN_WCC}" -eq 1 ]; then
     wcc_com="${out_wcc_dir}/com.csv"
     wcc_done="${out_wcc_dir}/done"
     
-    mkdir -p "${out_wcc_dir}"
     if [ ! -f "${wcc_done}" ]; then
         echo "Running WCC..."
+        mkdir -p "${out_wcc_dir}"
         { timeout "${TIMEOUT}" /usr/bin/time -v ./constrained-clustering/constrained_clustering \
             MincutOnly \
             --connectedness-criterion "1log_10(n)" \
