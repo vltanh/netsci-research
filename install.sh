@@ -3,7 +3,7 @@ conda activate nw
 
 conda install -c conda-forge graph-tool
 conda update --all
-conda install pandas requests tqdm seaborn
+conda install pandas requests tqdm seaborn scikit-learn
 
 pip install git+https://github.com/vikramr2/python-mincut
 pip install igraph leidenalg networkit
