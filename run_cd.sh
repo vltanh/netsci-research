@@ -7,8 +7,13 @@
 # clustering, and evaluates statistics (and accuracy for synthetic networks).
 #
 # USAGE:
-#   Real:  ./run_cd.sh <algorithm> <network_id> [real]
-#   Synth: ./run_cd.sh <algorithm> <network_id> <generator> <gt_clustering> [run_id]
+#   Real:  ./run_cd.sh --algo <algo> --network <id> --real [OPTIONS]
+#   Synth: ./run_cd.sh --algo <algo> --network <id> --generator <gen> --gt-clustering <gt> [OPTIONS]
+#
+# OPTIONS:
+#   --run-id <id>      : (Synthetic) Identifier for the run (default: 0).
+#   --criterion <name> : Connectedness criterion for WCC and CM (e.g., 'sqrt' or 'log').
+#                        If provided, outputs are suffixed (e.g., +wcc(sqrt)).
 #
 # PATH LEGEND:
 #   [INP_EDGE]
@@ -83,7 +88,7 @@
 #   - Network Edge List : [INP_EDGE]
 #   - Base Clustering   : (Generated in Step 1)
 # [Outputs]
-#   - Refined Clustering: [OUT_ROOT]/clusterings/<algo>+<pp>/[SUB_PATH]/com.csv
+#   - Refined Clustering: [OUT_ROOT]/clusterings/<algo>+<pp>[criterion]/[SUB_PATH]/com.csv
 #
 # ------------------------------------------------------------------------------
 # STEP 6: Post-Processing Evaluation
@@ -96,15 +101,64 @@
 #   - Refined Clustering: (Generated in Step 5)
 #   - Ground Truth Coms : [GT_COM] (Synth only)
 # [Outputs]
-#   - Stats Directory   : [OUT_ROOT]/stats/<algo>+<pp>/[SUB_PATH]/
-#   - Acc Directory     : [OUT_ROOT]/acc/<algo>+<pp>/[SUB_PATH]/ (Synth only)
+#   - Stats Directory   : [OUT_ROOT]/stats/<algo>+<pp>[criterion]/[SUB_PATH]/
+#   - Acc Directory     : [OUT_ROOT]/acc/<algo>+<pp>[criterion]/[SUB_PATH]/ (Synth only)
 # ==============================================================================
 
 # Constants
 TIMEOUT="3d"
 
-algo=$1
-network_id=$2
+# ==========================================
+# Argument Parsing
+# ==========================================
+algo=""
+network_id=""
+is_real=0
+generator=""
+gt_clustering=""
+run_id="0"
+criterion=""
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --algo) algo="$2"; shift 2 ;;
+        --network) network_id="$2"; shift 2 ;;
+        --real) is_real=1; shift 1 ;;
+        --generator) generator="$2"; shift 2 ;;
+        --gt-clustering) gt_clustering="$2"; shift 2 ;;
+        --run-id) run_id="$2"; shift 2 ;;
+        --criterion) criterion="$2"; shift 2 ;;
+        -*) echo "Unknown parameter passed: $1"; exit 1 ;;
+        *) echo "Unexpected argument: $1"; exit 1 ;;
+    esac
+done
+
+if [ -z "${algo}" ] || [ -z "${network_id}" ]; then
+    echo "Error: --algo and --network are required parameters."
+    exit 1
+fi
+
+# ==========================================
+# Connectedness Criterion Configuration
+# ==========================================
+CRIT_SUFFIX=""
+WCC_CRIT="1log_10(n)" # Default
+CM_CRIT="0.2n^0.5"    # Default
+
+if [[ -n "${criterion}" ]]; then
+    CRIT_SUFFIX="(${criterion})"
+    if [[ "${criterion}" == "sqrt" ]]; then
+        WCC_CRIT="0.2n^0.5"
+        CM_CRIT="0.2n^0.5"
+    elif [[ "${criterion}" == "log" ]]; then
+        WCC_CRIT="1log_10(n)"
+        CM_CRIT="1log_10(n)"
+    else
+        # Fallback if a custom formula is provided directly
+        WCC_CRIT="${criterion}"
+        CM_CRIT="${criterion}"
+    fi
+fi
 
 # Flags
 IS_RUN_CC=1
@@ -121,26 +175,19 @@ esac
 # ==========================================
 # Input/Output Path Routing (Real vs Synthetic)
 # ==========================================
-if [ "$#" -le 2 ] || [ "$3" == "real" ]; then
-    is_real=1
+if [ "${is_real}" -eq 1 ]; then
     dataset_type="real"
     inp_edge="data/empirical_networks/netzschleuder/${network_id}/${network_id}.csv"
     COMMDET_BASE="data/reference_clusterings"
     out_subpath="${network_id}"
     gt_file="" # Not applicable for real networks
 else
-    is_real=0
-    generator=$3
-    gt_clustering=$4
-    run_id=${5:-0} # Default to 0 if not provided
-    dataset_type="${generator}/${gt_clustering} (run: ${run_id})"
-
     if [ -z "${generator}" ] || [ -z "${gt_clustering}" ]; then
-        echo "Error: For synthetic networks, you must provide generator and gt-clustering."
-        echo "Usage: $0 <algo> <network_id> <generator> <gt_clustering> [run_id]"
+        echo "Error: For synthetic networks, --generator and --gt-clustering must be provided."
         exit 1
     fi
 
+    dataset_type="${generator}/${gt_clustering} (run: ${run_id})"
     inp_edge="data/synthetic_networks/networks/${generator}/${gt_clustering}/${network_id}/${run_id}/edge.csv"
     COMMDET_BASE="data/estimated_clusterings/${generator}/${gt_clustering}"
     out_subpath="${network_id}/${run_id}"
@@ -354,36 +401,44 @@ if [[ ${sbm_model} == "flat-best" || ${sbm_model} == "nested-best" ]]; then
     fi
 
     # 2. Symlink post-processing & their respective stats/acc folders
-    for pp in cc wcc cm; do
-        if [ "${pp}" == "cc" ] && [ "${IS_RUN_CC}" -ne 1 ]; then continue; fi
-        if [ "${pp}" == "wcc" ] && [ "${IS_RUN_WCC}" -ne 1 ]; then continue; fi
-        if [ "${pp}" == "cm" ] && [ "${IS_RUN_CM}" -ne 1 ]; then continue; fi
+    for base_pp in cc wcc cm; do
+        # Determine the correct tag and skip conditionally
+        if [ "${base_pp}" == "cc" ]; then
+            if [ "${IS_RUN_CC}" -ne 1 ]; then continue; fi
+            pp_tag="cc"
+        elif [ "${base_pp}" == "wcc" ]; then
+            if [ "${IS_RUN_WCC}" -ne 1 ]; then continue; fi
+            pp_tag="wcc${CRIT_SUFFIX}"
+        elif [ "${base_pp}" == "cm" ]; then
+            if [ "${IS_RUN_CM}" -ne 1 ]; then continue; fi
+            pp_tag="cm${CRIT_SUFFIX}"
+        fi
 
-        target_pp_clust="${PWD}/${base_root_clusterings}/${best_algo}+${pp}/${out_subpath}"
-        target_pp_stats="${PWD}/${base_root_stats}/${best_algo}+${pp}/${out_subpath}"
+        target_pp_clust="${PWD}/${base_root_clusterings}/${best_algo}+${pp_tag}/${out_subpath}"
+        target_pp_stats="${PWD}/${base_root_stats}/${best_algo}+${pp_tag}/${out_subpath}"
         
         # Check and link post-processing clustering
         if [ -e "${target_pp_clust}" ]; then
-            mkdir -p "$(dirname "${base_root_clusterings}/${algo}+${pp}/${out_subpath}")"
-            ln -sfn "${target_pp_clust}" "${base_root_clusterings}/${algo}+${pp}/${out_subpath}"
+            mkdir -p "$(dirname "${base_root_clusterings}/${algo}+${pp_tag}/${out_subpath}")"
+            ln -sfn "${target_pp_clust}" "${base_root_clusterings}/${algo}+${pp_tag}/${out_subpath}"
         else
             echo "Warning: Post-processing cluster folder ${target_pp_clust} not found. Skipping symlink."
         fi
 
         # Check and link post-processing stats
         if [ -e "${target_pp_stats}" ]; then
-            mkdir -p "$(dirname "${base_root_stats}/${algo}+${pp}/${out_subpath}")"
-            ln -sfn "${target_pp_stats}" "${base_root_stats}/${algo}+${pp}/${out_subpath}"
+            mkdir -p "$(dirname "${base_root_stats}/${algo}+${pp_tag}/${out_subpath}")"
+            ln -sfn "${target_pp_stats}" "${base_root_stats}/${algo}+${pp_tag}/${out_subpath}"
         else
             echo "Warning: Post-processing stats folder ${target_pp_stats} not found. Skipping symlink."
         fi
         
         # Check and link post-processing acc (for synthetic)
         if [ "${is_real}" -eq 0 ]; then
-            target_pp_acc="${PWD}/${base_root_acc}/${best_algo}+${pp}/${out_subpath}"
+            target_pp_acc="${PWD}/${base_root_acc}/${best_algo}+${pp_tag}/${out_subpath}"
             if [ -e "${target_pp_acc}" ]; then
-                mkdir -p "$(dirname "${base_root_acc}/${algo}+${pp}/${out_subpath}")"
-                ln -sfn "${target_pp_acc}" "${base_root_acc}/${algo}+${pp}/${out_subpath}"
+                mkdir -p "$(dirname "${base_root_acc}/${algo}+${pp_tag}/${out_subpath}")"
+                ln -sfn "${target_pp_acc}" "${base_root_acc}/${algo}+${pp_tag}/${out_subpath}"
             else
                 echo "Warning: Post-processing acc folder ${target_pp_acc} not found. Skipping symlink."
             fi
@@ -439,7 +494,7 @@ fi
 # 3. Run WCC 
 # ==========================================
 if [ "${IS_RUN_WCC}" -eq 1 ]; then
-    suffix="${algo}+wcc"
+    suffix="${algo}+wcc${CRIT_SUFFIX}"
     out_wcc_dir="${base_root_clusterings}/${suffix}/${out_subpath}"
     stats_wcc_dir="${base_root_stats}/${suffix}/${out_subpath}"
     acc_wcc_dir="${base_root_acc}/${suffix}/${out_subpath}"
@@ -447,11 +502,11 @@ if [ "${IS_RUN_WCC}" -eq 1 ]; then
     wcc_done="${out_wcc_dir}/done"
     
     if [ ! -f "${wcc_done}" ]; then
-        echo "Running WCC..."
+        echo "Running WCC (${WCC_CRIT})..."
         mkdir -p "${out_wcc_dir}"
         { timeout "${TIMEOUT}" /usr/bin/time -v ./constrained-clustering/constrained_clustering \
             MincutOnly \
-            --connectedness-criterion "1log_10(n)" \
+            --connectedness-criterion "${WCC_CRIT}" \
             --edgelist "${inp_edge}" \
             --existing-clustering "${base_com}" \
             --num-processors 1 \
@@ -475,7 +530,7 @@ fi
 # 4. Run CM
 # ==========================================
 if [ "${IS_RUN_CM}" -eq 1 ]; then
-    suffix="${algo}+cm"
+    suffix="${algo}+cm${CRIT_SUFFIX}"
     out_cm_dir="${base_root_clusterings}/${suffix}/${out_subpath}"
     stats_cm_dir="${base_root_stats}/${suffix}/${out_subpath}"
     acc_cm_dir="${base_root_acc}/${suffix}/${out_subpath}"
@@ -483,14 +538,14 @@ if [ "${IS_RUN_CM}" -eq 1 ]; then
     cm_done="${out_cm_dir}/done"
     
     if [ ! -f "${cm_done}" ]; then
-        echo "Running CM..."
+        echo "Running CM (${CM_CRIT})..."
         if [[ ${algo} == leiden* ]]; then
             if [[ ${leiden_model} == cpm ]]; then
                 mkdir -p "${out_cm_dir}"
                 { timeout "${TIMEOUT}" /usr/bin/time -v ./constrained-clustering/constrained_clustering \
                     CM \
                     --mincut-type "cactus" \
-                    --connectedness-criterion "0.2n^0.5" \
+                    --connectedness-criterion "${CM_CRIT}" \
                     --edgelist "${inp_edge}" \
                     --existing-clustering "${base_com}" \
                     --algorithm "leiden-cpm" \
@@ -505,7 +560,7 @@ if [ "${IS_RUN_CM}" -eq 1 ]; then
                 { timeout "${TIMEOUT}" /usr/bin/time -v ./constrained-clustering/constrained_clustering \
                     CM \
                     --mincut-type "cactus" \
-                    --connectedness-criterion "0.2n^0.5" \
+                    --connectedness-criterion "${CM_CRIT}" \
                     --edgelist "${inp_edge}" \
                     --existing-clustering "${base_com}" \
                     --algorithm "leiden-mod" \
