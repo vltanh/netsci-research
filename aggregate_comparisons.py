@@ -56,7 +56,7 @@ def parse_args():
     parser.add_argument(
         "--network-fp",
         type=str,
-        default="data/networks_all.txt",
+        required=True,
         help="File containing the list of network IDs to process.",
     )
     parser.add_argument(
