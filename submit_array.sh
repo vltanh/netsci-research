@@ -7,7 +7,7 @@
 # text file and submits them as a SLURM array job.
 #
 # USAGE:
-#   ./submit_array.sh --mode <mode> [OPTIONS] <methods/clusterings...>
+#   ./submit_array.sh --mode <mode> [OPTIONS]
 #
 # COMMON OPTIONS:
 #   --network-list <file>    : Path to the list of network IDs (default: data/networks_all.txt).
@@ -16,27 +16,24 @@
 # MODES & SPECIFIC OPTIONS:
 #   --mode cd      : Run Community Detection (evaluates algorithms).
 #       --real                   : Flag to run on empirical (real) networks.
-#       --generator <name>       : (Synthetic only) Name of the network generator.
-#       --gt-clustering <name>   : (Synthetic only) Name of the ground-truth clustering.
+#       --generator <names...>   : (Synthetic only) Name(s) of the network generator(s).
+#       --gt-clustering <names..>: (Synthetic only) Name(s) of the ground-truth clustering(s).
 #       --criterion <name>       : (Optional) Connectedness criterion for WCC/CM (e.g., sqrt, log).
-#       <methods...>             : Space-separated list of CD algorithms to run.
+#       --method <names...>      : List of CD algorithms to run.
 #
 #   --mode gen     : Generate synthetic networks.
-#       --generator <name>       : Name of the network generator (e.g., ec-sbm).
-#       <clusterings...>         : Space-separated list of reference clusterings to generate.
+#       --generator <names...>   : Name(s) of the network generator(s) (e.g., ec-sbm).
+#       --clustering <names...>  : List of reference clusterings to generate.
 #
 # EXAMPLES:
 #   1. Community Detection on Real Networks:
-#      ./submit_array.sh --mode cd --real --criterion sqrt leiden-cpm-0.1 sbm-flat-ndc
-#      (Note: This will run leiden-cpm-0.1 and sbm-flat-dc on all real networks, with the WCC/CM criterion set to sqrt)
+#      ./submit_array.sh --mode cd --real --criterion sqrt --method leiden-cpm-0.1 sbm-flat-ndc
 #
-#   2. Community Detection on Synthetic Networks:
-#      ./submit_array.sh --mode cd --generator ec-sbm --gt-clustering leiden-cpm-0.1 leiden-cpm-0.1 sbm-flat-ndc
-#      (Note: leiden-cpm-0.1 is used both as the ground-truth and the method for evaluation in this example)
+#   2. Community Detection on Synthetic Networks (Multiple Generators/Methods):
+#      ./submit_array.sh --mode cd --generator ec-sbm dc-sbm --gt-clustering leiden-cpm-0.1 --method leiden-cpm-0.1 sbm-flat-ndc
 #
 #   3. Synthetic Network Generation (specific run-id):
-#      ./submit_array.sh --mode gen --generator ec-sbm leiden-cpm-0.5+cm
-#      (Note: This will use leiden-cpm-0.5+cm as the reference clustering for generation across all networks)
+#      ./submit_array.sh --mode gen --generator ec-sbm dc-sbm --clustering leiden-cpm-0.5+cm
 # ==============================================================================
 
 CONCURRENCY_LIMIT=40
@@ -47,29 +44,59 @@ mkdir -p task_files
 TASK_FILE="task_files/tasks_$(date +%Y%m%d_%H%M%S)_$$.txt"
 
 # Default variables
+# [CONFIGURABLE] Add any additional default variables here
 mode=""
-generator=""
-gt_clustering=""
 run_id="0"
 is_real=0
 criterion=""
 network_list="data/networks_all.txt"
-positional_args=()
-# [CONFIGURABLE] Future variables for additional modes can be added here
+
+# Arrays for multi-argument flags
+# [CONFIGURABLE] Add any additional arrays for multi-argument flags here
+generators=()
+gt_clusterings=()
+methods=()
+clusterings=()
 
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --mode) mode="$2"; shift 2 ;;
-        --generator) generator="$2"; shift 2 ;;
-        --gt-clustering) gt_clustering="$2"; shift 2 ;;
         --run-id) run_id="$2"; shift 2 ;;
         --network-list) network_list="$2"; shift 2 ;;
         --criterion) criterion="$2"; shift 2 ;;
         --real) is_real=1; shift 1 ;;
-        # [CONFIGURABLE] Future named arguments can be added here
+        # [CONFIGURABLE] Add any additional single-argument flags here
+        
+        # Multi-argument parsing logic
+        --generator)
+            shift
+            while [[ "$#" -gt 0 && ! "$1" == -* ]]; do
+                generators+=("$1"); shift
+            done
+            ;;
+        --gt-clustering)
+            shift
+            while [[ "$#" -gt 0 && ! "$1" == -* ]]; do
+                gt_clusterings+=("$1"); shift
+            done
+            ;;
+        --method)
+            shift
+            while [[ "$#" -gt 0 && ! "$1" == -* ]]; do
+                methods+=("$1"); shift
+            done
+            ;;
+        --clustering)
+            shift
+            while [[ "$#" -gt 0 && ! "$1" == -* ]]; do
+                clusterings+=("$1"); shift
+            done
+            ;;
+        # [CONFIGURABLE] Add any additional flags here following the same pattern
+            
         -*) echo "Unknown parameter passed: $1"; exit 1 ;;
-        *) positional_args+=("$1"); shift 1 ;;
+        *) echo "Unknown positional argument passed: $1. Please use flags (e.g., --method, --clustering)."; exit 1 ;;
     esac
 done
 
@@ -86,14 +113,21 @@ if [[ -z "${mode}" ]]; then
 fi
 
 if [[ "${mode}" == "gen" ]]; then
-    if [[ -z "${generator}" ]]; then
-        echo "Error: --generator is required for mode 'gen'."
+    if [[ ${#generators[@]} -eq 0 ]]; then
+        echo "Error: At least one --generator is required for mode 'gen'."
         exit 1
     fi
-    clusterings=("${positional_args[@]}")
-    echo "Mode: ${mode}, Generator: ${generator}, Run: ${run_id}"
+    if [[ ${#clusterings[@]} -eq 0 ]]; then
+        echo "Error: At least one --clustering is required for mode 'gen'."
+        exit 1
+    fi
+    echo "Mode: ${mode}, Generators: ${generators[*]}, Run: ${run_id}"
+    
 elif [[ "${mode}" == "cd" ]]; then
-    methods=("${positional_args[@]}")
+    if [[ ${#methods[@]} -eq 0 ]]; then
+        echo "Error: At least one --method is required for mode 'cd'."
+        exit 1
+    fi
     
     crit_display="default"
     if [[ -n "${criterion}" ]]; then crit_display="${criterion}"; fi
@@ -101,14 +135,14 @@ elif [[ "${mode}" == "cd" ]]; then
     if [[ "${is_real}" -eq 1 ]]; then
         echo "Mode: cd (Real Networks), Criterion: ${crit_display}"
     else
-        if [[ -z "${generator}" ]] || [[ -z "${gt_clustering}" ]]; then
+        if [[ ${#generators[@]} -eq 0 ]] || [[ ${#gt_clusterings[@]} -eq 0 ]]; then
             echo "Error: --generator and --gt-clustering are required for synthetic 'cd' mode unless --real is passed."
             exit 1
         fi
-        echo "Mode: cd (Synthetic), Generator: ${generator}, GT: ${gt_clustering}, Run: ${run_id}, Criterion: ${crit_display}"
+        echo "Mode: cd (Synthetic), Generators: ${generators[*]}, GTs: ${gt_clusterings[*]}, Run: ${run_id}, Criterion: ${crit_display}"
     fi
-# elif [[ "${mode}" == <mode> ]]; then
-# [CONFIGURABLE] Future mode-specific validations can be added here
+
+# [CONFIGURABLE] Add any additional validation logic here based on the flags you have defined
 else
     echo "Unknown mode: ${mode}."
     exit 1
@@ -121,48 +155,57 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
     if [[ -z "$network_id" ]]; then continue; fi 
 
     if [[ "${mode}" == "cd" ]]; then
-        for method in "${methods[@]}"; do
-            script="run_cd.sh"
-            
-            crit_arg=""
-            crit_suffix=""
-            if [[ -n "${criterion}" ]]; then 
-                crit_arg="--criterion ${criterion}"
-                crit_suffix="_${criterion}"
-            fi
+        crit_arg=""
+        crit_suffix=""
+        if [[ -n "${criterion}" ]]; then 
+            crit_arg="--criterion ${criterion}"
+            crit_suffix="_${criterion}"
+        fi
 
-            if [[ "${is_real}" -eq 1 ]]; then
+        if [[ "${is_real}" -eq 1 ]]; then
+            for method in "${methods[@]}"; do
+                script="run_cd.sh"
                 job_name="${mode}_real_${network_id}_${method}${crit_suffix}"
                 args="--algo ${method} --network ${network_id} --real ${crit_arg}"
                 log_path="${LOG_DIR_BASE}/${mode}/real/${method}${crit_suffix}/${network_id}"
-            else
-                job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
-                args="--algo ${method} --network ${network_id} --generator ${generator} --gt-clustering ${gt_clustering} --run-id ${run_id} ${crit_arg}"
-                log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
-            fi
-            
-            echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
-        done
+                
+                echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
+            done
+        else
+            for generator in "${generators[@]}"; do
+                for gt_clustering in "${gt_clusterings[@]}"; do
+                    for method in "${methods[@]}"; do
+                        script="run_cd.sh"
+                        job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
+                        args="--algo ${method} --network ${network_id} --generator ${generator} --gt-clustering ${gt_clustering} --run-id ${run_id} ${crit_arg}"
+                        log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
+                        
+                        echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
+                    done
+                done
+            done
+        fi
+        
     elif [[ "${mode}" == "gen" ]]; then
-        for clustering_id in "${clusterings[@]}"; do
-            job_name="${mode}_${generator}_${network_id}_${clustering_id}_${run_id}"
-            script="run_generator.sh"
-            args="${generator} ${network_id} ${clustering_id} ${run_id}"
-            log_path="${LOG_DIR_BASE}/${mode}/${generator}/${network_id}/${clustering_id}/${run_id}"
-            
-            echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
+        for generator in "${generators[@]}"; do
+            for clustering_id in "${clusterings[@]}"; do
+                job_name="${mode}_${generator}_${network_id}_${clustering_id}_${run_id}"
+                script="run_generator.sh"
+                args="${generator} ${network_id} ${clustering_id} ${run_id}"
+                log_path="${LOG_DIR_BASE}/${mode}/${generator}/${network_id}/${clustering_id}/${run_id}"
+                
+                echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
+            done
         done
-    # elif [[ "${mode}" == <mode> ]]; then
-    # [CONFIGURABLE] 
-    #   Future mode-specific task generation can be added here
-    #   Remember to define 'script', 'args', 'log_path', and 'job_name' variables appropriately.
+
+    # [CONFIGURABLE] Add any additional modes and their corresponding task generation logic here
     fi
 done < "${network_list}"
 
 total_tasks=$(wc -l < "$TASK_FILE")
 
 if [[ "$total_tasks" -eq 0 ]]; then
-    echo "No tasks generated. Did you forget to provide methods/clusterings at the end?"
+    echo "No tasks generated. Did you forget to provide methods or clusterings?"
     rm "$TASK_FILE"
     exit 0
 fi
