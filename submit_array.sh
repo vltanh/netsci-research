@@ -164,7 +164,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
 
         if [[ "${is_real}" -eq 1 ]]; then
             for method in "${methods[@]}"; do
-                script="run_cd.sh"
+                script="community_detection/run_cd.sh"
                 job_name="${mode}_real_${network_id}_${method}${crit_suffix}"
                 args="--algo ${method} --network ${network_id} --real ${crit_arg}"
                 log_path="${LOG_DIR_BASE}/${mode}/real/${method}${crit_suffix}/${network_id}"
@@ -175,7 +175,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
             for generator in "${generators[@]}"; do
                 for gt_clustering in "${gt_clusterings[@]}"; do
                     for method in "${methods[@]}"; do
-                        script="run_cd.sh"
+                        script="community_detection/run_cd.sh"
                         job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
                         args="--algo ${method} --network ${network_id} --generator ${generator} --gt-clustering ${gt_clustering} --run-id ${run_id} ${crit_arg}"
                         log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
