@@ -1,8 +1,0 @@
-2026-03-05 21:27:17,927 - INFO - Generation of Outlier Subnetwork
-2026-03-05 21:27:17,927 - INFO - Network: test/input/topology/edge.csv
-2026-03-05 21:27:17,928 - INFO - Clustering: test/input/topology/comm-det/sbm+wcc/com.csv
-2026-03-05 21:27:17,928 - INFO - Output folder: test/output/topology/ec-sbm/v1.5/outlier/edges
-2026-03-05 21:27:19,057 - INFO - Setup: 1.1265 seconds
-2026-03-05 21:27:19,123 - INFO - Generation of outlier subgraph: 0.0660 seconds
-2026-03-05 21:27:19,190 - INFO - Post-process: 0.0670 seconds
-2026-03-05 21:27:19,190 - INFO - Complete.
