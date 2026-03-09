@@ -109,6 +109,14 @@
 TIMEOUT="3d"
 
 # ==========================================
+# Helper Functions
+# ==========================================
+# Custom log function to prepend timestamps to output
+log() {
+    builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
+# ==========================================
 # Argument Parsing
 # ==========================================
 algo=""
@@ -128,13 +136,13 @@ while [[ "$#" -gt 0 ]]; do
         --gt-clustering) gt_clustering="$2"; shift 2 ;;
         --run-id) run_id="$2"; shift 2 ;;
         --criterion) criterion="$2"; shift 2 ;;
-        -*) echo "Unknown parameter passed: $1"; exit 1 ;;
-        *) echo "Unexpected argument: $1"; exit 1 ;;
+        -*) log "Unknown parameter passed: $1"; exit 1 ;;
+        *) log "Unexpected argument: $1"; exit 1 ;;
     esac
 done
 
 if [ -z "${algo}" ] || [ -z "${network_id}" ]; then
-    echo "Error: --algo and --network are required parameters."
+    log "Error: --algo and --network are required parameters."
     exit 1
 fi
 
@@ -183,7 +191,7 @@ if [ "${is_real}" -eq 1 ]; then
     gt_file="" # Not applicable for real networks
 else
     if [ -z "${generator}" ] || [ -z "${gt_clustering}" ]; then
-        echo "Error: For synthetic networks, --generator and --gt-clustering must be provided."
+        log "Error: For synthetic networks, --generator and --gt-clustering must be provided."
         exit 1
     fi
 
@@ -195,7 +203,7 @@ else
 fi
 
 if [ ! -f "${inp_edge}" ]; then
-    echo "Input file ${inp_edge} does not exist. Skipping."
+    log "Input file ${inp_edge} does not exist. Skipping."
     exit 1
 fi
 
@@ -211,7 +219,7 @@ run_stats() {
     local com_file=$2
     local stats_dir=$3
 
-    echo "Computing stats..."
+    log "Computing stats..."
     if [ ! -f "${stats_dir}/done" ]; then
         mkdir -p "${stats_dir}"
         { /usr/bin/time -v python network_evaluation/network_stats/compute_cluster_stats.py \
@@ -219,7 +227,7 @@ run_stats() {
             --community "${com_file}" \
             --outdir "${stats_dir}"; } 2> "${stats_dir}/error.log"
     else
-        echo "Stats already done."
+        log "Stats already done."
     fi
 }
 
@@ -229,7 +237,7 @@ run_accuracy() {
     local est_file=$3
     local acc_d=$4
 
-    echo "Computing accuracy..."
+    log "Computing accuracy..."
     if [ ! -f "${acc_d}/done" ]; then
         mkdir -p "${acc_d}"
         { /usr/bin/time -v python network_evaluation/commdet_acc/compute_cd_accuracy.py \
@@ -238,12 +246,12 @@ run_accuracy() {
             --est-clustering "${est_file}" \
             --output-prefix "${acc_d}/result"; } 2> "${acc_d}/error.log"
     else
-        echo "Accuracy already done."
+        log "Accuracy already done."
     fi
 }
 
-echo "============================"
-echo "${algo} ${network_id} | Dataset: ${dataset_type}"
+log "============================"
+log "${algo} ${network_id} | Dataset: ${dataset_type}"
 
 leiden_model=""
 leiden_res=""
@@ -273,7 +281,7 @@ base_com="${out_dir}/com.csv"
 base_dens="${out_dir}/density.csv"
 base_done="${out_dir}/done"
 
-echo "Running clustering..."
+log "Running clustering..."
 if [ ! -f "${base_done}" ]; then
     if [[ ${algo} == leiden* ]]; then
         if [[ ${leiden_model} == cpm ]]; then
@@ -290,7 +298,7 @@ if [ ! -f "${base_done}" ]; then
                 --output-directory "${out_dir}" \
                 --model mod; } 2> "${out_dir}/error.log"
         else
-            echo "Unknown leiden_model: ${leiden_model}"; exit 1
+            log "Unknown leiden_model: ${leiden_model}"; exit 1
         fi
     elif [[ ${algo} == infomap ]]; then
         mkdir -p "${out_dir}"
@@ -305,14 +313,14 @@ if [ ! -f "${base_done}" ]; then
             --kvalue "${ikc_k}"; } 1> "${out_dir}/output.log" 2> "${out_dir}/error.log"
     elif [[ ${algo} == sbm* ]]; then
         if [[ ${sbm_model} =~ ^(flat-dc|flat-ndc|flat-pp|nested-dc|nested-ndc)$ ]]; then
-            echo "Running ${sbm_model}..."
+            log "Running ${sbm_model}..."
             mkdir -p "${out_dir}"
             { timeout "${TIMEOUT}" /usr/bin/time -v python src/comm-det/sbm/run_sbm.py \
                 --edgelist "${inp_edge}" \
                 --output-directory "${out_dir}" \
                 --method "${sbm_model}"; } 2> "${out_dir}/error.log"
         elif [[ ${sbm_model} == "flat-best" ]]; then
-            echo "Running flat-best (selecting best of dc, ndc, pp)..."
+            log "Running flat-best (selecting best of dc, ndc, pp)..."
             sbm_flat_dc_root="${base_root_clusterings}/sbm-flat-dc/${out_subpath}"
             sbm_flat_ndc_root="${base_root_clusterings}/sbm-flat-ndc/${out_subpath}"
             sbm_flat_pp_root="${base_root_clusterings}/sbm-flat-pp/${out_subpath}"
@@ -325,12 +333,12 @@ if [ ! -f "${base_done}" ]; then
 
             if [ -f "${out_dir}/best_model.txt" ]; then
                 best_model=$(cat "${out_dir}/best_model.txt")
-                echo "Best SBM model selected: ${best_model}"
+                log "Best SBM model selected: ${best_model}"
             else
-                echo "Error: Best model selection failed. best_model.txt not found."
+                log "Error: Best model selection failed. best_model.txt not found."
             fi
         elif [[ ${sbm_model} == "nested-best" ]]; then
-            echo "Running nested-best (selecting best of dc, ndc)..."
+            log "Running nested-best (selecting best of dc, ndc)..."
             sbm_nested_dc_root="${base_root_clusterings}/sbm-nested-dc/${out_subpath}"
             sbm_nested_ndc_root="${base_root_clusterings}/sbm-nested-ndc/${out_subpath}"
             
@@ -342,15 +350,15 @@ if [ ! -f "${base_done}" ]; then
 
             if [ -f "${out_dir}/best_model.txt" ]; then
                 best_model=$(cat "${out_dir}/best_model.txt")
-                echo "Best SBM model selected: ${best_model}"
+                log "Best SBM model selected: ${best_model}"
             else
-                echo "Error: Best model selection failed. best_model.txt not found."
+                log "Error: Best model selection failed. best_model.txt not found."
             fi
         else
-            echo "Unknown sbm_model: ${sbm_model}"; exit 1
+            log "Unknown sbm_model: ${sbm_model}"; exit 1
         fi
     else
-        echo "Unknown method: ${algo}"; exit 1
+        log "Unknown method: ${algo}"; exit 1
     fi
 
     if [ -f "${base_com}" ]; then 
@@ -359,7 +367,7 @@ if [ ! -f "${base_done}" ]; then
 fi
 
 if [ ! -f "${base_com}" ]; then
-    echo "CRITICAL: Base clustering failed or timed out."
+    log "CRITICAL: Base clustering failed or timed out."
     exit 1
 fi
 
@@ -369,18 +377,18 @@ fi
 if [[ ${sbm_model} == "flat-best" || ${sbm_model} == "nested-best" ]]; then
     best_model_file="${out_dir}/best_model.txt"
     if [ ! -f "${best_model_file}" ]; then
-        echo "Error: ${best_model_file} not found. Could not link downstream tasks."
+        log "Error: ${best_model_file} not found. Could not link downstream tasks."
         exit 1
     fi
     
     best_algo=$(cat "${best_model_file}")
 
     if [ ! -L "${base_com}" ] || [ ! -e "${base_com}" ]; then
-        echo "CRITICAL: Symlink ${base_com} does not exist or is broken."
+        log "CRITICAL: Symlink ${base_com} does not exist or is broken."
         exit 1
     fi
 
-    echo "Best model successfully read as: ${best_algo}. Symlinking downstream folders..."
+    log "Best model successfully read as: ${best_algo}. Symlinking downstream folders..."
 
     # 1. Symlink base stats folder
     target_stats="${PWD}/${base_root_stats}/${best_algo}/${out_subpath}"
@@ -388,7 +396,7 @@ if [[ ${sbm_model} == "flat-best" || ${sbm_model} == "nested-best" ]]; then
         mkdir -p "$(dirname "${stats_dir}")"
         ln -sfn "${target_stats}" "${stats_dir}"
     else
-        echo "Warning: Base stats folder ${target_stats} not found. Skipping symlink."
+        log "Warning: Base stats folder ${target_stats} not found. Skipping symlink."
     fi
 
     # 1b. Symlink base acc folder (for synthetic)
@@ -422,7 +430,7 @@ if [[ ${sbm_model} == "flat-best" || ${sbm_model} == "nested-best" ]]; then
             mkdir -p "$(dirname "${base_root_clusterings}/${algo}+${pp_tag}/${out_subpath}")"
             ln -sfn "${target_pp_clust}" "${base_root_clusterings}/${algo}+${pp_tag}/${out_subpath}"
         else
-            echo "Warning: Post-processing cluster folder ${target_pp_clust} not found. Skipping symlink."
+            log "Warning: Post-processing cluster folder ${target_pp_clust} not found. Skipping symlink."
         fi
 
         # Check and link post-processing stats
@@ -430,7 +438,7 @@ if [[ ${sbm_model} == "flat-best" || ${sbm_model} == "nested-best" ]]; then
             mkdir -p "$(dirname "${base_root_stats}/${algo}+${pp_tag}/${out_subpath}")"
             ln -sfn "${target_pp_stats}" "${base_root_stats}/${algo}+${pp_tag}/${out_subpath}"
         else
-            echo "Warning: Post-processing stats folder ${target_pp_stats} not found. Skipping symlink."
+            log "Warning: Post-processing stats folder ${target_pp_stats} not found. Skipping symlink."
         fi
         
         # Check and link post-processing acc (for synthetic)
@@ -440,12 +448,12 @@ if [[ ${sbm_model} == "flat-best" || ${sbm_model} == "nested-best" ]]; then
                 mkdir -p "$(dirname "${base_root_acc}/${algo}+${pp_tag}/${out_subpath}")"
                 ln -sfn "${target_pp_acc}" "${base_root_acc}/${algo}+${pp_tag}/${out_subpath}"
             else
-                echo "Warning: Post-processing acc folder ${target_pp_acc} not found. Skipping symlink."
+                log "Warning: Post-processing acc folder ${target_pp_acc} not found. Skipping symlink."
             fi
         fi
     done
 
-    echo "[cd-done] ${algo} ${network_id} ${dataset_type}" >> complete.log
+    log "[cd-done] ${algo} ${network_id} ${dataset_type}" >> complete.log
     exit 0
 fi
 
@@ -466,7 +474,7 @@ if [ "${IS_RUN_CC}" -eq 1 ]; then
     cc_done="${out_cc_dir}/done"
     
     if [ ! -f "${cc_done}" ]; then
-        echo "Running CC..."
+        log "Running CC..."
         mkdir -p "${out_cc_dir}"
         { timeout "${TIMEOUT}" /usr/bin/time -v ./constrained-clustering/constrained_clustering \
             MincutOnly \
@@ -479,7 +487,7 @@ if [ "${IS_RUN_CC}" -eq 1 ]; then
             --connectedness-criterion 0; } 2> "${out_cc_dir}/error.log"
         [ -f "${cc_com}" ] && touch "${cc_done}"
     else
-        echo "CC already done."
+        log "CC already done."
     fi
     
     if [ -f "${cc_com}" ]; then
@@ -502,7 +510,7 @@ if [ "${IS_RUN_WCC}" -eq 1 ]; then
     wcc_done="${out_wcc_dir}/done"
     
     if [ ! -f "${wcc_done}" ]; then
-        echo "Running WCC (${WCC_CRIT})..."
+        log "Running WCC (${WCC_CRIT})..."
         mkdir -p "${out_wcc_dir}"
         { timeout "${TIMEOUT}" /usr/bin/time -v ./constrained-clustering/constrained_clustering \
             MincutOnly \
@@ -515,7 +523,7 @@ if [ "${IS_RUN_WCC}" -eq 1 ]; then
             --log-level 1; } 2> "${out_wcc_dir}/error.log"
         [ -f "${wcc_com}" ] && touch "${wcc_done}"
     else
-        echo "WCC already done."
+        log "WCC already done."
     fi
 
     if [ -f "${wcc_com}" ]; then
@@ -538,7 +546,7 @@ if [ "${IS_RUN_CM}" -eq 1 ]; then
     cm_done="${out_cm_dir}/done"
     
     if [ ! -f "${cm_done}" ]; then
-        echo "Running CM (${CM_CRIT})..."
+        log "Running CM (${CM_CRIT})..."
         if [[ ${algo} == leiden* ]]; then
             if [[ ${leiden_model} == cpm ]]; then
                 mkdir -p "${out_cm_dir}"
@@ -571,11 +579,11 @@ if [ "${IS_RUN_CM}" -eq 1 ]; then
                     --log-level 1; } 2> "${out_cm_dir}/error.log"
             fi
         else
-            echo "CM not implemented for ${algo}"
+            log "CM not implemented for ${algo}"
         fi
         [ -f "${cm_com}" ] && touch "${cm_done}"
     else
-        echo "CM already done."
+        log "CM already done."
     fi
 
     if [ -f "${cm_com}" ]; then
@@ -586,4 +594,4 @@ if [ "${IS_RUN_CM}" -eq 1 ]; then
     fi
 fi
 
-echo "[cd-done] ${algo} ${network_id} ${dataset_type}" >> complete.log
+log "[cd-done] ${algo} ${network_id} ${dataset_type}" >> complete.log

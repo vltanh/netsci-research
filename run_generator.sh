@@ -40,19 +40,30 @@
 #   - Comparison CSV     : data/synthetic_networks/stats/<generator>/<clustering_id>/<network_id>/<run_id>/comparison.csv
 # ==============================================================================
 
+# ==========================================
+# Helper Functions
+# ==========================================
+# Custom log function to prepend timestamps to output
+log() {
+    builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
+# ==========================================
+# Argument Parsing & Validation
+# ==========================================
 GENERATOR=$1
 NETWORK_ID=$2
 CLUSTERING_ID=$3
 RUN_ID=${4:-"0"} # Default to "0" if not provided
 
 if [ -z "$NETWORK_ID" ] || [ -z "$CLUSTERING_ID" ] || [ -z "$GENERATOR" ]; then
-    echo "Usage: $0 <generator> <network_id> <clustering_id> [run_id]"
+    log "Usage: $0 <generator> <network_id> <clustering_id> [run_id]"
     exit 1
 fi
 
 ACCEPTED_GENERATORS=("ec-sbm-v2" "ec-sbm-v2-SDG" "ec-sbm-v1.5")
 if [[ ! " ${ACCEPTED_GENERATORS[*]} " =~ " ${GENERATOR} " ]]; then
-    echo "Error: Unsupported generator '${GENERATOR}'. Accepted generators are: ${ACCEPTED_GENERATORS[*]}"
+    log "Error: Unsupported generator '${GENERATOR}'. Accepted generators are: ${ACCEPTED_GENERATORS[*]}"
     exit 1
 fi
 
@@ -83,7 +94,7 @@ run_stats() {
     local cluster_out_dir=$3
     local network_out_dir=$4
 
-    echo "Computing stats..."
+    log "Computing stats..."
     
     # 1. Compute Cluster-Dependent Stats
     if [ ! -f "${cluster_out_dir}/done" ]; then
@@ -93,7 +104,7 @@ run_stats() {
             --community "${com_file}" \
             --outdir "${cluster_out_dir}"; } 2> "${cluster_out_dir}/cluster_time.log"
     else
-        echo "Cluster stats already done."
+        log "Cluster stats already done."
     fi
 
     # 2. Compute Network-Only Stats
@@ -103,24 +114,24 @@ run_stats() {
             --network "${edge_file}" \
             --outdir "${network_out_dir}"; } 1> "${network_out_dir}/out.log" 2> "${network_out_dir}/network_time.log"
     else
-        echo "Network stats already done."
+        log "Network stats already done."
     fi
 }
 
 # ==========================================
 # Orchestration
 # ==========================================
-echo "============================"
-echo "Running: ${GENERATOR} on ${NETWORK_ID} (Clustering: ${CLUSTERING_ID}, Run: ${RUN_ID})"
+log "============================"
+log "Running: ${GENERATOR} on ${NETWORK_ID} (Clustering: ${CLUSTERING_ID}, Run: ${RUN_ID})"
 
-if [ ! -f "${INP_EDGE}" ]; then echo "CRITICAL: Input network missing: ${INP_EDGE}"; exit 1; fi
-if [ ! -f "${INP_COM}" ]; then echo "CRITICAL: Input clustering missing: ${INP_COM}"; exit 1; fi
+if [ ! -f "${INP_EDGE}" ]; then log "CRITICAL: Input network missing: ${INP_EDGE}"; exit 1; fi
+if [ ! -f "${INP_COM}" ]; then log "CRITICAL: Input clustering missing: ${INP_COM}"; exit 1; fi
 
 # ==========================================
 # 1. Run Generation Pipeline
 # ==========================================
 if [ ! -f "${OUT_DIR}/done" ]; then
-    echo "Generating synthetic network..."
+    log "Generating synthetic network..."
 
     if [[ "${GENERATOR}" == ec-sbm-v2* ]]; then
         # Generator Configuration Parsing
@@ -153,7 +164,7 @@ if [ ! -f "${OUT_DIR}/done" ]; then
             --input-clustering "${INP_COM}" \
             --output-dir "${OUT_DIR}"
     else
-        echo "Error: Unsupported generator."
+        log "Error: Unsupported generator."
         exit 1
     fi
 
@@ -161,11 +172,11 @@ if [ ! -f "${OUT_DIR}/done" ]; then
         touch "${OUT_DIR}/done"
     fi
 else
-    echo "Generation already done."
+    log "Generation already done."
 fi
 
 if [ ! -f "${OUT_DIR}/edge.csv" ]; then
-    echo "CRITICAL: Generation failed or timed out."
+    log "CRITICAL: Generation failed or timed out."
     exit 1
 fi
 
@@ -182,7 +193,7 @@ if [ ! -f "${STATS_DIR}/done" ]; then
     if [ -d "${SYNTH_CLUSTER_STATS_DIR}" ] && [ -d "${REFERENCE_STATS_DIR}" ] && \
        [ -d "${SYNTH_NETWORK_STATS_DIR}" ] && [ -d "${EMPIRICAL_NETWORK_STATS_DIR}" ]; then
         
-        echo "Comparing stats..."
+        log "Comparing stats..."
         mkdir -p "${STATS_DIR}"
         { /usr/bin/time -v python network_evaluation/compare/compare_pair.py \
             --cluster-1-folder "${SYNTH_CLUSTER_STATS_DIR}" \
@@ -196,20 +207,21 @@ if [ ! -f "${STATS_DIR}/done" ]; then
             touch "${STATS_DIR}/done"
         fi
     else
-        echo "Warning: Skipping comparison. One or more stat directories do not exist."
-        echo "  - Synth Cluster Stats: ${SYNTH_CLUSTER_STATS_DIR}"
-        echo "  - Synth Network Stats: ${SYNTH_NETWORK_STATS_DIR}"
-        echo "  - Ref Cluster Stats:   ${REFERENCE_STATS_DIR}"
-        echo "  - Ref Network Stats:   ${EMPIRICAL_NETWORK_STATS_DIR}"
+        log "Warning: Skipping comparison. One or more stat directories do not exist."
+        log "  - Synth Cluster Stats: ${SYNTH_CLUSTER_STATS_DIR}"
+        log "  - Synth Network Stats: ${SYNTH_NETWORK_STATS_DIR}"
+        log "  - Ref Cluster Stats:   ${REFERENCE_STATS_DIR}"
+        log "  - Ref Network Stats:   ${EMPIRICAL_NETWORK_STATS_DIR}"
     fi
 else
-    echo "Statistics comparison already done."
+    log "Statistics comparison already done."
 fi
 
 if [ ! -f "${STATS_DIR}/comparison.csv" ]; then
-    echo "CRITICAL: Comparison failed or timed out."
+    log "CRITICAL: Comparison failed or timed out."
     exit 1
 fi
 
-echo "Process completed for ${GENERATOR} on ${NETWORK_ID} (Clustering: ${CLUSTERING_ID}, Run: ${RUN_ID})"
-echo "[gen] ${GENERATOR} ${NETWORK_ID} ${CLUSTERING_ID} ${RUN_ID}" >> complete.log
+log "Process completed for ${GENERATOR} on ${NETWORK_ID} (Clustering: ${CLUSTERING_ID}, Run: ${RUN_ID})"
+
+log "[gen] ${GENERATOR} ${NETWORK_ID} ${CLUSTERING_ID} ${RUN_ID}" >> complete.log
