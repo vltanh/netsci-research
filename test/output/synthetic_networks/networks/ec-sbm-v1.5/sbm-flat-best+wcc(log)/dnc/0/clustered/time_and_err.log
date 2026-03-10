@@ -1,21 +1,21 @@
 	Command being timed: "python /u/vltanh/ecsbmv2/network_generation/src/ec-sbm/v1.5/gen_clustered.py --node-id test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/node_id.csv --cluster-id test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/cluster_id.csv --assignment test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/assignment.csv --degree test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/degree.csv --mincut test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/mincut.csv --edge-counts test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/edge_counts.csv --output-folder test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered"
-	User time (seconds): 2.45
-	System time (seconds): 0.54
-	Percent of CPU this job got: 106%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.82
+	User time (seconds): 2.54
+	System time (seconds): 0.59
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.12
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 209748
+	Maximum resident set size (kbytes): 207756
 	Average resident set size (kbytes): 0
-	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 51239
-	Voluntary context switches: 4022
-	Involuntary context switches: 520
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 54901
+	Voluntary context switches: 4019
+	Involuntary context switches: 512
 	Swaps: 0
 	File system inputs: 0
-	File system outputs: 712
+	File system outputs: 640
 	Socket messages sent: 0
 	Socket messages received: 0
 	Signals delivered: 0

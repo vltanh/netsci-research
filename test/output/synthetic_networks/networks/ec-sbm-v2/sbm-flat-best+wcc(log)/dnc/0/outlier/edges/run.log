@@ -1,17 +1,17 @@
-2026-03-09 22:53:37,633 - INFO - Starting Residual SBM Generation...
-2026-03-09 22:53:37,633 - INFO - Correction Mode: rewire | Outlier Mode: combined
-2026-03-09 22:53:37,744 - INFO - Setup complete: 0.1107 seconds
-2026-03-09 22:53:37,755 - INFO - Initial bad edges before rewiring: 1993
-2026-03-09 22:53:37,818 - INFO - After attempt 1: 644 bad edges remain.
-2026-03-09 22:53:37,827 - INFO - After attempt 2: 632 bad edges remain.
-2026-03-09 22:53:37,830 - INFO - After attempt 3: 628 bad edges remain.
-2026-03-09 22:53:37,831 - INFO - After attempt 4: 628 bad edges remain.
-2026-03-09 22:53:37,832 - INFO - After attempt 5: 625 bad edges remain.
-2026-03-09 22:53:37,833 - INFO - After attempt 6: 625 bad edges remain.
-2026-03-09 22:53:37,837 - INFO - After attempt 7: 622 bad edges remain.
-2026-03-09 22:53:37,838 - INFO - After attempt 8: 622 bad edges remain.
-2026-03-09 22:53:37,842 - INFO - After attempt 9: 617 bad edges remain.
-2026-03-09 22:53:37,851 - INFO - After attempt 10: 607 bad edges remain.
-2026-03-09 22:53:37,851 - WARNING - Finished 10 retries. 607 bad edges remain unresolved and will be dropped.
-2026-03-09 22:53:37,873 - INFO - Generation (7208 edges): 0.1285 seconds
-2026-03-09 22:53:37,880 - INFO - Complete.
+2026-03-10 10:38:21,131 - INFO - Starting Residual SBM Generation...
+2026-03-10 10:38:21,131 - INFO - Correction Mode: rewire | Outlier Mode: combined
+2026-03-10 10:38:21,279 - INFO - Setup complete: 0.1478 seconds
+2026-03-10 10:38:21,621 - INFO - Initial bad edges before rewiring: 1963
+2026-03-10 10:38:21,682 - INFO - After attempt 1: 585 bad edges remain.
+2026-03-10 10:38:21,686 - INFO - After attempt 2: 579 bad edges remain.
+2026-03-10 10:38:21,690 - INFO - After attempt 3: 573 bad edges remain.
+2026-03-10 10:38:21,694 - INFO - After attempt 4: 568 bad edges remain.
+2026-03-10 10:38:21,696 - INFO - After attempt 5: 564 bad edges remain.
+2026-03-10 10:38:21,698 - INFO - After attempt 6: 562 bad edges remain.
+2026-03-10 10:38:21,704 - INFO - After attempt 7: 550 bad edges remain.
+2026-03-10 10:38:21,706 - INFO - After attempt 8: 548 bad edges remain.
+2026-03-10 10:38:21,707 - INFO - After attempt 9: 548 bad edges remain.
+2026-03-10 10:38:21,713 - INFO - After attempt 10: 542 bad edges remain.
+2026-03-10 10:38:21,713 - WARNING - Finished 10 retries. 542 bad edges remain unresolved and will be dropped.
+2026-03-10 10:38:22,481 - INFO - Generation (7059 edges): 1.2018 seconds
+2026-03-10 10:38:22,489 - INFO - Complete.

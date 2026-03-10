@@ -1,18 +1,18 @@
 	Command being timed: "python network_evaluation/network_stats/compute_cluster_stats.py --network test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv --community test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-dc+wcc(sqrt)/dnc/0/com.csv --outdir test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/stats/sbm-flat-dc+wcc(sqrt)/dnc/0"
-	User time (seconds): 1.35
-	System time (seconds): 0.18
-	Percent of CPU this job got: 158%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.97
+	User time (seconds): 1.55
+	System time (seconds): 0.22
+	Percent of CPU this job got: 179%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.98
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 71092
+	Maximum resident set size (kbytes): 71168
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 16290
-	Voluntary context switches: 1506
-	Involuntary context switches: 272
+	Minor (reclaiming a frame) page faults: 17793
+	Voluntary context switches: 1508
+	Involuntary context switches: 342
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 176

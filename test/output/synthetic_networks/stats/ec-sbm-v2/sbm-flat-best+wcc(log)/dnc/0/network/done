@@ -1,0 +1,11 @@
+5063215676ddc1bd32f66d053f27f2b0a25bcab4d3b0e97f30213651deb4a5a9  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+5ccf4ac5ecc2574831dbc2ee7d70e4e85df984cef919f9ab36f154141b464442  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/concomp_sizes.distribution
+26eb147cd78e678251dc1ddbfae0c01955fb14f997a0a5ac313ee906e482f5b9  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/degree.distribution
+aa3235c44a5a5ee701d5a256186db142cfa58b9d934b1007e046bfbe3d8b6c71  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/kcore.distribution
+8c16fd12aa248f9b4b51b3d97fe20c6c0515c904f882494c51634b6d2f7bed36  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/local_ccoeff_nodes.distribution
+ba4447dbf7ba9574026301a354c83b6e87a0f2019318c764e618ad4c341b3a1f  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/network_time.log
+ef4e8b7f614ad29a07ab32df0dbf7360c116eeea9a53a8efae357d8fbb4da286  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/node.idx
+88a5b163d87530c33b332dc944d93f58a773559e6091d9840d18caedaa9865e5  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/out.log
+6dd0460b306beb089f28bd15ad5845bc5315a3beb1253cee8917a9fee06f63e7  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/pagerank.distribution
+7c2c2f1cedc82a7bd1f6716acc4f4776cbd66992771b623770a26c485cc63f24  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/run.log
+175a009cba1eb880c713adccea4c33ed94083362f2d707868d1f22567878f38c  test/output/synthetic_networks//stats/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/network/stats.json

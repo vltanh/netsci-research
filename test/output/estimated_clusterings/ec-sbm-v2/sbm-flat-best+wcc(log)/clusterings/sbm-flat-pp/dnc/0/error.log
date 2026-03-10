@@ -1,18 +1,18 @@
 	Command being timed: "python /u/vltanh/ecsbmv2/community_detection/src/sbm/run_sbm.py --edgelist test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv --output-directory test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp/dnc/0 --method flat-pp"
-	User time (seconds): 3.43
-	System time (seconds): 0.63
-	Percent of CPU this job got: 100%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:04.02
+	User time (seconds): 2.99
+	System time (seconds): 0.95
+	Percent of CPU this job got: 91%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:04.31
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 995660
+	Maximum resident set size (kbytes): 996588
 	Average resident set size (kbytes): 0
-	Major (requiring I/O) page faults: 1
-	Minor (reclaiming a frame) page faults: 55926
-	Voluntary context switches: 4214
-	Involuntary context switches: 349
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 254275
+	Voluntary context switches: 4212
+	Involuntary context switches: 507
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 64

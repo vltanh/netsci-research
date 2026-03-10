@@ -1,18 +1,18 @@
 	Command being timed: "python /u/vltanh/ecsbmv2/network_generation/src/ec-sbm/v1.5/setup.py --edgelist test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean/edge.csv --clustering test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean/com.csv --output-folder test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup --generator ecsbm"
-	User time (seconds): 1.53
-	System time (seconds): 0.21
-	Percent of CPU this job got: 186%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.94
+	User time (seconds): 1.54
+	System time (seconds): 0.22
+	Percent of CPU this job got: 184%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.95
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 72440
+	Maximum resident set size (kbytes): 71936
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 16738
-	Voluntary context switches: 1480
-	Involuntary context switches: 369
+	Minor (reclaiming a frame) page faults: 17996
+	Voluntary context switches: 1481
+	Involuntary context switches: 782
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 80

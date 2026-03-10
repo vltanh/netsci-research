@@ -1,15 +1,15 @@
 {
     "n_nodes": 906,
-    "n_edges": 10464,
-    "n_concomp": 28,
-    "mean_degree": 23.09933774834437,
-    "deg_assort": -0.09091562585536364,
-    "mean_kcore": 14.512141280353202,
-    "global_ccoeff": 0.504732073409153,
-    "local_ccoeff": 0.36299153035657733,
+    "n_edges": 10460,
+    "n_concomp": 16,
+    "mean_degree": 23.090507726269315,
+    "deg_assort": -0.08629468847999565,
+    "mean_kcore": 14.605960264900663,
+    "global_ccoeff": 0.5139980149437059,
+    "local_ccoeff": 0.3656655994147523,
     "pseudo_diameter": 8.0,
-    "char_time": 50.09323815009163,
-    "node_percolation_targeted": 0.4775753012782091,
-    "node_percolation_random": 0.37835596879279176,
-    "frac_giant_ccomp": 0.9326710816777042
+    "char_time": 38.74996603935984,
+    "node_percolation_targeted": 0.48410766584311604,
+    "node_percolation_random": 0.4045948277122348,
+    "frac_giant_ccomp": 0.9591611479028698
 }

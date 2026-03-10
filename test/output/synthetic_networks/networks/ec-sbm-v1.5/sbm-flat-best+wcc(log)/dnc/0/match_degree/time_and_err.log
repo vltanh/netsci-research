@@ -1,18 +1,18 @@
 	Command being timed: "python /u/vltanh/ecsbmv2/network_generation/src/ec-sbm/v1.5/match_degree.py --input-edgelist test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/outlier/edge.csv --ref-edgelist test/input/dnc/dnc.csv --ref-clustering test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv --output-folder test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/match_degree"
-	User time (seconds): 1.58
-	System time (seconds): 0.19
-	Percent of CPU this job got: 187%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.95
+	User time (seconds): 1.53
+	System time (seconds): 0.22
+	Percent of CPU this job got: 188%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.93
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 70808
+	Maximum resident set size (kbytes): 71828
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 15876
-	Voluntary context switches: 1455
-	Involuntary context switches: 487
+	Minor (reclaiming a frame) page faults: 17394
+	Voluntary context switches: 1454
+	Involuntary context switches: 537
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 72

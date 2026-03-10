@@ -1,0 +1,14 @@
+5063215676ddc1bd32f66d053f27f2b0a25bcab4d3b0e97f30213651deb4a5a9  test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+d9fcf020788811f6b62d27ac51414df72e2fdbab9fe030a0e00ddc514a9e1167  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+54ac1adbf800692ab7e70367f8e26533c7a1b71127fef4758ef684e2c13d2203  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc+wcc(sqrt)/dnc/0/com.csv
+3671a29b6b4126a603549e307e4dedae82462b7816de91747fb86dbcbc640bcd  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/error.log
+63841354540359975f8d8ce258b804618eef2f98a0341940c0a54378aa1093e3  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.agri
+a893c69102e5ada9feb17689d32371f2c385f02a793fa34ef93ae6c0794ec104  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.ami
+a9c32ad64a97fa27d3f277b87ad00d3983473eb3307f0468ffe43d476254a4d8  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.ari
+201607b08cb661bc2028a7605acb650f544e5a7c308b29b4a367a62d7c9b5a5d  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.f1_score
+09ca49c1eed9ef452f14cc7b26ef53fc50732e1ff9341bdab36aaf9ff74c9424  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.fnr
+852cbed400b0db2334fb8cbdc6f1fb240cc57359a2d13ee0883d00ef21ce08be  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.fpr
+b1b07cf1d4ca29cf43944afb6eb7f63d3b2859e2c3edae99e045c4effc6a5179  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.nmi
+8176752a2ac006eb05b67c8fe57659cd03d733993b17a619690eaa45f60fa6c8  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.node_coverage
+7d6f2c41448dfa15653e767c02ec1784667272ee497e4778a6ad73ea3a222c1d  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.precision
+06cf9e672ffd0b6f89a6c3e3a14b08f3cad976d419b3fd90825d060038aa521b  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+wcc(sqrt)/dnc/0/result.recall

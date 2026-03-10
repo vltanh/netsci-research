@@ -1,0 +1,9 @@
+dd660eb0ebdcc5a9be2b7cf6cfd1ae334a1906803f2ce7da238f77f7c2a62d6f  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/node_id.csv
+b2beaa650544d0d41368909788ae684aa6c377e9066950cceab1a63e3e09c312  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/cluster_id.csv
+40e9b9873dc10bb65ec7a7a23283bfb8ca632e84c18b624c6a80bbef246544f9  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/assignment.csv
+92880fbafa50de7bf197b8128fda4b8e02b7918fff3d301543dcd838d2c206ac  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/degree.csv
+646bccb8e34e900072060d9cb8965d7cb9edcfff98324b938db5700941d084e3  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/mincut.csv
+d6c091481aa981e2aec69aa4356ea21e5b90a6eef35c41f3e711b719a6ec538a  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/setup/edge_counts.csv
+676adc5c5ad27032ad226623462147774554b3154b8fdd6d8279507010ebf4c4  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/edge.csv
+d5f059566755f97e2f1959e743eb79db4045f0b203a818e7541589bb8cfab8c6  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/run.log
+77e2eabb4b0ce7519d0924a46894fbf27906f10eda1e8b78d6ccc7c7c26dc2e8  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/time_and_err.log

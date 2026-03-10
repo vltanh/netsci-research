@@ -1,8 +1,8 @@
-2026-03-09 22:53:40,092 - INFO - --- Starting Stage 6: Degree Matching (TRUE_GREEDY mode) ---
-2026-03-09 22:53:40,107 - INFO - Loaded reference topologies: 0.0146s
-2026-03-09 22:53:40,115 - INFO - Subtracted existing edges: 0.0083s
-2026-03-09 22:53:40,115 - INFO - Starting True Dynamic Greedy matching algorithm...
-2026-03-09 22:53:40,115 - INFO - Initial missing stubs: 1566 (Target edges: 783)
-2026-03-09 22:53:40,126 - WARNING - Finished with 5 gridlocked nodes.
-2026-03-09 22:53:40,126 - INFO - Degree matching complete. Added 772 edges: 0.0113s
-2026-03-09 22:53:40,133 - INFO - Exported edgelist: 0.0061s
+2026-03-10 10:38:25,683 - INFO - --- Starting Stage 6: Degree Matching (TRUE_GREEDY mode) ---
+2026-03-10 10:38:25,699 - INFO - Loaded reference topologies: 0.0156s
+2026-03-10 10:38:25,708 - INFO - Subtracted existing edges: 0.0091s
+2026-03-10 10:38:25,708 - INFO - Starting True Dynamic Greedy matching algorithm...
+2026-03-10 10:38:25,708 - INFO - Initial missing stubs: 1326 (Target edges: 663)
+2026-03-10 10:38:25,716 - WARNING - Finished with 4 gridlocked nodes.
+2026-03-10 10:38:25,716 - INFO - Degree matching complete. Added 648 edges: 0.0078s
+2026-03-10 10:38:25,722 - INFO - Exported edgelist: 0.0063s

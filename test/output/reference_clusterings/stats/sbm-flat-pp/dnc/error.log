@@ -1,18 +1,18 @@
 	Command being timed: "python network_evaluation/network_stats/compute_cluster_stats.py --network test/input/dnc/dnc.csv --community test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/com.csv --outdir test/output/reference_clusterings/stats/sbm-flat-pp/dnc"
-	User time (seconds): 0.96
-	System time (seconds): 0.20
-	Percent of CPU this job got: 119%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.97
+	User time (seconds): 1.58
+	System time (seconds): 0.21
+	Percent of CPU this job got: 173%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.03
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 71432
+	Maximum resident set size (kbytes): 71424
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 16827
-	Voluntary context switches: 1510
-	Involuntary context switches: 203
+	Minor (reclaiming a frame) page faults: 17817
+	Voluntary context switches: 1507
+	Involuntary context switches: 397
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 160
