@@ -8,8 +8,8 @@
     "global_ccoeff": 0.5482011904886444,
     "local_ccoeff": 0.49440857829328555,
     "pseudo_diameter": 8.0,
-    "char_time": 40.410835642831344,
+    "char_time": 40.41083564283265,
     "node_percolation_targeted": 0.48071843827512434,
-    "node_percolation_random": 0.39565540497736457,
+    "node_percolation_random": 0.38177760234687563,
     "frac_giant_ccomp": 0.9370860927152318
 }
