@@ -1,0 +1,15 @@
+{
+    "n_nodes": 906,
+    "n_edges": 10429,
+    "n_concomp": 25,
+    "mean_degree": 23.02207505518764,
+    "deg_assort": -0.12489244283998928,
+    "mean_kcore": 15.990066225165563,
+    "global_ccoeff": 0.5482011904886444,
+    "local_ccoeff": 0.49440857829328555,
+    "pseudo_diameter": 8.0,
+    "char_time": 40.41083564284194,
+    "node_percolation_targeted": 0.48071843827512434,
+    "node_percolation_random": 0.38666505855006356,
+    "frac_giant_ccomp": 0.9370860927152318
+}
