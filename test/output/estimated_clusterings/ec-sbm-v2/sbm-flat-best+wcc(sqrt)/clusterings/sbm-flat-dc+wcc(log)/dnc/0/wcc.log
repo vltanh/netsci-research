@@ -3,7 +3,7 @@
 [INFO][0-0:0:0](t=0s) Loading the initial graph
 [INFO][0-0:0:0](t=0s) Finished loading the initial graph
 [INFO][0-0:0:0](t=0s) Iteration number: 0
-[INFO][0-0:0:0](t=0s) 71 [connected components / clusters] to be mincut
+[INFO][0-0:0:0](t=0s) 66 [connected components / clusters] to be mincut
 [INFO][0-0:0:0](t=0s) all clusters are (well) connected
-[INFO][0-0:0:0](t=0s) Total number of iterations: 22
+[INFO][0-0:0:0](t=0s) Total number of iterations: 27
 [INFO][0-0:0:0](t=0s) Writing output to: test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-dc+wcc(log)/dnc/0/com.csv

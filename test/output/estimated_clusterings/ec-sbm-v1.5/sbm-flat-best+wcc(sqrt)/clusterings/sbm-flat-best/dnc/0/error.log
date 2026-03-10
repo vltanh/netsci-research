@@ -1,0 +1,23 @@
+	Command being timed: "python /u/vltanh/ecsbmv2/community_detection/src/sbm/choose_best_sbm.py --entropy_files test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-dc/dnc/0/entropy.txt test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-ndc/dnc/0/entropy.txt test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-pp/dnc/0/entropy.txt --com_files test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-dc/dnc/0/com.csv test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-ndc/dnc/0/com.csv test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-pp/dnc/0/com.csv --model_names sbm-flat-dc sbm-flat-ndc sbm-flat-pp --out_dir test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-best/dnc/0"
+	User time (seconds): 1.55
+	System time (seconds): 0.18
+	Percent of CPU this job got: 163%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.06
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 72072
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 11
+	Minor (reclaiming a frame) page faults: 15825
+	Voluntary context switches: 1535
+	Involuntary context switches: 327
+	Swaps: 0
+	File system inputs: 2800
+	File system outputs: 24
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

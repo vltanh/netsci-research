@@ -1,18 +1,18 @@
 	Command being timed: "/u/vltanh/ecsbmv2/community_detection/constrained-clustering/constrained_clustering MincutOnly --connectedness-criterion 1log_10(n) --edgelist test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/edge.csv --existing-clustering test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-pp/dnc/0/com.csv --num-processors 1 --output-file test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-pp+wcc(log)/dnc/0/com.csv --log-file test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-pp+wcc(log)/dnc/0/wcc.log --log-level 1"
-	User time (seconds): 0.06
+	User time (seconds): 0.07
 	System time (seconds): 0.00
-	Percent of CPU this job got: 77%
+	Percent of CPU this job got: 83%
 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.09
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 11700
+	Maximum resident set size (kbytes): 11392
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 927
-	Voluntary context switches: 51
-	Involuntary context switches: 7
+	Minor (reclaiming a frame) page faults: 897
+	Voluntary context switches: 43
+	Involuntary context switches: 8
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 24

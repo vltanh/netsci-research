@@ -1,0 +1,9 @@
+[INFO][0-0:0:0](t=0s) Running with mode (mincut of each cluster has to be greater than 1.000000 times log base 10.000000of n
+[INFO][0-0:0:0](t=0s) Parsing connectedness criterion
+[INFO][0-0:0:0](t=0s) Loading the initial graph
+[INFO][0-0:0:0](t=0s) Finished loading the initial graph
+[INFO][0-0:0:0](t=0s) Iteration number: 0
+[INFO][0-0:0:0](t=0s) 55 [connected components / clusters] to be mincut
+[INFO][0-0:0:0](t=0s) all clusters are (well) connected
+[INFO][0-0:0:0](t=0s) Total number of iterations: 247
+[INFO][0-0:0:0](t=0s) Writing output to: test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(sqrt)/clusterings/sbm-flat-pp+wcc(log)/dnc/0/com.csv
