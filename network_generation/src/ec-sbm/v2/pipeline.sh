@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Default values
 TIMEOUT="3d"
 SKIP_STAGE_1=0
 SKIP_STAGE_2=0
@@ -10,6 +13,9 @@ while [[ "$#" -gt 0 ]]; do
         --input-edgelist) INPUT_EDGELIST="$2"; shift ;;
         --input-clustering) INPUT_CLUSTERING="$2"; shift ;;
         --output-dir) OUTPUT_DIR="$2"; shift ;;
+        --outlier-mode) OUTLIER_MODE="$2"; shift ;;
+        --edge-correction) EDGE_CORRECTION="$2"; shift ;;
+        --algorithm) ALGORITHM="$2"; shift ;;
         --timeout) TIMEOUT="$2"; shift ;;
         --existing-clustered) SKIP_STAGE_1=1 ;;
         --existing-outlier) SKIP_STAGE_1=1; SKIP_STAGE_2=1 ;;
@@ -70,13 +76,13 @@ mark_done() {
     echo "Success [${stage_name}]: All required files validated. Marked as done."
 }
 
-# ==========================================
-# STAGE 1: Clustered Generation
-# ==========================================
 # Define cross-stage directories
 STG1_DIR="${OUTPUT_DIR}/clustered"
 STG2_DIR="${OUTPUT_DIR}/outlier"
-    
+
+# ==========================================
+# STAGE 1: Core Clustered Generation
+# ==========================================
 if [ "${SKIP_STAGE_1}" -eq 0 ]; then
     echo "=== Starting Stage 1: Core Clustered Generation ==="
     STG1_CLEAN_DIR="${OUTPUT_DIR}/clustered/clean"
@@ -85,7 +91,7 @@ if [ "${SKIP_STAGE_1}" -eq 0 ]; then
 
     # 1a. Clean Outliers
     if ! is_step_done "${STG1_CLEAN_DIR}/done" "${STG1_CLEAN_DIR}/edge.csv" "${STG1_CLEAN_DIR}/com.csv"; then
-        { timeout "${TIMEOUT}" /usr/bin/time -v python src/generate/ec-sbm/v1.5/clean_outlier.py \
+        { timeout "${TIMEOUT}" /usr/bin/time -v python "${SCRIPT_DIR}/clean_outlier.py" \
             --edgelist "${INPUT_EDGELIST}" \
             --clustering "${INPUT_CLUSTERING}" \
             --output-folder "${STG1_CLEAN_DIR}"; } 2> "${STG1_CLEAN_DIR}/time_and_err.log"
@@ -96,7 +102,7 @@ if [ "${SKIP_STAGE_1}" -eq 0 ]; then
 
     # 1b. Setup Profiling
     if ! is_step_done "${STG1_SETUP_DIR}/done" "${STG1_SETUP_DIR}/node_id.csv" "${STG1_SETUP_DIR}/cluster_id.csv" "${STG1_SETUP_DIR}/assignment.csv" "${STG1_SETUP_DIR}/degree.csv" "${STG1_SETUP_DIR}/mincut.csv" "${STG1_SETUP_DIR}/edge_counts.csv"; then
-        { timeout "${TIMEOUT}" /usr/bin/time -v python src/generate/ec-sbm/v1.5/setup.py \
+        { timeout "${TIMEOUT}" /usr/bin/time -v python "${SCRIPT_DIR}/setup.py" \
             --edgelist "${STG1_CLEAN_DIR}/edge.csv" \
             --clustering "${STG1_CLEAN_DIR}/com.csv" \
             --output-folder "${STG1_SETUP_DIR}" \
@@ -108,7 +114,7 @@ if [ "${SKIP_STAGE_1}" -eq 0 ]; then
 
     # 1c. Generate Clustered
     if ! is_step_done "${STG1_DIR}/done" "${STG1_DIR}/edge.csv"; then
-        { timeout "${TIMEOUT}" /usr/bin/time -v python src/generate/ec-sbm/v1.5/gen_clustered.py \
+        { timeout "${TIMEOUT}" /usr/bin/time -v python "${SCRIPT_DIR}/gen_clustered.py" \
             --node-id "${STG1_SETUP_DIR}/node_id.csv" \
             --cluster-id "${STG1_SETUP_DIR}/cluster_id.csv" \
             --assignment "${STG1_SETUP_DIR}/assignment.csv" \
@@ -128,9 +134,8 @@ else
     fi
 fi
 
-
 # ==========================================
-# STAGE 2: Outlier Generation & First Merge
+# STAGE 2: Outlier Generation & Merge
 # ==========================================
 if [ "${SKIP_STAGE_2}" -eq 0 ]; then
     echo "=== Starting Stage 2: Outlier Generation & Merge ==="
@@ -139,9 +144,12 @@ if [ "${SKIP_STAGE_2}" -eq 0 ]; then
 
     # 2a. Generate Outliers
     if ! is_step_done "${STG2_OUTLIER_DIR}/done" "${STG2_OUTLIER_DIR}/edge_outlier.csv"; then
-        { timeout "${TIMEOUT}" /usr/bin/time -v python src/generate/ec-sbm/v1.5/gen_outlier.py \
-            --edgelist "${INPUT_EDGELIST}" \
-            --clustering "${INPUT_CLUSTERING}" \
+        { timeout "${TIMEOUT}" /usr/bin/time -v python "${SCRIPT_DIR}/gen_outlier.py" \
+            --orig-edgelist "${INPUT_EDGELIST}" \
+            --orig-clustering "${INPUT_CLUSTERING}" \
+            --exist-edgelist "${STG1_DIR}/edge.csv" \
+            --outlier-mode "${OUTLIER_MODE}" \
+            --edge-correction "${EDGE_CORRECTION}" \
             --output-folder "${STG2_OUTLIER_DIR}"; } 2> "${STG2_OUTLIER_DIR}/time_and_err.log"
         mark_done "${STG2_OUTLIER_DIR}/done" "Stage 2a (Outlier Gen)" "${STG2_OUTLIER_DIR}/edge_outlier.csv"
     else
@@ -150,7 +158,7 @@ if [ "${SKIP_STAGE_2}" -eq 0 ]; then
 
     # 2b. Combine Clustered + Outliers
     if ! is_step_done "${STG2_DIR}/done" "${STG2_DIR}/edge.csv" "${STG2_DIR}/sources.json"; then
-        { timeout "${TIMEOUT}" /usr/bin/time -v python src/generate/ec-sbm/v1.5/combine_edgelists.py \
+        { timeout "${TIMEOUT}" /usr/bin/time -v python "${SCRIPT_DIR}/combine_edgelists.py" \
             --edgelist-1 "${STG1_DIR}/edge.csv" \
             --name-1 "clustered" \
             --edgelist-2 "${STG2_OUTLIER_DIR}/edge_outlier.csv" \
@@ -179,10 +187,11 @@ mkdir -p "${STG3_MATCH_DIR}"
 
 # 3a. Match Degrees
 if ! is_step_done "${STG3_MATCH_DIR}/done" "${STG3_MATCH_DIR}/degree_matching_edge.csv"; then
-    { timeout "${TIMEOUT}" /usr/bin/time -v python src/generate/ec-sbm/v1.5/match_degree.py \
+    { timeout "${TIMEOUT}" /usr/bin/time -v python "${SCRIPT_DIR}/match_degree.py" \
         --input-edgelist "${STG2_DIR}/edge.csv" \
         --ref-edgelist "${INPUT_EDGELIST}" \
         --ref-clustering "${INPUT_CLUSTERING}" \
+        --algorithm "${ALGORITHM}" \
         --output-folder "${STG3_MATCH_DIR}"; } 2> "${STG3_MATCH_DIR}/time_and_err.log"
     mark_done "${STG3_MATCH_DIR}/done" "Stage 3a (Degree Match)" "${STG3_MATCH_DIR}/degree_matching_edge.csv"
 else
@@ -191,14 +200,14 @@ fi
 
 # 3b. Final Combination
 if ! is_step_done "${STG3_DIR}/done" "${STG3_DIR}/edge.csv" "${STG3_DIR}/sources.json"; then
-    { timeout "${TIMEOUT}" /usr/bin/time -v python src/generate/ec-sbm/v1.5/combine_edgelists.py \
+    { timeout "${TIMEOUT}" /usr/bin/time -v python "${SCRIPT_DIR}/combine_edgelists.py" \
         --edgelist-1 "${STG2_DIR}/edge.csv" \
         --json-1 "${STG2_DIR}/sources.json" \
         --edgelist-2 "${STG3_MATCH_DIR}/degree_matching_edge.csv" \
         --name-2 "match_degree" \
         --output-folder "${STG3_DIR}" \
         --output-filename "edge.csv"; } 2> "${STG3_DIR}/time_and_err.log"
-mark_done "${STG3_DIR}/done" "Stage 3b (Final Combine)" "${STG3_DIR}/edge.csv" "${STG3_DIR}/sources.json"
+    mark_done "${STG3_DIR}/done" "Stage 3b (Final Combine)" "${STG3_DIR}/edge.csv" "${STG3_DIR}/sources.json"
 else
     echo "Skipping Stage 3b: Already done."
 fi

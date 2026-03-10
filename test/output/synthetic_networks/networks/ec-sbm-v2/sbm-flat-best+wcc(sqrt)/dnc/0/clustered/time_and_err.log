@@ -1,21 +1,21 @@
-	Command being timed: "python src/generate/ec-sbm/v2/gen_clustered.py --node-id test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/node_id.csv --cluster-id test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/cluster_id.csv --assignment test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/assignment.csv --degree test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/degree.csv --mincut test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/mincut.csv --edge-counts test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/edge_counts.csv --output-folder test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered"
-	User time (seconds): 1.70
-	System time (seconds): 0.28
-	Percent of CPU this job got: 75%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.65
+	Command being timed: "python /u/vltanh/ecsbmv2/network_generation/src/ec-sbm/v2/gen_clustered.py --node-id test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/node_id.csv --cluster-id test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/cluster_id.csv --assignment test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/assignment.csv --degree test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/degree.csv --mincut test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/mincut.csv --edge-counts test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered/setup/edge_counts.csv --output-folder test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(sqrt)/dnc/0/clustered"
+	User time (seconds): 1.68
+	System time (seconds): 0.32
+	Percent of CPU this job got: 26%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.62
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 79164
+	Maximum resident set size (kbytes): 77596
 	Average resident set size (kbytes): 0
-	Major (requiring I/O) page faults: 47
-	Minor (reclaiming a frame) page faults: 18152
-	Voluntary context switches: 2837
-	Involuntary context switches: 572
+	Major (requiring I/O) page faults: 45
+	Minor (reclaiming a frame) page faults: 17884
+	Voluntary context switches: 2801
+	Involuntary context switches: 765
 	Swaps: 0
-	File system inputs: 12152
-	File system outputs: 520
+	File system inputs: 12064
+	File system outputs: 480
 	Socket messages sent: 0
 	Socket messages received: 0
 	Signals delivered: 0

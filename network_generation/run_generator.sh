@@ -225,7 +225,7 @@ if [ ! -f "${OUT_DIR}/done" ]; then
         fi
 
         mkdir -p "${OUT_DIR}"
-        "${SCRIPT_DIR}/src/generate/ec-sbm/v2/pipeline.sh" \
+        "${SCRIPT_DIR}/src/ec-sbm/v2/pipeline.sh" \
             --input-edgelist "${INP_EDGE}" \
             --input-clustering "${INP_COM}" \
             --output-dir "${OUT_DIR}" \
@@ -234,7 +234,7 @@ if [ ! -f "${OUT_DIR}/done" ]; then
             --algorithm "${MATCH_ALGO}"
     elif [[ "${generator}" == "ec-sbm-v1.5" ]]; then
         mkdir -p "${OUT_DIR}"
-        "${SCRIPT_DIR}/src/generate/ec-sbm/v1.5/pipeline.sh" \
+        "${SCRIPT_DIR}/src/ec-sbm/v1.5/pipeline.sh" \
             --input-edgelist "${INP_EDGE}" \
             --input-clustering "${INP_COM}" \
             --output-dir "${OUT_DIR}"
