@@ -1,0 +1,17 @@
+2026-03-09 22:53:37,633 - INFO - Starting Residual SBM Generation...
+2026-03-09 22:53:37,633 - INFO - Correction Mode: rewire | Outlier Mode: combined
+2026-03-09 22:53:37,744 - INFO - Setup complete: 0.1107 seconds
+2026-03-09 22:53:37,755 - INFO - Initial bad edges before rewiring: 1993
+2026-03-09 22:53:37,818 - INFO - After attempt 1: 644 bad edges remain.
+2026-03-09 22:53:37,827 - INFO - After attempt 2: 632 bad edges remain.
+2026-03-09 22:53:37,830 - INFO - After attempt 3: 628 bad edges remain.
+2026-03-09 22:53:37,831 - INFO - After attempt 4: 628 bad edges remain.
+2026-03-09 22:53:37,832 - INFO - After attempt 5: 625 bad edges remain.
+2026-03-09 22:53:37,833 - INFO - After attempt 6: 625 bad edges remain.
+2026-03-09 22:53:37,837 - INFO - After attempt 7: 622 bad edges remain.
+2026-03-09 22:53:37,838 - INFO - After attempt 8: 622 bad edges remain.
+2026-03-09 22:53:37,842 - INFO - After attempt 9: 617 bad edges remain.
+2026-03-09 22:53:37,851 - INFO - After attempt 10: 607 bad edges remain.
+2026-03-09 22:53:37,851 - WARNING - Finished 10 retries. 607 bad edges remain unresolved and will be dropped.
+2026-03-09 22:53:37,873 - INFO - Generation (7208 edges): 0.1285 seconds
+2026-03-09 22:53:37,880 - INFO - Complete.

@@ -1,0 +1,8 @@
+2026-03-09 22:54:18,537 - INFO - Generation of Outlier Subnetwork
+2026-03-09 22:54:18,537 - INFO - Network: test/input/dnc/dnc.csv
+2026-03-09 22:54:18,537 - INFO - Clustering: test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+2026-03-09 22:54:18,538 - INFO - Output folder: test/output/synthetic_networks/networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/outlier/edges
+2026-03-09 22:54:18,561 - INFO - Setup: 0.0230 seconds
+2026-03-09 22:54:18,563 - INFO - Generation of outlier subgraph: 0.0022 seconds
+2026-03-09 22:54:18,569 - INFO - Post-process: 0.0055 seconds
+2026-03-09 22:54:18,569 - INFO - Complete.

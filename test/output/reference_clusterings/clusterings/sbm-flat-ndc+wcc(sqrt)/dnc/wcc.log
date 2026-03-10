@@ -3,7 +3,7 @@
 [INFO][0-0:0:0](t=0s) Loading the initial graph
 [INFO][0-0:0:0](t=0s) Finished loading the initial graph
 [INFO][0-0:0:0](t=0s) Iteration number: 0
-[INFO][0-0:0:0](t=0s) 88 [connected components / clusters] to be mincut
+[INFO][0-0:0:0](t=0s) 86 [connected components / clusters] to be mincut
 [INFO][0-0:0:0](t=0s) all clusters are (well) connected
-[INFO][0-0:0:0](t=0s) Total number of iterations: 2
-[INFO][0-0:0:0](t=0s) Writing output to: test/output/reference_clusterings//clusterings/sbm-flat-ndc+wcc(sqrt)/dnc/com.csv
+[INFO][0-0:0:0](t=0s) Total number of iterations: 4
+[INFO][0-0:0:0](t=0s) Writing output to: test/output/reference_clusterings/clusterings/sbm-flat-ndc+wcc(sqrt)/dnc/com.csv

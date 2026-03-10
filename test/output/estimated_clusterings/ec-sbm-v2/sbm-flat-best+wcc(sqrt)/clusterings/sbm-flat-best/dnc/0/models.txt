@@ -1,4 +1,0 @@
-model,entropy
-sbm-flat-dc,22365.6594540192
-sbm-flat-ndc,22952.410883309833
-sbm-flat-pp,26133.515899276554

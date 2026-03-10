@@ -1,0 +1,4 @@
+[INFO] Comparing scalars using metrics: ['abs_diff', 'rel_diff', 'rpd']
+[INFO] Comparing distributions using metrics: ['ks', 'emd']
+[INFO] Comparing sequences using metrics: ['l1', 'mean_l1', 'l2', 'rmse', 'cosine']
+[SUCCESS] Comparison complete. Saved to test/output/synthetic_networks/stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/comparison.csv

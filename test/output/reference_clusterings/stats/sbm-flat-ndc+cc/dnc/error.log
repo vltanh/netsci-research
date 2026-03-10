@@ -1,18 +1,18 @@
-	Command being timed: "python network_evaluation/network_stats/compute_cluster_stats.py --network test/input/dnc/dnc.csv --community test/output/reference_clusterings//clusterings/sbm-flat-ndc+cc/dnc/com.csv --outdir test/output/reference_clusterings//stats/sbm-flat-ndc+cc/dnc"
-	User time (seconds): 1.01
-	System time (seconds): 0.18
-	Percent of CPU this job got: 119%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.00
+	Command being timed: "python network_evaluation/network_stats/compute_cluster_stats.py --network test/input/dnc/dnc.csv --community test/output/reference_clusterings/clusterings/sbm-flat-ndc+cc/dnc/com.csv --outdir test/output/reference_clusterings/stats/sbm-flat-ndc+cc/dnc"
+	User time (seconds): 1.56
+	System time (seconds): 0.19
+	Percent of CPU this job got: 172%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.02
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 70548
+	Maximum resident set size (kbytes): 73632
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 16845
-	Voluntary context switches: 1513
-	Involuntary context switches: 222
+	Minor (reclaiming a frame) page faults: 16787
+	Voluntary context switches: 1504
+	Involuntary context switches: 346
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 176

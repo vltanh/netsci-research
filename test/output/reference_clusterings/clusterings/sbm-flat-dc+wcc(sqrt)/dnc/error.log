@@ -1,18 +1,18 @@
-	Command being timed: "/u/vltanh/ecsbmv2/community_detection/constrained-clustering/constrained_clustering MincutOnly --connectedness-criterion 0.2n^0.5 --edgelist test/input/dnc/dnc.csv --existing-clustering test/output/reference_clusterings//clusterings/sbm-flat-dc/dnc/com.csv --num-processors 1 --output-file test/output/reference_clusterings//clusterings/sbm-flat-dc+wcc(sqrt)/dnc/com.csv --log-file test/output/reference_clusterings//clusterings/sbm-flat-dc+wcc(sqrt)/dnc/wcc.log --log-level 1"
+	Command being timed: "/u/vltanh/ecsbmv2/community_detection/constrained-clustering/constrained_clustering MincutOnly --connectedness-criterion 0.2n^0.5 --edgelist test/input/dnc/dnc.csv --existing-clustering test/output/reference_clusterings/clusterings/sbm-flat-dc/dnc/com.csv --num-processors 1 --output-file test/output/reference_clusterings/clusterings/sbm-flat-dc+wcc(sqrt)/dnc/com.csv --log-file test/output/reference_clusterings/clusterings/sbm-flat-dc+wcc(sqrt)/dnc/wcc.log --log-level 1"
 	User time (seconds): 0.02
 	System time (seconds): 0.00
-	Percent of CPU this job got: 71%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.04
+	Percent of CPU this job got: 76%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 12276
+	Maximum resident set size (kbytes): 12700
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 1189
+	Minor (reclaiming a frame) page faults: 1191
 	Voluntary context switches: 33
-	Involuntary context switches: 1
+	Involuntary context switches: 2
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 24

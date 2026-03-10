@@ -2,4 +2,4 @@
 [INFO][0-0:0:0](t=0s) Parsing connectedness criterion
 [INFO][0-0:0:0](t=0s) Loading the initial graph
 [INFO][0-0:0:0](t=0s) Finished loading the initial graph
-[INFO][0-0:0:0](t=0s) Writing output to: test/output/reference_clusterings//clusterings/sbm-flat-ndc+cc/dnc/com.csv
+[INFO][0-0:0:0](t=0s) Writing output to: test/output/reference_clusterings/clusterings/sbm-flat-ndc+cc/dnc/com.csv
