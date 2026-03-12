@@ -1,24 +1,248 @@
 #!/bin/sh
 
-python network_evaluation/compare/aggregate_comparisons.py \
-    --root data/synthetic_networks/stats/ \
-    --output plots/ec-sbm/agg_comp.csv \
-    --network-fp data/networks_verysmall.txt \
-    --generators ec-sbm-v2 ec-sbm-v1.5 \
-    --clusterings \
-        leiden-cpm-0.5 \
-        leiden-cpm-0.5+cm \
-        leiden-cpm-0.1 \
-        leiden-cpm-0.1+cm \
-        leiden-mod \
-        leiden-mod+cm \
-        "sbm-flat-best+wcc(sqrt)" \
-        "sbm-nested-best+wcc(sqrt)" \
-        "sbm-flat-best+wcc(log)" \
-        "sbm-nested-best+wcc(log)"
+# Very small networks
+
+# python network_evaluation/compare/aggregate_comparisons.py \
+#     --root data/synthetic_networks/stats/ \
+#     --output plots/ec-sbm/agg_comp.csv \
+#     --network-fp data/networks_verysmall.txt \
+#     --generators ec-sbm-v2 ec-sbm-v1.5 \
+#     --clusterings \
+#         leiden-cpm-0.5 \
+#         leiden-cpm-0.5+cm \
+#         leiden-cpm-0.1 \
+#         leiden-cpm-0.1+cm \
+#         leiden-mod \
+#         leiden-mod+cm \
+#         "sbm-flat-best+wcc(sqrt)" \
+#         "sbm-nested-best+wcc(sqrt)" \
+#         "sbm-flat-best+wcc(log)" \
+#         "sbm-nested-best+wcc(log)"
+
+# python network_evaluation/compare/visualize_comparisons.py \
+#     --data-fp plots/ec-sbm/agg_comp.csv \
+#     --generators \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#     --clusterings \
+#         leiden-cpm-0.5 \
+#         leiden-cpm-0.5 \
+#         leiden-cpm-0.5+cm \
+#         leiden-cpm-0.5+cm \
+#         leiden-cpm-0.1 \
+#         leiden-cpm-0.1 \
+#         leiden-cpm-0.1+cm \
+#         leiden-cpm-0.1+cm \
+#         leiden-mod \
+#         leiden-mod \
+#         leiden-mod+cm \
+#         leiden-mod+cm \
+#         "sbm-flat-best+wcc(sqrt)" \
+#         "sbm-flat-best+wcc(sqrt)" \
+#         "sbm-flat-best+wcc(log)" \
+#         "sbm-flat-best+wcc(log)" \
+#         "sbm-nested-best+wcc(sqrt)" \
+#         "sbm-nested-best+wcc(sqrt)" \
+#         "sbm-nested-best+wcc(log)" \
+#         "sbm-nested-best+wcc(log)" \
+#     --names \
+#         "EC-SBMv2 x Leiden-CPM(0.5)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.5)" \
+#         "EC-SBMv2 x Leiden-CPM(0.5)+CM" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.5)+CM" \
+#         "EC-SBMv2 x Leiden-CPM(0.1)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.1)" \
+#         "EC-SBMv2 x Leiden-CPM(0.1)+CM" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.1)+CM" \
+#         "EC-SBMv2 x Leiden-Mod" \
+#         "EC-SBMv1.5 x Leiden-Mod" \
+#         "EC-SBMv2 x Leiden-Mod+CM" \
+#         "EC-SBMv1.5 x Leiden-Mod+CM" \
+#         "EC-SBMv2 x SBM(Flat)+WCC(sqrt)" \
+#         "EC-SBMv1.5 x SBM(Flat)+WCC(sqrt)" \
+#         "EC-SBMv2 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv2 x SBM(Nested)+WCC(sqrt)" \
+#         "EC-SBMv1.5 x SBM(Nested)+WCC(sqrt)" \
+#         "EC-SBMv2 x SBM(Nested)+WCC(log)" \
+#         "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
+#     --stats \
+#         n_edges \
+#         deg_assort \
+#         global_ccoeff \
+#         local_ccoeff \
+#         pseudo_diameter \
+#         char_time \
+#         node_percolation_targeted \
+#         node_percolation_random \
+#         degree \
+#         local_ccoeff_nodes \
+#         pagerank \
+#         kcore \
+#     --types \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         sequence \
+#         sequence \
+#         sequence \
+#         sequence \
+#     --metrics \
+#         rel_diff \
+#         abs_diff \
+#         abs_diff \
+#         abs_diff \
+#         rel_diff \
+#         abs_diff \
+#         abs_diff \
+#         abs_diff \
+#         rmse \
+#         rmse \
+#         rmse \
+#         rmse \
+#     --network-fp data/networks_verysmall.txt \
+#     --output-dir plots/ec-sbm/verysmall/ \
+#     --output-fn network \
+#     --hide-fliers
+
+# python network_evaluation/compare/visualize_comparisons.py \
+#     --data-fp plots/ec-sbm/agg_comp.csv \
+#     --generators \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#     --clusterings \
+#         leiden-cpm-0.5 \
+#         leiden-cpm-0.5 \
+#         leiden-cpm-0.5+cm \
+#         leiden-cpm-0.5+cm \
+#         leiden-cpm-0.1 \
+#         leiden-cpm-0.1 \
+#         leiden-cpm-0.1+cm \
+#         leiden-cpm-0.1+cm \
+#         leiden-mod \
+#         leiden-mod \
+#         leiden-mod+cm \
+#         leiden-mod+cm \
+#         "sbm-flat-best+wcc(sqrt)" \
+#         "sbm-flat-best+wcc(sqrt)" \
+#         "sbm-flat-best+wcc(log)" \
+#         "sbm-flat-best+wcc(log)" \
+#         "sbm-nested-best+wcc(sqrt)" \
+#         "sbm-nested-best+wcc(sqrt)" \
+#         "sbm-nested-best+wcc(log)" \
+#         "sbm-nested-best+wcc(log)" \
+#     --names \
+#         "EC-SBMv2 x Leiden-CPM(0.5)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.5)" \
+#         "EC-SBMv2 x Leiden-CPM(0.5)+CM" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.5)+CM" \
+#         "EC-SBMv2 x Leiden-CPM(0.1)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.1)" \
+#         "EC-SBMv2 x Leiden-CPM(0.1)+CM" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.1)+CM" \
+#         "EC-SBMv2 x Leiden-Mod" \
+#         "EC-SBMv1.5 x Leiden-Mod" \
+#         "EC-SBMv2 x Leiden-Mod+CM" \
+#         "EC-SBMv1.5 x Leiden-Mod+CM" \
+#         "EC-SBMv2 x SBM(Flat)+WCC(sqrt)" \
+#         "EC-SBMv1.5 x SBM(Flat)+WCC(sqrt)" \
+#         "EC-SBMv2 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv2 x SBM(Nested)+WCC(sqrt)" \
+#         "EC-SBMv1.5 x SBM(Nested)+WCC(sqrt)" \
+#         "EC-SBMv2 x SBM(Nested)+WCC(log)" \
+#         "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
+#     --stats \
+#         m \
+#         c \
+#         conductance \
+#         degree_density \
+#         edge_density \
+#         modularity \
+#         mincut \
+#     --types \
+#         sequence \
+#         sequence \
+#         sequence \
+#         sequence \
+#         sequence \
+#         sequence \
+#         sequence \
+#     --metrics \
+#         rmse \
+#         rmse \
+#         rmse \
+#         rmse \
+#         rmse \
+#         rmse \
+#         rmse \
+#     --network-fp data/networks_verysmall.txt \
+#     --output-dir plots/ec-sbm/verysmall/ \
+#     --output-fn cluster \
+#     --hide-fliers
+
+# Old list
+
+# python network_evaluation/compare/aggregate_comparisons.py \
+#     --root data/synthetic_networks/stats/ \
+#     --output plots/old/agg_comp.csv \
+#     --network-fp data/networks_all_old.txt \
+#     --generators ec-sbm-v2 ec-sbm-v1.5 \
+#     --clusterings \
+#         leiden-cpm-0.1 \
+#         "leiden-cpm-0.1+cm(log)" \
+#         leiden-cpm-0.01 \
+#         "leiden-cpm-0.01+cm(log)" \
+#         leiden-cpm-0.001 \
+#         "leiden-cpm-0.001+cm(log)" \
+#         leiden-mod \
+#         "leiden-mod+cm(log)" \
+#         sbm-flat-best+cc \
+#         "sbm-flat-best+wcc(log)"
 
 python network_evaluation/compare/visualize_comparisons.py \
-    --data-fp plots/ec-sbm/agg_comp.csv \
+    --data-fp plots/old/agg_comp.csv \
     --generators \
         ec-sbm-v2 \
         ec-sbm-v1.5 \
@@ -41,47 +265,47 @@ python network_evaluation/compare/visualize_comparisons.py \
         ec-sbm-v2 \
         ec-sbm-v1.5 \
     --clusterings \
-        leiden-cpm-0.5 \
-        leiden-cpm-0.5 \
-        leiden-cpm-0.5+cm \
-        leiden-cpm-0.5+cm \
         leiden-cpm-0.1 \
         leiden-cpm-0.1 \
-        leiden-cpm-0.1+cm \
-        leiden-cpm-0.1+cm \
+        "leiden-cpm-0.1+cm(log)" \
+        "leiden-cpm-0.1+cm(log)" \
+        leiden-cpm-0.01 \
+        leiden-cpm-0.01 \
+        "leiden-cpm-0.01+cm(log)" \
+        "leiden-cpm-0.01+cm(log)" \
+        leiden-cpm-0.001 \
+        leiden-cpm-0.001 \
+        "leiden-cpm-0.001+cm(log)" \
+        "leiden-cpm-0.001+cm(log)" \
         leiden-mod \
         leiden-mod \
-        leiden-mod+cm \
-        leiden-mod+cm \
-        "sbm-flat-best+wcc(sqrt)" \
-        "sbm-flat-best+wcc(sqrt)" \
+        "leiden-mod+cm(log)" \
+        "leiden-mod+cm(log)" \
+        "sbm-flat-best+cc" \
+        "sbm-flat-best+cc" \
         "sbm-flat-best+wcc(log)" \
         "sbm-flat-best+wcc(log)" \
-        "sbm-nested-best+wcc(sqrt)" \
-        "sbm-nested-best+wcc(sqrt)" \
-        "sbm-nested-best+wcc(log)" \
-        "sbm-nested-best+wcc(log)" \
     --names \
-        "EC-SBMv2 x Leiden-CPM(0.5)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.5)" \
-        "EC-SBMv2 x Leiden-CPM(0.5)+CM" \
-        "EC-SBMv1.5 x Leiden-CPM(0.5)+CM" \
         "EC-SBMv2 x Leiden-CPM(0.1)" \
         "EC-SBMv1.5 x Leiden-CPM(0.1)" \
-        "EC-SBMv2 x Leiden-CPM(0.1)+CM" \
-        "EC-SBMv1.5 x Leiden-CPM(0.1)+CM" \
+        "EC-SBMv2 x Leiden-CPM(0.1)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(log)" \
+        "EC-SBMv2 x Leiden-CPM(0.01)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.01)" \
+        "EC-SBMv2 x Leiden-CPM(0.01)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(log)" \
+        "EC-SBMv2 x Leiden-CPM(0.001)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.001)" \
+        "EC-SBMv2 x Leiden-CPM(0.001)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(log)" \
         "EC-SBMv2 x Leiden-Mod" \
         "EC-SBMv1.5 x Leiden-Mod" \
-        "EC-SBMv2 x Leiden-Mod+CM" \
-        "EC-SBMv1.5 x Leiden-Mod+CM" \
-        "EC-SBMv2 x SBM(Flat)+WCC(sqrt)" \
-        "EC-SBMv1.5 x SBM(Flat)+WCC(sqrt)" \
+        "EC-SBMv2 x Leiden-Mod+CM(log)" \
+        "EC-SBMv1.5 x Leiden-Mod+CM(log)" \
+        "EC-SBMv2 x SBM(Flat)+CC" \
+        "EC-SBMv1.5 x SBM(Flat)+CC" \
         "EC-SBMv2 x SBM(Flat)+WCC(log)" \
         "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
-        "EC-SBMv2 x SBM(Nested)+WCC(sqrt)" \
-        "EC-SBMv1.5 x SBM(Nested)+WCC(sqrt)" \
-        "EC-SBMv2 x SBM(Nested)+WCC(log)" \
-        "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
     --stats \
         n_edges \
         deg_assort \
@@ -117,17 +341,175 @@ python network_evaluation/compare/visualize_comparisons.py \
         abs_diff \
         abs_diff \
         abs_diff \
+        mean_l1 \
         rmse \
         rmse \
         rmse \
-        rmse \
-    --network-fp data/networks_verysmall.txt \
-    --output-dir plots/ec-sbm/very_small/ \
+    --network-fp data/networks_all_old.txt \
+    --output-dir plots/old/all/ \
     --output-fn network \
     --hide-fliers
 
 python network_evaluation/compare/visualize_comparisons.py \
-    --data-fp plots/ec-sbm/agg_comp.csv \
+    --data-fp plots/old/agg_comp.csv \
+    --generators \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+        ec-sbm-v2 \
+    --clusterings \
+        leiden-cpm-0.1 \
+        "leiden-cpm-0.1+cm(log)" \
+        leiden-cpm-0.01 \
+        "leiden-cpm-0.01+cm(log)" \
+        leiden-cpm-0.001 \
+        "leiden-cpm-0.001+cm(log)" \
+        leiden-mod \
+        "leiden-mod+cm(log)" \
+        "sbm-flat-best+cc" \
+        "sbm-flat-best+wcc(log)" \
+    --names \
+        "EC-SBMv2 x Leiden-CPM(0.1)" \
+        "EC-SBMv2 x Leiden-CPM(0.1)+CM(log)" \
+        "EC-SBMv2 x Leiden-CPM(0.01)" \
+        "EC-SBMv2 x Leiden-CPM(0.01)+CM(log)" \
+        "EC-SBMv2 x Leiden-CPM(0.001)" \
+        "EC-SBMv2 x Leiden-CPM(0.001)+CM(log)" \
+        "EC-SBMv2 x Leiden-Mod" \
+        "EC-SBMv2 x Leiden-Mod+CM(log)" \
+        "EC-SBMv2 x SBM(Flat)+CC" \
+        "EC-SBMv2 x SBM(Flat)+WCC(log)" \
+    --stats \
+        n_edges \
+        deg_assort \
+        global_ccoeff \
+        local_ccoeff \
+        pseudo_diameter \
+        char_time \
+        node_percolation_targeted \
+        node_percolation_random \
+        degree \
+        local_ccoeff_nodes \
+        pagerank \
+        kcore \
+    --types \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        sequence \
+        sequence \
+        sequence \
+        sequence \
+    --metrics \
+        rel_diff \
+        abs_diff \
+        abs_diff \
+        abs_diff \
+        rel_diff \
+        abs_diff \
+        abs_diff \
+        abs_diff \
+        mean_l1 \
+        rmse \
+        rmse \
+        rmse \
+    --network-fp data/networks_all_old.txt \
+    --output-dir plots/old/all/ \
+    --output-fn network_ecsbmv2 \
+    --hide-fliers
+
+python network_evaluation/compare/visualize_comparisons.py \
+    --data-fp plots/old/agg_comp.csv \
+    --generators \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+        ec-sbm-v1.5 \
+    --clusterings \
+        leiden-cpm-0.1 \
+        "leiden-cpm-0.1+cm(log)" \
+        leiden-cpm-0.01 \
+        "leiden-cpm-0.01+cm(log)" \
+        leiden-cpm-0.001 \
+        "leiden-cpm-0.001+cm(log)" \
+        leiden-mod \
+        "leiden-mod+cm(log)" \
+        "sbm-flat-best+cc" \
+        "sbm-flat-best+wcc(log)" \
+    --names \
+        "EC-SBMv1.5 x Leiden-CPM(0.1)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.01)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.001)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-Mod" \
+        "EC-SBMv1.5 x Leiden-Mod+CM(log)" \
+        "EC-SBMv1.5 x SBM(Flat)+CC" \
+        "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
+    --stats \
+        n_edges \
+        deg_assort \
+        global_ccoeff \
+        local_ccoeff \
+        pseudo_diameter \
+        char_time \
+        node_percolation_targeted \
+        node_percolation_random \
+        degree \
+        local_ccoeff_nodes \
+        pagerank \
+        kcore \
+    --types \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        scalar \
+        sequence \
+        sequence \
+        sequence \
+        sequence \
+    --metrics \
+        rel_diff \
+        abs_diff \
+        abs_diff \
+        abs_diff \
+        rel_diff \
+        abs_diff \
+        abs_diff \
+        abs_diff \
+        mean_l1 \
+        rmse \
+        rmse \
+        rmse \
+    --network-fp data/networks_all_old.txt \
+    --output-dir plots/old/all/ \
+    --output-fn network_ecsbmv1.5 \
+    --hide-fliers
+
+python network_evaluation/compare/visualize_comparisons.py \
+    --data-fp plots/old/agg_comp.csv \
     --generators \
         ec-sbm-v2 \
         ec-sbm-v1.5 \
@@ -150,54 +532,54 @@ python network_evaluation/compare/visualize_comparisons.py \
         ec-sbm-v2 \
         ec-sbm-v1.5 \
     --clusterings \
-        leiden-cpm-0.5 \
-        leiden-cpm-0.5 \
-        leiden-cpm-0.5+cm \
-        leiden-cpm-0.5+cm \
         leiden-cpm-0.1 \
         leiden-cpm-0.1 \
-        leiden-cpm-0.1+cm \
-        leiden-cpm-0.1+cm \
+        "leiden-cpm-0.1+cm(log)" \
+        "leiden-cpm-0.1+cm(log)" \
+        leiden-cpm-0.01 \
+        leiden-cpm-0.01 \
+        "leiden-cpm-0.01+cm(log)" \
+        "leiden-cpm-0.01+cm(log)" \
+        leiden-cpm-0.001 \
+        leiden-cpm-0.001 \
+        "leiden-cpm-0.001+cm(log)" \
+        "leiden-cpm-0.001+cm(log)" \
         leiden-mod \
         leiden-mod \
-        leiden-mod+cm \
-        leiden-mod+cm \
-        "sbm-flat-best+wcc(sqrt)" \
-        "sbm-flat-best+wcc(sqrt)" \
+        "leiden-mod+cm(log)" \
+        "leiden-mod+cm(log)" \
+        "sbm-flat-best+cc" \
+        "sbm-flat-best+cc" \
         "sbm-flat-best+wcc(log)" \
         "sbm-flat-best+wcc(log)" \
-        "sbm-nested-best+wcc(sqrt)" \
-        "sbm-nested-best+wcc(sqrt)" \
-        "sbm-nested-best+wcc(log)" \
-        "sbm-nested-best+wcc(log)" \
     --names \
-        "EC-SBMv2 x Leiden-CPM(0.5)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.5)" \
-        "EC-SBMv2 x Leiden-CPM(0.5)+CM" \
-        "EC-SBMv1.5 x Leiden-CPM(0.5)+CM" \
         "EC-SBMv2 x Leiden-CPM(0.1)" \
         "EC-SBMv1.5 x Leiden-CPM(0.1)" \
-        "EC-SBMv2 x Leiden-CPM(0.1)+CM" \
-        "EC-SBMv1.5 x Leiden-CPM(0.1)+CM" \
+        "EC-SBMv2 x Leiden-CPM(0.1)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(log)" \
+        "EC-SBMv2 x Leiden-CPM(0.01)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.01)" \
+        "EC-SBMv2 x Leiden-CPM(0.01)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(log)" \
+        "EC-SBMv2 x Leiden-CPM(0.001)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.001)" \
+        "EC-SBMv2 x Leiden-CPM(0.001)+CM(log)" \
+        "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(log)" \
         "EC-SBMv2 x Leiden-Mod" \
         "EC-SBMv1.5 x Leiden-Mod" \
-        "EC-SBMv2 x Leiden-Mod+CM" \
-        "EC-SBMv1.5 x Leiden-Mod+CM" \
-        "EC-SBMv2 x SBM(Flat)+WCC(sqrt)" \
-        "EC-SBMv1.5 x SBM(Flat)+WCC(sqrt)" \
+        "EC-SBMv2 x Leiden-Mod+CM(log)" \
+        "EC-SBMv1.5 x Leiden-Mod+CM(log)" \
+        "EC-SBMv2 x SBM(Flat)+CC" \
+        "EC-SBMv1.5 x SBM(Flat)+CC" \
         "EC-SBMv2 x SBM(Flat)+WCC(log)" \
         "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
-        "EC-SBMv2 x SBM(Nested)+WCC(sqrt)" \
-        "EC-SBMv1.5 x SBM(Nested)+WCC(sqrt)" \
-        "EC-SBMv2 x SBM(Nested)+WCC(log)" \
-        "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
     --stats \
-        m \
-        c \
         conductance \
+        modularity \
         degree_density \
         edge_density \
-        modularity \
+        m \
+        c \
         mincut \
     --types \
         sequence \
@@ -212,10 +594,10 @@ python network_evaluation/compare/visualize_comparisons.py \
         rmse \
         rmse \
         rmse \
-        rmse \
-        rmse \
-        rmse \
-    --network-fp data/networks_verysmall.txt \
-    --output-dir plots/ec-sbm/very_small/ \
+        mean_l1 \
+        mean_l1 \
+        mean_l1 \
+    --network-fp data/networks_all_old.txt \
+    --output-dir plots/old/all/ \
     --output-fn cluster \
     --hide-fliers
