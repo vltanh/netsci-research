@@ -37,6 +37,7 @@
 # ==============================================================================
 
 CONCURRENCY_LIMIT=40
+MAX_JOB_PER_ARRAY=1000
 LOG_DIR_BASE="slurm_output"
 
 # Create a unique task file name using the current timestamp and script Process ID ($$)
@@ -210,5 +211,20 @@ if [[ "$total_tasks" -eq 0 ]]; then
     exit 0
 fi
 
-echo "Submitting array for ${total_tasks} tasks (Max Concurrency: ${CONCURRENCY_LIMIT})..."
-sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh "${TASK_FILE}"
+echo "Generated ${total_tasks} total tasks."
+
+if [[ "$total_tasks" -le "$MAX_JOB_PER_ARRAY" ]]; then
+    echo "Submitting single array job for ${total_tasks} tasks (Max Concurrency: ${CONCURRENCY_LIMIT})..."
+    sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh "${TASK_FILE}"
+else
+    echo "Total tasks exceed MAX_JOB_PER_ARRAY (${MAX_JOB_PER_ARRAY}). Splitting into multiple jobs..."
+    
+    # Split the task file into chunks (-l lines, -d numeric suffixes, -a 3 suffix length)
+    split -a 3 -d -l "${MAX_JOB_PER_ARRAY}" "${TASK_FILE}" "${TASK_FILE}_part_"
+    
+    for part_file in "${TASK_FILE}_part_"*; do
+        part_tasks=$(wc -l < "${part_file}")
+        echo "Submitting array for ${part_tasks} tasks from ${part_file}..."
+        sbatch --array=1-${part_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh "${part_file}"
+    done
+fi
