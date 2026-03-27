@@ -41,7 +41,7 @@ data/                               # All inputs and outputs (gitignored)
       stats/<algo>[+<pp>]/<network>/<run-id>/
       acc/<algo>[+<pp>]/<network>/<run-id>/
 
-network_generation/                 # EC-SBM synthetic network generator
+network-generation/                 # EC-SBM synthetic network generator
 community_detection/                # Community detection pipeline
 network_evaluation/                 # (submodule) Stats and comparison scripts
 constrained-clustering/             # (submodule) CC/WCC/CM post-processing binary
@@ -61,7 +61,7 @@ The full experiment pipeline runs in five stages:
 [2] Compute emp. stats     compute_empirical_stats.sh  ──┐
 [3] Run CD on real nets    community_detection/          │ reference data
     run_cd.sh (--real)                                  ─┘
-[4] Generate syn. nets     network_generation/
+[4] Generate syn. nets     network-generation/
     run_generator.sh                                     → synthetic networks
 [5] Run CD on syn. nets    community_detection/
     run_cd.sh (--synthetic)                              → estimated clusterings
@@ -118,7 +118,7 @@ The SLURM batch script executed by each array task. Handles lock-based deduplica
 
 #### `compute_empirical_stats.sh`
 
-Computes network-level structural statistics for an empirical network. Must be run before `--run-comp` in `network_generation/run_generator.sh`.
+Computes network-level structural statistics for an empirical network. Must be run before `--run-comp` in `network-generation/run_generator.sh`.
 
 ```bash
 # Macro mode
@@ -128,9 +128,9 @@ Computes network-level structural statistics for an empirical network. Must be r
 ./compute_empirical_stats.sh --input-edgelist <path> --output-dir <dir>
 ```
 
-#### `network_generation/run_generator.sh`
+#### `network-generation/run_generator.sh`
 
-Generates a synthetic network from an empirical network and a reference clustering. See [network_generation/README.md](network_generation/README.md) for full documentation.
+Generates a synthetic network from an empirical network and a reference clustering. See [network-generation/README.md](network-generation/README.md) for full documentation.
 
 #### `community_detection/run_cd.sh`
 
@@ -218,7 +218,7 @@ done < data/networks_all.txt
 
 ```bash
 # Generate
-./network_generation/run_generator.sh \
+./network-generation/run_generator.sh \
     --generator ec-sbm-v2 --run-id 0 \
     --input-edgelist test/input/dnc/dnc.csv \
     --input-clustering "test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv" \

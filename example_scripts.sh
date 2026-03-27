@@ -40,10 +40,10 @@ sh submit_array.sh --network-list data/networks_all.txt --mode gen --generator e
     --network dnc --generator ec-sbm-v2 --gt-clustering-id "sbm-flat-best+wcc(log)" --run-id 0 \
     --run-cc --run-wcc --run-cm --run-stats --run-acc
 
-# network_generation/run_generator.sh
+# network-generation/run_generator.sh
 
 # Custom simulating macro
-./network_generation/run_generator.sh \
+./network-generation/run_generator.sh \
     --generator ec-sbm-v2 --run-id 0 \
     --input-edgelist test/input/dnc/dnc.csv \
     --input-clustering "test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv" \
@@ -53,7 +53,7 @@ sh submit_array.sh --network-list data/networks_all.txt --mode gen --generator e
     --network dnc --clustering-id "sbm-flat-best+wcc(log)"  \
     --run-stats --run-comp
 
-./network_generation/run_generator.sh \
+./network-generation/run_generator.sh \
     --generator ec-sbm-v2 --run-id 0 \
     --macro \
     --network dnc --clustering-id "sbm-flat-best+wcc(log)"  \
