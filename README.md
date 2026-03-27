@@ -42,7 +42,7 @@ data/                               # All inputs and outputs (gitignored)
       acc/<algo>[+<pp>]/<network>/<run-id>/
 
 network-generation/                 # EC-SBM synthetic network generator
-community_detection/                # Community detection pipeline
+community-detection/                # Community detection pipeline
 network_evaluation/                 # (submodule) Stats and comparison scripts
 constrained-clustering/             # (submodule) CC/WCC/CM post-processing binary
 
@@ -58,13 +58,13 @@ The full experiment pipeline runs in five stages:
 
 ```
 [1] Crawl networks         crawl_netzschleuder.py
-[2] Compute emp. stats     compute_empirical_stats.sh  ──┐
-[3] Run CD on real nets    community_detection/          │ reference data
-    run_cd.sh (--real)                                  ─┘
+[2] Compute emp. stats     compute_network_stats.sh     ──┐
+[3] Run CD on real nets    community-detection/           │ reference data
+    run_cd.sh (--real)                                   ─┘
 [4] Generate syn. nets     network-generation/
-    run_generator.sh                                     → synthetic networks
-[5] Run CD on syn. nets    community_detection/
-    run_cd.sh (--synthetic)                              → estimated clusterings
+    run_generator.sh                                      → synthetic networks
+[5] Run CD on syn. nets    community-detection/
+    run_cd.sh (--synthetic)                               → estimated clusterings
 [6] Plot results           make_plots.sh / plot_stats.py
 ```
 
@@ -116,25 +116,44 @@ The SLURM batch script executed by each array task. Handles lock-based deduplica
 
 ### Pipeline Scripts
 
-#### `compute_empirical_stats.sh`
+#### `compute_network_stats.sh`
 
-Computes network-level structural statistics for an empirical network. Must be run before `--run-comp` in `network-generation/run_generator.sh`.
+Computes network-only structural statistics for an empirical or synthetic network. Must be run before `--run-comp` in `network-generation/run_generator.sh`.
 
 ```bash
-# Macro mode
-./compute_empirical_stats.sh --macro --network <id>
+# Real network
+./compute_network_stats.sh --real --network <id>
+
+# Synthetic network
+./compute_network_stats.sh --synthetic --network <id> --generator <gen> --clustering <id> [--run-id <id>]
 
 # Custom mode
-./compute_empirical_stats.sh --input-edgelist <path> --output-dir <dir>
+./compute_network_stats.sh --input-edgelist <path> --output-dir <dir>
+```
+
+#### `compute_cluster_stats.sh`
+
+Computes cluster-dependent statistics (conductance, mincut, modularity, etc.) for a network and a community assignment. Covers CD results on both real and synthetic networks.
+
+```bash
+# Real network (reference clustering)
+./compute_cluster_stats.sh --real --network <id> --clustering <id>
+
+# Synthetic network (estimated clustering)
+./compute_cluster_stats.sh --synthetic \
+    --network <id> --generator <gen> --gt-clustering <id> --clustering <id> [--run-id <id>]
+
+# Custom mode
+./compute_cluster_stats.sh --input-edgelist <path> --input-clustering <path> --output-dir <dir>
 ```
 
 #### `network-generation/run_generator.sh`
 
 Generates a synthetic network from an empirical network and a reference clustering. See [network-generation/README.md](network-generation/README.md) for full documentation.
 
-#### `community_detection/run_cd.sh`
+#### `community-detection/run_cd.sh`
 
-Runs community detection (and optional post-processing and evaluation) on a network. See [community_detection/README.md](community_detection/README.md) for full documentation.
+Runs community detection (and optional post-processing and evaluation) on a network. See [community-detection/README.md](community-detection/README.md) for full documentation.
 
 ---
 
@@ -176,12 +195,12 @@ Splits a network list file into train/val/test subsets with shuffled assignment 
 
 ## Examples
 
-### 1. Compute empirical statistics
+### 1. Compute network statistics
 
 ```bash
 # For all networks in a list
 while IFS= read -r network; do
-    ./compute_empirical_stats.sh --macro --network "${network}"
+    ./compute_network_stats.sh --real --network "${network}"
 done < data/networks_all.txt
 ```
 
@@ -227,7 +246,7 @@ done < data/networks_all.txt
     --run-stats --run-comp
 
 # Detect communities
-./community_detection/run_cd.sh \
+./community-detection/run_cd.sh \
     --algo sbm-flat-best --criterion sqrt \
     --input-edgelist "test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv" \
     --input-gt-clustering "test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv" \
