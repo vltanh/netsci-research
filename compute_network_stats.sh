@@ -51,31 +51,6 @@ log() {
     builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
 }
 
-is_step_done() {
-    local done_file="$1"
-    if [ ! -f "${done_file}" ]; then return 1; fi
-    if ! sha256sum --status -c "${done_file}" 2>/dev/null; then
-        log "State change detected. Recomputing..."
-        return 1
-    fi
-    return 0
-}
-
-mark_done() {
-    local done_file="$1"
-    local stage_name="$2"
-    read -r -a inputs <<< "$3"
-    local out_dir="$4"
-
-    local tmp_done="${done_file}.tmp.$$"
-
-    sha256sum "${inputs[@]}" > "${tmp_done}"
-    find "${out_dir}" -maxdepth 1 -type f ! -name "$(basename "${done_file}")" ! -name "$(basename "${tmp_done}")" -exec sha256sum {} + >> "${tmp_done}"
-
-    mv "${tmp_done}" "${done_file}"
-    log "Success [${stage_name}]: I/O hashes recorded atomically."
-}
-
 # ==========================================
 # Argument Parsing
 # ==========================================
@@ -147,20 +122,17 @@ log "============================"
 log "Computing Network Stats for: ${dataset_name}"
 log "============================"
 
-done_file="${OUT_DIR}/done"
+log "Evaluating network stats state via Python StateTracker..."
+mkdir -p "${OUT_DIR}"
 
-log "Evaluating network stats state..."
-if ! is_step_done "${done_file}"; then
-    log "Computing Network Stats..."
-    mkdir -p "${OUT_DIR}"
+{ /usr/bin/time -v python "${SCRIPT_DIR}/network_evaluation/network_stats/compute_network_stats.py" \
+    --network "${INP_EDGE}" \
+    --outdir "${OUT_DIR}"; } 2> "${OUT_DIR}/error.log"
 
-    { /usr/bin/time -v python "${SCRIPT_DIR}/network_evaluation/network_stats/compute_network_stats.py" \
-        --network "${INP_EDGE}" \
-        --outdir "${OUT_DIR}"; } 1> "${OUT_DIR}/out.log" 2> "${OUT_DIR}/error.log"
-
-    mark_done "${done_file}" "Network Stats" "${INP_EDGE}" "${OUT_DIR}"
+if [ ${?} -ne 0 ]; then
+    log "ERROR: Network Stats computation failed."
 else
-    log "Network stats already up-to-date. Skipping..."
+    log "Network Stats evaluation complete."
 fi
 
 log "Process completed. Outputs mapped to: ${OUT_DIR}"

@@ -53,35 +53,10 @@ if [[ "${SCRIPT_DIR}" == *"/slurmd/job"* ]]; then
 fi
 
 # ==========================================
-# Helper Functions: Logging & State Tracking
+# Helper Functions: Logging
 # ==========================================
 log() {
     builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
-}
-
-is_step_done() {
-    local done_file="$1"
-    if [ ! -f "${done_file}" ]; then return 1; fi
-    if ! sha256sum --status -c "${done_file}" 2>/dev/null; then
-        log "State change detected. Recomputing..."
-        return 1
-    fi
-    return 0
-}
-
-mark_done() {
-    local done_file="$1"
-    local stage_name="$2"
-    read -r -a inputs <<< "$3"
-    local out_dir="$4"
-
-    local tmp_done="${done_file}.tmp.$$"
-
-    sha256sum "${inputs[@]}" > "${tmp_done}"
-    find "${out_dir}" -maxdepth 1 -type f ! -name "$(basename "${done_file}")" ! -name "$(basename "${tmp_done}")" -exec sha256sum {} + >> "${tmp_done}"
-
-    mv "${tmp_done}" "${done_file}"
-    log "Success [${stage_name}]: I/O hashes recorded atomically."
 }
 
 # ==========================================
@@ -166,21 +141,18 @@ log "============================"
 log "Computing Cluster Stats for: ${dataset_name}"
 log "============================"
 
-done_file="${OUT_DIR}/done"
+log "Evaluating cluster stats state via Python StateTracker..."
+mkdir -p "${OUT_DIR}"
 
-log "Evaluating cluster stats state..."
-if ! is_step_done "${done_file}"; then
-    log "Computing Cluster Stats..."
-    mkdir -p "${OUT_DIR}"
+{ /usr/bin/time -v python "${SCRIPT_DIR}/network_evaluation/network_stats/compute_cluster_stats.py" \
+    --network "${INP_EDGE}" \
+    --community "${INP_COM}" \
+    --outdir "${OUT_DIR}"; } 2> "${OUT_DIR}/error.log"
 
-    { /usr/bin/time -v python "${SCRIPT_DIR}/network_evaluation/network_stats/compute_cluster_stats.py" \
-        --network "${INP_EDGE}" \
-        --community "${INP_COM}" \
-        --outdir "${OUT_DIR}"; } 2> "${OUT_DIR}/error.log"
-
-    mark_done "${done_file}" "Cluster Stats" "${INP_EDGE} ${INP_COM}" "${OUT_DIR}"
+if [ ${?} -ne 0 ]; then
+    log "ERROR: Cluster Stats computation failed."
 else
-    log "Cluster stats already up-to-date. Skipping..."
+    log "Cluster Stats evaluation complete."
 fi
 
 log "Process completed. Outputs mapped to: ${OUT_DIR}"
