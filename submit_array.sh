@@ -3,7 +3,7 @@
 # ==============================================================================
 # Slurm Array Job Submitter (submit_array.sh)
 # ==============================================================================
-# This script generates a list of tasks (tasks.txt) for networks defined in a 
+# This script generates a list of tasks (tasks.txt) for networks defined in a
 # text file and submits them as a SLURM array job.
 #
 # USAGE:
@@ -68,7 +68,7 @@ while [[ "$#" -gt 0 ]]; do
         --criterion) criterion="$2"; shift 2 ;;
         --real) is_real=1; shift 1 ;;
         # [CONFIGURABLE] Add any additional single-argument flags here
-        
+
         # Multi-argument parsing logic
         --generator)
             shift
@@ -95,7 +95,7 @@ while [[ "$#" -gt 0 ]]; do
             done
             ;;
         # [CONFIGURABLE] Add any additional flags here following the same pattern
-            
+
         -*) echo "Unknown parameter passed: $1"; exit 1 ;;
         *) echo "Unknown positional argument passed: $1. Please use flags (e.g., --method, --clustering)."; exit 1 ;;
     esac
@@ -123,13 +123,13 @@ if [[ "${mode}" == "gen" ]]; then
         exit 1
     fi
     echo "Mode: ${mode}, Generators: ${generators[*]}, Run: ${run_id}"
-    
+
 elif [[ "${mode}" == "cd" ]]; then
     if [[ ${#methods[@]} -eq 0 ]]; then
         echo "Error: At least one --method is required for mode 'cd'."
         exit 1
     fi
-    
+
     crit_display="default"
     if [[ -n "${criterion}" ]]; then crit_display="${criterion}"; fi
 
@@ -153,40 +153,40 @@ fi
 
 echo "Generating task list..."
 while IFS= read -r network_id || [[ -n "$network_id" ]]; do
-    if [[ -z "$network_id" ]]; then continue; fi 
+    if [[ -z "$network_id" ]]; then continue; fi
 
     if [[ "${mode}" == "cd" ]]; then
         crit_arg=""
         crit_suffix=""
-        if [[ -n "${criterion}" ]]; then 
+        if [[ -n "${criterion}" ]]; then
             crit_arg="--criterion ${criterion}"
             crit_suffix="_${criterion}"
         fi
 
         if [[ "${is_real}" -eq 1 ]]; then
             for method in "${methods[@]}"; do
-                script="community_detection/run_cd.sh"
+                script="community-detection/run_cd.sh"
                 job_name="${mode}_real_${network_id}_${method}${crit_suffix}"
                 args="--algo ${method} --network ${network_id} --real ${crit_arg} --run-stats --run-cc --run-wcc --run-cm"
                 log_path="${LOG_DIR_BASE}/${mode}/real/${method}${crit_suffix}/${network_id}"
-                
+
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
             done
         else
             for generator in "${generators[@]}"; do
                 for gt_clustering in "${gt_clusterings[@]}"; do
                     for method in "${methods[@]}"; do
-                        script="community_detection/run_cd.sh"
+                        script="community-detection/run_cd.sh"
                         job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
                         args="--algo ${method} --network ${network_id} --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg} --run-stats --run-acc --run-cc --run-wcc --run-cm"
                         log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
-                        
+
                         echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
                     done
                 done
             done
         fi
-        
+
     elif [[ "${mode}" == "gen" ]]; then
         for generator in "${generators[@]}"; do
             for clustering_id in "${clusterings[@]}"; do
@@ -194,7 +194,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
                 script="network-generation/run_generator.sh"
                 args="--generator ${generator} --run-id ${run_id} --macro --network ${network_id} --clustering-id ${clustering_id} --run-stats --run-comp"
                 log_path="${LOG_DIR_BASE}/${mode}/${generator}/${network_id}/${clustering_id}/${run_id}"
-                
+
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
             done
         done
@@ -218,10 +218,10 @@ if [[ "$total_tasks" -le "$MAX_JOB_PER_ARRAY" ]]; then
     sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh "${TASK_FILE}"
 else
     echo "Total tasks exceed MAX_JOB_PER_ARRAY (${MAX_JOB_PER_ARRAY}). Splitting into multiple jobs..."
-    
+
     # Split the task file into chunks (-l lines, -d numeric suffixes, -a 3 suffix length)
     split -a 3 -d -l "${MAX_JOB_PER_ARRAY}" "${TASK_FILE}" "${TASK_FILE}_part_"
-    
+
     for part_file in "${TASK_FILE}_part_"*; do
         part_tasks=$(wc -l < "${part_file}")
         echo "Submitting array for ${part_tasks} tasks from ${part_file}..."

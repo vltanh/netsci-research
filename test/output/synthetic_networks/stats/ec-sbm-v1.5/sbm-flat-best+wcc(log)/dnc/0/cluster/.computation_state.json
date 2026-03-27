@@ -1,0 +1,24 @@
+{
+    "input_hash": "387a0c72624f5f589f7b5818888071f009cca44292a25470109b4349992e3f18",
+    "completed_metrics": {
+        "node.idx": "525f154bff3f52c8fae02896aa67399f44187fd3dbe9cf5d5a9c1542cdc2f492",
+        "com.idx": "52efaae1bca65cd1a8ca3829cc1e48402095dc74b036f4465a59efbd59942960",
+        "outliers.idx": "d517fb287d2a0bea1e1e3236a908b3b09b93d532700e18865982f41d2fe7e603",
+        "global_n": "d5ef26658db000e0d661d54add309ff14305b055198b7376f386812bad2a0f6d",
+        "global_m": "811e7b36525b68ea4b9f5f0b343f4de1cf4fb4e1096ec7191835696727b16db4",
+        "node_coverage": "e84d4f61f68b4b8fa78704bf2dca57b56b21132c597892b19ec7b783f769f09f",
+        "n_outliers": "82d20bdb3ec683c1f2c3429814e7ef9b85ea76d7695c16651ac3b114c6f7839c",
+        "mixing_parameter": "8985b4996020090f2eadbbba145d872625bc3a3026b13ca237409bef006d8328",
+        "n": "b4f71364b40d7fdf62a6c4e7b4dfca136b4a62cc77517989c1cbc62bdd14a4ea",
+        "m": "24f2e1fc6d661b769273ce7d28f4cf8ef855f01727c5d661ac8ed825eaa3bdbf",
+        "c": "cb1fd900e2d14f19c0940c7623a3710f8886233fb887f520543b3fd8a3b58133",
+        "conductance": "155cec9360f39c4e0bf7f7f1088eb61be7e3ebbbac705bbf6198bbb3b99ce2ff",
+        "degree_density": "409326a1af482b4f5f4d4775fc1dd18c81c34e2312e0a4a79d494bcf9fbd0b54",
+        "edge_density": "861b81b2130e86694eb4f525ddb41e8bd28e75f3d6caf7d7ee85ee7a4b20b88a",
+        "mincut": "e7e75b342aa7c4481cf57315a85d1a7a49231024d0966217c2923c1eae9f0e7b",
+        "modularity": "314205ebeff78638340cd8db44744589699551e94927e3601936a1fb55574208",
+        "n_clusters": "d93844f8f37e55564be3f194656bf33b5d0fb5e589a0fe17eb7c2d4e8593ec9c",
+        "n_disconnected_clusters": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "n_connected_clusters": "d93844f8f37e55564be3f194656bf33b5d0fb5e589a0fe17eb7c2d4e8593ec9c"
+    }
+}

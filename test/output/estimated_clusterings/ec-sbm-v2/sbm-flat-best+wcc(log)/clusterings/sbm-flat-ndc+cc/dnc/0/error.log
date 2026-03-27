@@ -1,16 +1,16 @@
-	Command being timed: "/u/vltanh/ecsbmv2/community_detection/constrained-clustering/constrained_clustering MincutOnly --edgelist test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv --existing-clustering test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc/dnc/0/com.csv --num-processors 1 --output-file test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc+cc/dnc/0/com.csv --log-file test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc+cc/dnc/0/cc.log --log-level 1 --connectedness-criterion 0"
-	User time (seconds): 0.01
+	Command being timed: "/u/vltanh/ecsbmv2/community-detection/constrained-clustering/constrained_clustering MincutOnly --edgelist test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv --existing-clustering test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc/dnc/0/com.csv --num-processors 1 --output-file test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc+cc/dnc/0/com.csv --log-file test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc+cc/dnc/0/cc.log --log-level 1 --connectedness-criterion 0"
+	User time (seconds): 0.02
 	System time (seconds): 0.00
-	Percent of CPU this job got: 82%
+	Percent of CPU this job got: 79%
 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.02
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 10540
+	Maximum resident set size (kbytes): 10876
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 783
+	Minor (reclaiming a frame) page faults: 789
 	Voluntary context switches: 14
 	Involuntary context switches: 2
 	Swaps: 0

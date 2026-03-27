@@ -1,7 +1,7 @@
-90d9adf5270c9744e99a49be741ab1c87cfb281cd7dd67e0fe70a92615877d9a  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/edge.csv
-95c28748977a5a8fa66bbc1760a917e4d1e4820c1c28f277c8e5b37a86e8051b  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/sources.json
-770cf4a2e78c310a7bdaae63c860bb356dec269048ac8c28a98b6364484ba0d1  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/match_degree/degree_matching_edge.csv
-5063215676ddc1bd32f66d053f27f2b0a25bcab4d3b0e97f30213651deb4a5a9  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv
-22fd9a239599255508dfc29d17d198c8923b8f3d812e5c3b83fb9ec5feff7a41  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/run.log
-1542f74ef32830ae94386e3871e52b066485301f5ba11a573ee30e3827b79c67  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/sources.json
-d2cbd5f16eb48121504aab6dd80b9eb385804f00bbcd0599d36b71444e720f2e  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/time_and_err.log
+6f0bdbccbf0402d96e7167c383fd3497c5d19243aeea80991f32e0984a48a329  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/edge.csv
+213cb5e3efdc82dda0d9ee77e98eb9ea870a579fe86294fac529ef161621268a  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/sources.json
+9b1f05a4f29cf640d8dd66771657481104fd9b0928b5431574a15e777bba1fca  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/match_degree/degree_matching_edge.csv
+ada9517a641be744c7cd399e4f2d7f42e23d90df5a33b7b5f3427f35ec97863e  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+682f668a70bad10502615ba1c9ddf88fbdfd87a10d9518d2bd8adeaa7afa3829  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/run.log
+14951a201c28d35937e9aff230cb69b390c5c8dfa59e0cf6584419b92cfce863  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/sources.json
+b816dbd73d1133c556c5da663d0e03d9c769441655243d9799142950f00ced89  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/time_and_err.log

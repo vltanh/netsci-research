@@ -1,0 +1,14 @@
+{
+    "input_hash": "91fef31ccb9c18ece0f5f8cfff2c44fa19e2ad5f74f41f6b484d5f8a85f0973e",
+    "completed_metrics": {
+        "node_coverage": "b4d0845247fe036cdf8415adb93dc9d728413ee4aa04fae1367277c8472ce4aa",
+        "nmi": "de748448681975f26b0750a259f8cb27f6b5079444c08bd0f894c4770c4ff62a",
+        "ami": "20daa57924f1be01e464e33e4407526246a884ba07043fa5e51328ea41d76d6c",
+        "ari": "6f4f8d56b9f3b3f4f31feabaa6122d55c765aa7c90215b297dfc0d6f879ed1b1",
+        "fnr": "a5373f581a2055dadb00ba599edfc097a12e780dd01a8a064ddb9f9ed9a4f78f",
+        "fpr": "ca5d7734c9340aa7faf5477a6d8bdffa52e056401b40bf5c26507da93396fea5",
+        "precision": "bf3ffd695fd93a0d2b4bdc8c16e7a8f34253767e7f179671b1fee98f6839b3f4",
+        "recall": "ea87b10783a31c4908b8d9a2c2ebc193f5237219a50a1f0dd4b3bd168a5d9602",
+        "f1_score": "311f307789761992684fcc8857518477991c927c32dedcebaaec528e6a2987bb"
+    }
+}

@@ -1,5 +1,5 @@
 60e57ada6fc438cb448fb65c542cfd827a4509e4a5c9a13faa9d83c366d6bf76  test/input/dnc/dnc.csv
-d5ff0efae4bb445363a8813deed2e79418a9856624cc431e74074b1f414238c3  test/output/reference_clusterings/clusterings/sbm-flat-ndc/dnc/com.csv
-a3e4ba8c65e6853d163a730fd9c994d9dab59be1aab07ebe516960a7ea3fe92a  test/output/reference_clusterings/clusterings/sbm-flat-ndc+wcc(log)/dnc/com.csv
-743aa8df9d70da187c6409063bca46dcb37006fe249d5de06d6d7890fcb30c4a  test/output/reference_clusterings/clusterings/sbm-flat-ndc+wcc(log)/dnc/error.log
-6a84e1bbe4a7eb17e036d8d983fc32cfb0027c76794ce08f2f43f7d73d5596f9  test/output/reference_clusterings/clusterings/sbm-flat-ndc+wcc(log)/dnc/wcc.log
+c2bfb4fcc8dec30d50e7858a45522c7caff7242f2ec4aadb6b23da5f0b9e539d  test/output/reference_clusterings/clusterings/sbm-flat-ndc/dnc/com.csv
+7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-ndc+wcc(log)/dnc/com.csv
+7884d226adacd9e87e12d0ede8e2706f3abf40a2f3b6128b1d3bfec9f56d88f3  test/output/reference_clusterings/clusterings/sbm-flat-ndc+wcc(log)/dnc/error.log
+6b5e6914ac64f706628c808e075e6b79075e545b750adc54079afe75ec5b6c53  test/output/reference_clusterings/clusterings/sbm-flat-ndc+wcc(log)/dnc/wcc.log

@@ -1,2 +1,2 @@
-2026-03-10 10:41:31,564 - INFO - Done! Cleaned files saved to: test/output/synthetic_networks/networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean
-2026-03-10 10:41:31,564 - INFO - Kept 9435 edges and 529 clustered nodes.
+2026-03-27 16:20:53,951 - INFO - Done! Cleaned files saved to: test/output/synthetic_networks/networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean
+2026-03-27 16:20:53,951 - INFO - Kept 9243 edges and 542 clustered nodes.

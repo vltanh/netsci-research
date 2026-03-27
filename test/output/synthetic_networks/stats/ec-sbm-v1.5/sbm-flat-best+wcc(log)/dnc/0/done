@@ -1,5 +1,0 @@
-1c22467c88586ef38915661ec5ad30fe58547695b7f5558954c18d8560084875  test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/cluster/done
-5ff70f463b688ad952451b98063a5fa3c3fd1de9d5e26501fd1a3e1b25a24130  test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/network/done
-f2f97a361338aceeb397cf558c19aad91e9b6eb46e1af6eb91c5929db8390a63  test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/comparison.csv
-22e13f50be793d928c5d2c6dc32dc5d63c936da1a9905b550cf43eca1151818a  test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/error.log
-0b4a869b9c2b76b04866e733ef096d7a150a67be619143523988dd026c66506c  test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/out.log

@@ -1,5 +1,5 @@
 60e57ada6fc438cb448fb65c542cfd827a4509e4a5c9a13faa9d83c366d6bf76  test/input/dnc/dnc.csv
-247e35aedb0d43ea72441433a25b7ab52bc40385ae5fbab29cb16480a7dd9807  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/com.csv
-0a5d0933befedc98d27468a315981bd4e459204c3c683f02b360c5b0c1be082a  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/entropy.txt
-951212b05c6defc06fe1ce307b1ffecc4d61cc3fe3d3206fbc7d17f4fda0e9fd  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/error.log
-9a77428faef17f31609c5b6e63414536481bd47c5a654a58d5f2b69c3b679695  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/run.log
+ea52b71aeafbca7135782acb70d2692adde2b1d41925a35f233680702b17c534  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/com.csv
+0388c949270e94ce24cab2831e3418b081215e2e3a71e648fac76840d2a163c3  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/entropy.txt
+2773ebc549fc8a5f430b46a975bac73bd0385e2f646e04eeb0b4a659275edecc  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/error.log
+2c61785495ed59045483740c0d04aa223352bb2ba9777110a8f07a7ae79593db  test/output/reference_clusterings/clusterings/sbm-flat-pp/dnc/run.log

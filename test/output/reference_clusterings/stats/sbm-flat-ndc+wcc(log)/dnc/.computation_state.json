@@ -1,0 +1,24 @@
+{
+    "input_hash": "6816257da39b1e31e262e87d5c98a762160c0fbc9e60d54b451b1136804a2b15",
+    "completed_metrics": {
+        "node.idx": "8b14498488eef76d6a1df387057fb80b857fa1bf113e06f77c647d93f5cfeba8",
+        "com.idx": "52efaae1bca65cd1a8ca3829cc1e48402095dc74b036f4465a59efbd59942960",
+        "outliers.idx": "b12c4a874e892fc4b31fb8e9ea21ab29f42ec2acbf625bffd4847a2f9a77add1",
+        "global_n": "d5ef26658db000e0d661d54add309ff14305b055198b7376f386812bad2a0f6d",
+        "global_m": "9e50d3ccd5c20c5bea167c23dda703b53eaf4b554608d8374a396fff767d5c80",
+        "node_coverage": "e84d4f61f68b4b8fa78704bf2dca57b56b21132c597892b19ec7b783f769f09f",
+        "n_outliers": "82d20bdb3ec683c1f2c3429814e7ef9b85ea76d7695c16651ac3b114c6f7839c",
+        "mixing_parameter": "58e1af125aeeb36f659794b36f3b8fd00b3d3db798574bc73a70b5a4d199235d",
+        "n": "b4f71364b40d7fdf62a6c4e7b4dfca136b4a62cc77517989c1cbc62bdd14a4ea",
+        "m": "0d1414305d4cb63e49fd0e9d16faf1c1a0e8196778b5d42644d16e07a8a9810c",
+        "c": "c3d919ee1efe4356d0d62cb29b3caa3a09f7770b9538e1ee71620540fe8f6df9",
+        "conductance": "732668b58a6e239150989a47ed810cbadbe38d249e4a9fab9ccee4f07816d701",
+        "degree_density": "a78c04cb6d0e5f6531f7c60df37e0fc659e9fb58d176926a9ca37a19caddd368",
+        "edge_density": "513c4f00578a6e93bbdd86fd9e327777f36c1a673857370618544850e5f89b3e",
+        "mincut": "760a478391490c9ff1d1676e6e33cbd9ce34de384da58ccae89b4e193b26db63",
+        "modularity": "aefcbf322d30ecac42c677d7cf8631caecf032dcf064117d9ab4fb54f4be6423",
+        "n_clusters": "d93844f8f37e55564be3f194656bf33b5d0fb5e589a0fe17eb7c2d4e8593ec9c",
+        "n_disconnected_clusters": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "n_connected_clusters": "d93844f8f37e55564be3f194656bf33b5d0fb5e589a0fe17eb7c2d4e8593ec9c"
+    }
+}

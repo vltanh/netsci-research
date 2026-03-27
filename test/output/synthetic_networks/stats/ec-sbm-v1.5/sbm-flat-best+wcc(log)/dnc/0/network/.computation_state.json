@@ -1,0 +1,24 @@
+{
+    "input_hash": "1c987982d8b940e4edc8790c102076667c2c21787f0b9a58fc87064cabbe4d5e",
+    "completed_metrics": {
+        "node.idx": "26d4c14d6cf7507d638a973c535250a63e66d4453b08d3c831faf5de63ef0611",
+        "n_nodes": "d5ef26658db000e0d661d54add309ff14305b055198b7376f386812bad2a0f6d",
+        "n_edges": "811e7b36525b68ea4b9f5f0b343f4de1cf4fb4e1096ec7191835696727b16db4",
+        "n_concomp": "64aeb9975f234becd55bb4635e6e2f2da7a6b7bf0a896f0c07763bdfbfb31420",
+        "mean_degree": "45495f193a2e69068b583796f882754c1bcded70af47aa78083be0be0b981232",
+        "deg_assort": "fa0194f36ddbb99253128cfd73205a94d3c35f62122550d9bdbf9b84e4610fb5",
+        "mean_kcore": "918e4f9c17368cec97c0dc5adaefe7a34fe5304ae47689a72c6f644ebda789e6",
+        "global_ccoeff": "a1cbfb5fa2e400430a14e1b548e30896e3fc2aa7db0c40dca4bec2f9a9d93954",
+        "local_ccoeff": "4f9bf0ce5f5a4065ca0b0e1a71566d55b0279e1166f790e08c7f3ce809353fbb",
+        "pseudo_diameter": "510fcef8619a24e3ce4d8838394e3c00a262aa18419e4e723bfccf0ce6debaf8",
+        "char_time": "bbc1cd6e5fc9e9a5e55d37ded5536d9ab2ec156f5062e86381c3cfd13eea68b4",
+        "node_percolation_targeted": "a8dca594ca6136c037bfc50a46fae6113f772efa71bcc6b9023c8d60a3f3b487",
+        "node_percolation_random": "37bf7c2403ae52933299845464adfa55ac19d93bff6cd08992a409e406e00d5f",
+        "frac_giant_ccomp": "c4fc66639183f25d63bae42bb1fa7bb6dcd99270e043f81152cc7a580114cae8",
+        "concomp_sizes": "c7296ca078b0a0777b0bbffedc4edf60777b4b28c8981829ae0b7366296c420f",
+        "degree": "5407c76369d43daf3a047008f4c6fbb717118a86c344afb120958d50081e5f38",
+        "local_ccoeff_nodes": "ceb88c0a73d15d85971ad08dcb7e3308c1250d89997507e80777fde01a317aef",
+        "pagerank": "9c22980d998eef37e2d88d6a4880a38114392bedba9163976e816469b3b17302",
+        "kcore": "8366dcb80eb8999b1b5c674e47745c6571de9028260505cf3a2b68d50bc5080a"
+    }
+}

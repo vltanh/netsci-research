@@ -1,11 +1,16 @@
-# community_detection/run_cd.sh
+# community-detection/run_cd.sh
 
 # Submission
 sh submit_array.sh --network-list data/networks_all.txt --mode cd --criterion log --real --method leiden-cpm-0.1 leiden-0.01 leiden-0.001 leiden-mod sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc
 sh submit_array.sh --network-list data/networks_all.txt --mode gen --generator ec-sbm-v2 ec-sbm-v1.5 --clustering leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 "leiden-cpm-0.1+cm(log)" "leiden-cpm-0.01+cm(log)" "leiden-cpm-0.001+cm(log)" leiden-mod "leiden-mod+cm(log)" sbm-flat-best+cc "sbm-flat-best+wcc(log)" sbm-nested-best+cc "sbm-nested-best+wcc(log)"
 
+# Custom computing network statistics
+./compute_network_stats.sh \
+    --input-edgelist test/input/dnc/dnc.csv \
+    --output-dir test/output/empirical_networks/stats/dnc
+
 # Custom simulating real
-./community_detection/run_cd.sh \
+./community-detection/run_cd.sh \
     --algo sbm-flat-dc \
     --criterion log \
     --input-edgelist test/input/dnc/dnc.csv \
@@ -14,7 +19,7 @@ sh submit_array.sh --network-list data/networks_all.txt --mode gen --generator e
     --run-stats \
     --run-cc --run-wcc --run-cm
 
-./community_detection/run_cd.sh \
+./community-detection/run_cd.sh \
     --algo sbm-flat-dc \
     --criterion log \
     --real \
@@ -23,7 +28,7 @@ sh submit_array.sh --network-list data/networks_all.txt --mode gen --generator e
     --run-cc --run-wcc --run-cm
 
 # Custom simulating synthetic
-./community_detection/run_cd.sh \
+./community-detection/run_cd.sh \
     --algo sbm-flat-best \
     --criterion sqrt \
     --input-edgelist "test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv" \
@@ -33,7 +38,7 @@ sh submit_array.sh --network-list data/networks_all.txt --mode gen --generator e
     --run-stats --run-acc \
     --run-cc --run-wcc --run-cm
 
-./community_detection/run_cd.sh \
+./community-detection/run_cd.sh \
     --algo sbm-flat-best \
     --criterion sqrt \
     --synthetic \
