@@ -33,9 +33,9 @@ def ordered_split(input_file, ratios=(0.7, 0.15, 0.15), seed=0):
 
     # 5. Save files
     files = [
-        "data/networks_train.txt",
-        "data/networks_val.txt",
-        "data/networks_test.txt",
+        "data/networks_train_old.txt",
+        "data/networks_val_old.txt",
+        "data/networks_test_old.txt",
     ]
     datasets = [train_lines, val_lines, test_lines]
 
@@ -46,4 +46,4 @@ def ordered_split(input_file, ratios=(0.7, 0.15, 0.15), seed=0):
 
 
 # Execute
-ordered_split("data/networks_all.txt", ratios=(0.5, 0.2, 0.3), seed=0)
+ordered_split("data/networks_all_old.txt", ratios=(0.5, 0.2, 0.3), seed=0)

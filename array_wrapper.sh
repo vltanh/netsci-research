@@ -4,7 +4,7 @@
 #SBATCH --error=/dev/null
 #SBATCH --time=04:00:00
 #SBATCH --mem=32G
-#SBATCH --partition=secondary
+#SBATCH --partition="secondary"
 #SBATCH --constraint="AE7713"
 #SBATCH --signal=B:SIGUSR1@60
 
