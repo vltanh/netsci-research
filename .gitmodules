@@ -4,3 +4,6 @@
 [submodule "constrained-clustering"]
 	path = constrained-clustering
 	url = git@github.com:MinhyukPark/constrained-clustering.git
+[submodule "network-generation"]
+	path = network-generation
+	url = git@github.com:vltanh/network-generation.git
