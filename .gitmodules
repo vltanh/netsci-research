@@ -7,3 +7,6 @@
 [submodule "network-generation"]
 	path = network-generation
 	url = git@github.com:vltanh/network-generation.git
+[submodule "community-detection"]
+	path = community-detection
+	url = git@github.com:vltanh/community-detection.git
