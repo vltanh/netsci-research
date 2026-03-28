@@ -1,0 +1,12 @@
+ada9517a641be744c7cd399e4f2d7f42e23d90df5a33b7b5f3427f35ec97863e  test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+c34300f93125c71cfc78a4a31a546b34684f7dfae84bdaf8f7c5402b2ffbcfe1  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc+cc/dnc/0/com.csv
+5b3373dcd83d306d7111f03e6ce4cc80703f6557ec534f5245f437cb65d9cf0e  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.node_coverage
+6d684f7102cdc074b06ec32827aae49bd51fd900cccfb0a85083b9f1538eba8d  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.nmi
+1faf0e18d4ab6a0fe29bf1993e0332f5ed5ce89261237ae896234e7c31486979  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.ami
+129fa203ff6e58e3b7fa8e039bfe59367dce784a6381f3db456adceff1522add  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.ari
+4f51c344920e5fb7cf5f09767a8505724247fe5d2bdba6d6e6fe01ffb447b6f8  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.fnr
+b36e6947fb290e3c5d9ab7dfa6db8fbbe8fd95039c34f0d00bd99aa6197c001e  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.fpr
+816170e5e0219819b7e0d170def8f6e03cc6d8bf958a5563fbeb2c16c76cd65c  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.precision
+b04e6aa4aa7ee8e549650de7d2db8707b451844e3967437cbb8bb80511c26c6d  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.recall
+34be97ae0bddcf3fa9289f1bca15383fbf6b48f70a0f77edad62509b4c3587bd  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc+cc/dnc/0/result.f1_score

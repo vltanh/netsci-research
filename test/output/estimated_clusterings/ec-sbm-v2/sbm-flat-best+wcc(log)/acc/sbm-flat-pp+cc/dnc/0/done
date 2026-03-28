@@ -1,0 +1,12 @@
+ada9517a641be744c7cd399e4f2d7f42e23d90df5a33b7b5f3427f35ec97863e  test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+7a5b1b7129795d83df93487a3b21f3c4399dfa18ba23e6a351685ac6070a7f98  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp+cc/dnc/0/com.csv
+3cd45d6e374d5d52cf1cd12f7878fec237091e8f03c77e6576155ebadc83efda  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.node_coverage
+f6e74f65fd5a2d44070604d0278b5580bef5ca8ce5a2e1dcffb93a5c8f9a68c4  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.nmi
+db88204c529dfd2f39dab160b6a0717d6edcb4171a7e3b933cc27ba2062f61d7  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.ami
+53e11dfb50900ebd3fdb559d9e7361a6904c1a744faddc1eb12826e33d8e7abe  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.ari
+b70cdfcdd11272ea7157a3122ef3a2ac6ce0f89a4cd03275eb05fc9e98f88376  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.fnr
+9d88ea2ba161056ba90129a745222a65a16d711e66d11b157071bb1c0bed49ce  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.fpr
+a59648852ed97760c9f2fb8fcdfdc7be3780adb4789d76c26b5cf28b9cb23e98  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.precision
+e08c2afbccfc64de8bf4dcef0519e3226152b9e1b4f72bcec47dc2bd61118056  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.recall
+0ece4a966bf5804445ed75e8ee58dc18e16c780484bc197a8e0f62e35119d5f5  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.f1_score

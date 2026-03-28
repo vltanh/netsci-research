@@ -1,0 +1,12 @@
+1c987982d8b940e4edc8790c102076667c2c21787f0b9a58fc87064cabbe4d5e  test/output/synthetic_networks/networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+3bc91cece15a87c61963da7e4b973ab0abfb967d659e1b2caf0ef1f2f5f2eb06  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp+cc/dnc/0/com.csv
+dd6e96df4e3be5e3ac0dccbe708a7f3dd704f33855386a3ec68d895b695556b7  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.node_coverage
+6bfab8cfa14da322b4fef7c5943309d6563e33e6219ff15ac1fed7c059766be6  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.nmi
+5099e7b696d07835fc4b819e1d363ae86796fbf0bffafaa62c28e15432a06420  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.ami
+5f4e21b86f0d8a1a1bfc1337a7eb59b91ddbc939bb99a6e4c21778abaa3a4fb5  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.ari
+c75208365f7a8ac36ff9242800cbf2a81583ce4404b83917927c257072e9ad23  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.fnr
+7741b7b9dc671af4fea037bd2791a04ace510325059cf2c696af2ff4330fdd8e  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.fpr
+f7f0139fc4992fa0f9c664e8197bcd186f550380c3d5ba3418929c6cda7429d8  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.precision
+94f21d55f74cdfead21b12e0de830bc1de613a61e12aac30ff4e30fea4762523  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.recall
+18600fe692bda72c103852436a7b3f8ee53a9ee75d8c88a33452d9f9752adfeb  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+cc/dnc/0/result.f1_score

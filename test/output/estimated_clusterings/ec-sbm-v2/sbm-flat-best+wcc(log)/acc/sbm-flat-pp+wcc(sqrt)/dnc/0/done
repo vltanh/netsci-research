@@ -1,0 +1,12 @@
+ada9517a641be744c7cd399e4f2d7f42e23d90df5a33b7b5f3427f35ec97863e  test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+dc659682eeaeed6ef8a121ed2c911fda38f379d19b33658102ff0435b99e8516  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp+wcc(sqrt)/dnc/0/com.csv
+dfe6a876ed1cb45a14a9541970bf06d3fed999a18b87100e8dc71d2610751555  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.node_coverage
+e6c9eb5e2e6d9bed2bbefc3c8491be419c0c45a38d0ad76ebadd5400fa7d71dc  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.nmi
+54c05a45f6b31ea027ab89c8baf2075a303066d6a3d3ba0de7caea2dfab74644  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.ami
+20d60080d7c5be52302985110db6900c88d50ead7b562d0bf0cdbdac2146350c  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.ari
+d862a42378c54cc2677b22394ad152c3e5cebb6a08cc81c4a5abdb145a36c8d8  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.fnr
+ee092fb0a34171aa2bed2163a5eac4e1aa9df5a48b257c139b7b67b296bf26e2  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.fpr
+79cd318a3a7d63acdde6f93b04b77c7acfe5b06b1aa6a608cab7c772bd61b815  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.precision
+bf962d6d99536caa5282ecd2dc35ab322280258a4a5950d0c1f2c13ad893b6a3  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.recall
+614acf0bb65f81d95391fef862508a364d04bfd88cfa85bfd78c58312ba03de4  test/output/estimated_clusterings/ec-sbm-v2/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.f1_score

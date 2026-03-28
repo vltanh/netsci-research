@@ -1,0 +1,12 @@
+1c987982d8b940e4edc8790c102076667c2c21787f0b9a58fc87064cabbe4d5e  test/output/synthetic_networks/networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+d7f5c1a007a0b877f043d863615e42af7c103d0b2dda15d1d9b60502bb6acd31  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp+wcc(sqrt)/dnc/0/com.csv
+024c065a5dd44d3578f41bad6f57de3a2e169271361e012c5c6191d8ff3262e2  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.node_coverage
+ceb4dcfb2d55a2b2ddd73772a0a575daf3ebad0e0ac8345cf71f97de12b9161e  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.nmi
+4fe711120486693527734df29d416a6d4611ed8a02a0b98a29f7736aab5ea874  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.ami
+47d6c7d9181354b731debdfdc4a1796888f0a21ab3717f38942c82dd107f0c77  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.ari
+0b7ae9f37a5b2e90dd21cf9f68f27bc7a86a15f0d209dc5b9b059bd9cd4f4f7d  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.fnr
+bbb53a9a45539c1eb29171398f99ed0a5ad3ad1808a0a50fd5856aab51f96e1b  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.fpr
+f7b88ee021191b7daffbd84c114dfbffc6cdfce0ef496fbf1782bf2bd29d41b2  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.precision
+cd5a20ff5b7e6304b191f8483cd169b086a716f7a1399093098d838dc5d5c44c  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.recall
+e6282d971ef9a7d0d15e1ce61ffe1e1c0964f9711275d8ca25c65211a329ff97  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-pp+wcc(sqrt)/dnc/0/result.f1_score

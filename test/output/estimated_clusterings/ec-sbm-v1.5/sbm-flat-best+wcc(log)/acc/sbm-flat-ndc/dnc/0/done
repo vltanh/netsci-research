@@ -1,0 +1,12 @@
+1c987982d8b940e4edc8790c102076667c2c21787f0b9a58fc87064cabbe4d5e  test/output/synthetic_networks/networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/edge.csv
+7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
+2297bb228fc6658742e145eeee983d9321f6aa54d4f9ee8ecd9595fdf6835d19  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/clusterings/sbm-flat-ndc/dnc/0/com.csv
+b4d0845247fe036cdf8415adb93dc9d728413ee4aa04fae1367277c8472ce4aa  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.node_coverage
+85dfbae5cfbb89432b0e92196c69f4a6271d7d624afc445b8a3504f8b3963964  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.nmi
+637d0657175ffb352275943c90f67522d29751ef9b58032c761bdfa9cd8331eb  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.ami
+f204e9ec04a67536585ce40f246df72b1990a01d1782632c906801f3d88fd725  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.ari
+53f62e67ebb600626eccfa5271de9c8166f501d964eef1b685333ad7d4d3f48f  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.fnr
+d818fae95ac616f1087026ab4be617110cf457901b7b0f94493a2cfcfa56d663  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.fpr
+debf269ab547bd40ca618a279f7885fedae5409ac45761d4a44b600535b5ce8d  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.precision
+9e1fd9fd62e656b388283c73c6370b18ea8763bd547036abe51a902a0c645a93  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.recall
+c443939f922a421035740c1368d9d020d5e2c3c5c5c9b89db15696fffd59b6df  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/acc/sbm-flat-ndc/dnc/0/result.f1_score

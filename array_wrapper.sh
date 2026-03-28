@@ -2,11 +2,12 @@
 #SBATCH --job-name=ecsbmv2_array
 #SBATCH --output=/dev/null
 #SBATCH --error=/dev/null
-#SBATCH --time=04:00:00
+#SBATCH --time=7-00:00:00
 #SBATCH --mem=32G
-#SBATCH --partition="secondary"
+#SBATCH --partition="folkvangr"
 #SBATCH --constraint="AE7713"
 #SBATCH --signal=B:SIGUSR1@60
+#SBATCH --dependency=afterany:7782558
 
 TASK_FILE=$1
 
@@ -50,7 +51,7 @@ signal_handler() {
         kill -TERM "${CHILD_PID}" 2>/dev/null
     fi
     # Exiting here will automatically trigger the 'EXIT' trap above
-    exit 124 
+    exit 124
 }
 # Trap SIGUSR1 (our 60s timeout warning) and SIGTERM (manual scancel)
 trap signal_handler SIGUSR1 SIGTERM
@@ -76,6 +77,6 @@ CHILD_PID=$!
 wait ${CHILD_PID}
 EXIT_CODE=$?
 
-# Exit with the script's actual exit code. 
+# Exit with the script's actual exit code.
 # The trap we set for 'EXIT' will automatically remove the lock.
 exit $EXIT_CODE

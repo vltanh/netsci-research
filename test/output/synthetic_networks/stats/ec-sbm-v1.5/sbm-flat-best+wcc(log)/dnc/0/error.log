@@ -1,20 +1,20 @@
 /u/vltanh/miniconda3/envs/nw/lib/python3.14/site-packages/scipy/stats/_axis_nan_policy.py:592: RuntimeWarning: ks_2samp: Exact calculation unsuccessful. Switching to method=asymp.
   res = hypotest_fun_out(*samples, **kwds)
 	Command being timed: "python /u/vltanh/ecsbmv2/network-generation/network_evaluation/compare/compare_pair.py --cluster-1-folder test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/cluster --cluster-2-folder test/output/reference_clusterings/stats/sbm-flat-best+wcc(log)/dnc --network-1-folder test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/network --network-2-folder test/output/empirical_networks/stats/dnc --output-file test/output/synthetic_networks//stats/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/comparison.csv --is-compare-sequence"
-	User time (seconds): 1.82
-	System time (seconds): 0.46
-	Percent of CPU this job got: 112%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.03
+	User time (seconds): 2.00
+	System time (seconds): 0.43
+	Percent of CPU this job got: 115%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.11
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 116736
+	Maximum resident set size (kbytes): 116992
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 32470
-	Voluntary context switches: 2911
-	Involuntary context switches: 486
+	Minor (reclaiming a frame) page faults: 32443
+	Voluntary context switches: 3129
+	Involuntary context switches: 364
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 24
