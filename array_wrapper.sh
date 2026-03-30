@@ -2,12 +2,7 @@
 #SBATCH --job-name=ecsbmv2_array
 #SBATCH --output=/dev/null
 #SBATCH --error=/dev/null
-#SBATCH --time=7-00:00:00
-#SBATCH --mem=32G
-#SBATCH --partition="folkvangr"
-#SBATCH --constraint="AE7713"
 #SBATCH --signal=B:SIGUSR1@60
-#SBATCH --dependency=afterany:7782558
 
 TASK_FILE=$1
 

@@ -13,6 +13,14 @@
 #   --network-list <file>    : Path to the list of network IDs (default: data/networks_all.txt).
 #   --run-id <id>            : Identifier for the run (default: 0). Used in both syn-cd and gen.
 #
+# SLURM OPTIONS:
+#   --time <time>            : Wall time limit (default: 04:00:00).
+#   --mem <mem>              : Memory per node (default: 32G).
+#   --partition <name>       : Partition to submit to (default: secondary).
+#   --constraint <name>      : Node constraint (default: AE7713).
+#   --dependency <cond...>   : One or more SLURM dependency conditions (e.g., afterok:123 afterany:456).
+#                              Multiple conditions are comma-joined: afterok:123,afterany:456.
+#
 # MODES & SPECIFIC OPTIONS:
 #   --mode cd      : Run Community Detection (evaluates algorithms).
 #       --real                   : Flag to run on empirical (real) networks.
@@ -34,6 +42,9 @@
 #
 #   3. Synthetic Network Generation (specific run-id):
 #      ./submit_array.sh --mode gen --generator ec-sbm dc-sbm --clustering leiden-cpm-0.5+cm
+#
+#   4. With SLURM overrides and dependencies:
+#      ./submit_array.sh --mode cd --real --method leiden-cpm-0.1 --time 01:00:00 --mem 16G --dependency afterok:12345 afterany:67890
 # ==============================================================================
 
 CONCURRENCY_LIMIT=40
@@ -51,6 +62,10 @@ run_id="0"
 is_real=0
 criterion=""
 network_list="data/networks_all.txt"
+time="04:00:00"
+mem="32G"
+partition="secondary"
+constraint="AE7713"
 
 # Arrays for multi-argument flags
 # [CONFIGURABLE] Add any additional arrays for multi-argument flags here
@@ -58,6 +73,7 @@ generators=()
 gt_clusterings=()
 methods=()
 clusterings=()
+dependencies=()
 
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
@@ -67,7 +83,18 @@ while [[ "$#" -gt 0 ]]; do
         --network-list) network_list="$2"; shift 2 ;;
         --criterion) criterion="$2"; shift 2 ;;
         --real) is_real=1; shift 1 ;;
+        --time) time="$2"; shift 2 ;;
+        --mem) mem="$2"; shift 2 ;;
+        --partition) partition="$2"; shift 2 ;;
+        --constraint) constraint="$2"; shift 2 ;;
         # [CONFIGURABLE] Add any additional single-argument flags here
+
+        --dependency)
+            shift
+            while [[ "$#" -gt 0 && ! "$1" == -* ]]; do
+                dependencies+=("$1"); shift
+            done
+            ;;
 
         # Multi-argument parsing logic
         --generator)
@@ -213,9 +240,16 @@ fi
 
 echo "Generated ${total_tasks} total tasks."
 
+sbatch_args=(--time="${time}" --mem="${mem}" --partition="${partition}" --constraint="${constraint}")
+if [[ ${#dependencies[@]} -gt 0 ]]; then
+    dep_str=$(IFS=,; echo "${dependencies[*]}")
+    sbatch_args+=(--dependency="${dep_str}")
+    echo "Dependencies: ${dep_str}"
+fi
+
 if [[ "$total_tasks" -le "$MAX_JOB_PER_ARRAY" ]]; then
     echo "Submitting single array job for ${total_tasks} tasks (Max Concurrency: ${CONCURRENCY_LIMIT})..."
-    sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh "${TASK_FILE}"
+    sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} "${sbatch_args[@]}" array_wrapper.sh "${TASK_FILE}"
 else
     echo "Total tasks exceed MAX_JOB_PER_ARRAY (${MAX_JOB_PER_ARRAY}). Splitting into multiple jobs..."
 
@@ -225,6 +259,6 @@ else
     for part_file in "${TASK_FILE}_part_"*; do
         part_tasks=$(wc -l < "${part_file}")
         echo "Submitting array for ${part_tasks} tasks from ${part_file}..."
-        sbatch --array=1-${part_tasks}%${CONCURRENCY_LIMIT} array_wrapper.sh "${part_file}"
+        sbatch --array=1-${part_tasks}%${CONCURRENCY_LIMIT} "${sbatch_args[@]}" array_wrapper.sh "${part_file}"
     done
 fi
