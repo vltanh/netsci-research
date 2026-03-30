@@ -1,6 +1,6 @@
-90797ca8fc64f5d9fcd0ddec42ebd3f3901add7a91484856972e4fb4e8d5191c  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/clustered/edge.csv
-67eafd964a94584998e45d27d4f80d8fd7889f7796af2d50251ac50047cd3359  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/edges/edge_outlier.csv
-6f0bdbccbf0402d96e7167c383fd3497c5d19243aeea80991f32e0984a48a329  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/edge.csv
-40588414f9819796086a8a4215aaf69eefff56e816aaa5b75c835f669b7726ba  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/run.log
-213cb5e3efdc82dda0d9ee77e98eb9ea870a579fe86294fac529ef161621268a  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/sources.json
-194aa98f5c6d067b884620d0429c7e2335e0ebb63d1acbaf50a39041b178ef66  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/time_and_err.log
+3daad3f18df07b6918cde7615ee21c3c92c14a7c1747dc02191cd0e3151c6eeb  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/clustered/edge.csv
+7e3d3c16507008d3566d121d9bc2353f078f8c6bf2afb4c7bfffbc623e7fbfae  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/edges/edge_outlier.csv
+5864f390738b8f80591b36d21ead6db7855465a1ce8053421e89214ecb38a8d6  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/edge.csv
+95f01a02e43d5cd5ced83a83f78c2e827afbc30a0a27cbb78f51626548ee4b48  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/run.log
+cb5c3ba70acd92e816cd0f846092fe9a2c03a4701bde81e2a5b492ca55a6c2c0  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/sources.json
+b721115c953d667997a9df7a78569ad1a0348dacdf7d73e0dbfef6775933fa8d  test/output/synthetic_networks//networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/outlier/time_and_err.log
