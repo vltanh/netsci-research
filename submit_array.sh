@@ -205,7 +205,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
                     for method in "${methods[@]}"; do
                         script="community-detection/run_cd.sh"
                         job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
-                        args="--algo ${method} --network ${network_id} --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg} --run-stats --run-acc --run-cc --run-wcc --run-cm"
+                        args="--algo ${method} --network ${network_id} --synthetic --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg} --run-stats --run-acc --run-cc --run-wcc --run-cm"
                         log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
 
                         echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"

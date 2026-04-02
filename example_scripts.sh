@@ -2,11 +2,20 @@
 
 # Submission
 sh submit_array.sh \
+    --time 04:00:00 --partition secondary --mem 32G \
     --network-list data/networks_all.txt \
     --mode cd --criterion log --real \
     --method leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 leiden-mod sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc
 
 sh submit_array.sh \
+    --time 04:00:00 --partition secondary --mem 32G \
+    --network-list data/networks_all.txt \
+    --mode cd --criterion log --synthetic \
+    --generator ec-sbm-v2 --gt-clustering-id sbm-flat-best+cc --run-id 0 \
+    --method leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 leiden-mod sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc
+
+sh submit_array.sh \
+    --time 04:00:00 --partition secondary --mem 32G \
     --network-list data/networks_all.txt \
     --mode gen --generator ec-sbm-v2 ec-sbm-v1.5 \
     --clustering leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 "leiden-cpm-0.1+cm(log)" "leiden-cpm-0.01+cm(log)" "leiden-cpm-0.001+cm(log)" leiden-mod "leiden-mod+cm(log)" sbm-flat-best+cc "sbm-flat-best+wcc(log)" sbm-nested-best+cc "sbm-nested-best+wcc(log)"
