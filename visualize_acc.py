@@ -215,9 +215,8 @@ def generate_summary_table(
     best_counts_df["Stat"] = "count_best"
     best_counts_df = best_counts_df.set_index("Stat", append=True)
 
-    # C. Combine, rename columns, and save CSV
+    # C. Combine and save CSV (keep raw metric names as column headers)
     final_summary = pd.concat([stats_stacked, best_counts_df]).sort_index()
-    final_summary.columns = metric_names
 
     output_dir.mkdir(parents=True, exist_ok=True)
     out_path = output_dir / f"summary_{output_fn}.csv"
@@ -340,9 +339,14 @@ if __name__ == "__main__":
 
     if df_mapped.empty:
         logger.warning(
-            "No data found matching the provided generator, gt-clustering, and algos."
+            "No data found matching the provided algos."
         )
         sys.exit(0)
+
+    # 3b. Derive complement columns for comp_fpr / comp_fnr if requested
+    for comp, base in (("comp_fpr", "fpr"), ("comp_fnr", "fnr")):
+        if comp in args.metrics:
+            df_mapped[comp] = 1.0 - df_mapped[base]
 
     # 4. Filter to common networks with complete data
     df_clean = get_common_networks_df(
