@@ -1,146 +1,146 @@
 #!/bin/sh
 
-# Very small
+# # Very small
 
-python network_evaluation/compare/aggregate_comparisons.py \
-    --root data/synthetic_networks/stats/ \
-    --output plots/verysmall/agg_comp.csv \
-    --network-fp data/networks_verysmall.txt \
-    --generators ec-sbm-v2 ec-sbm-v1.5 \
-    --clusterings \
-        leiden-cpm-0.1 \
-        "leiden-cpm-0.1+cm(log)" \
-        leiden-cpm-0.01 \
-        "leiden-cpm-0.01+cm(log)" \
-        leiden-cpm-0.001 \
-        "leiden-cpm-0.001+cm(log)" \
-        leiden-mod \
-        "leiden-mod+cm(log)" \
-        sbm-flat-best+cc \
-        "sbm-flat-best+wcc(log)" \
-        sbm-nested-best+cc \
-        "sbm-nested-best+wcc(log)"
+# python network_evaluation/compare/aggregate_comparisons.py \
+#     --root data/synthetic_networks/stats/ \
+#     --output plots/verysmall/agg_comp.csv \
+#     --network-fp data/networks_verysmall.txt \
+#     --generators ec-sbm-v2 ec-sbm-v1.5 \
+#     --clusterings \
+#         leiden-cpm-0.1 \
+#         "leiden-cpm-0.1+cm(log)" \
+#         leiden-cpm-0.01 \
+#         "leiden-cpm-0.01+cm(log)" \
+#         leiden-cpm-0.001 \
+#         "leiden-cpm-0.001+cm(log)" \
+#         leiden-mod \
+#         "leiden-mod+cm(log)" \
+#         sbm-flat-best+cc \
+#         "sbm-flat-best+wcc(log)" \
+#         sbm-nested-best+cc \
+#         "sbm-nested-best+wcc(log)"
 
-python network_evaluation/compare/visualize_comparisons.py \
-    --data-fp plots/verysmall/agg_comp.csv \
-    --generators \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-        ec-sbm-v2 \
-        ec-sbm-v1.5 \
-    --clusterings \
-        leiden-cpm-0.1 \
-        leiden-cpm-0.1 \
-        "leiden-cpm-0.1+cm(log)" \
-        "leiden-cpm-0.1+cm(log)" \
-        leiden-cpm-0.01 \
-        leiden-cpm-0.01 \
-        "leiden-cpm-0.01+cm(log)" \
-        "leiden-cpm-0.01+cm(log)" \
-        leiden-cpm-0.001 \
-        leiden-cpm-0.001 \
-        "leiden-cpm-0.001+cm(log)" \
-        "leiden-cpm-0.001+cm(log)" \
-        leiden-mod \
-        leiden-mod \
-        "leiden-mod+cm(log)" \
-        "leiden-mod+cm(log)" \
-        "sbm-flat-best+cc" \
-        "sbm-flat-best+cc" \
-        "sbm-flat-best+wcc(log)" \
-        "sbm-flat-best+wcc(log)" \
-        "sbm-nested-best+cc" \
-        "sbm-nested-best+cc" \
-        "sbm-nested-best+wcc(log)" \
-        "sbm-nested-best+wcc(log)" \
-    --names \
-        "EC-SBMv2 x Leiden-CPM(0.1)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.1)" \
-        "EC-SBMv2 x Leiden-CPM(0.1)+CM(log)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(log)" \
-        "EC-SBMv2 x Leiden-CPM(0.01)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.01)" \
-        "EC-SBMv2 x Leiden-CPM(0.01)+CM(log)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(log)" \
-        "EC-SBMv2 x Leiden-CPM(0.001)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.001)" \
-        "EC-SBMv2 x Leiden-CPM(0.001)+CM(log)" \
-        "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(log)" \
-        "EC-SBMv2 x Leiden-Mod" \
-        "EC-SBMv1.5 x Leiden-Mod" \
-        "EC-SBMv2 x Leiden-Mod+CM(log)" \
-        "EC-SBMv1.5 x Leiden-Mod+CM(log)" \
-        "EC-SBMv2 x SBM(Flat)+CC" \
-        "EC-SBMv1.5 x SBM(Flat)+CC" \
-        "EC-SBMv2 x SBM(Flat)+WCC(log)" \
-        "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
-        "EC-SBMv2 x SBM(Nested)+CC" \
-        "EC-SBMv1.5 x SBM(Nested)+CC" \
-        "EC-SBMv2 x SBM(Nested)+WCC(log)" \
-        "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
-    --stats \
-        pseudo_diameter \
-        char_time \
-        global_ccoeff \
-        degree \
-        n_edges \
-        deg_assort \
-        node_percolation_targeted \
-        node_percolation_random \
-        local_ccoeff \
-        local_ccoeff_nodes \
-        pagerank \
-        kcore \
-    --types \
-        scalar \
-        scalar \
-        scalar \
-        sequence \
-        scalar \
-        scalar \
-        scalar \
-        scalar \
-        scalar \
-        sequence \
-        sequence \
-        sequence \
-    --metrics \
-        rel_diff \
-        rel_diff \
-        abs_diff \
-        rmse \
-        rel_diff \
-        abs_diff \
-        abs_diff \
-        abs_diff \
-        abs_diff \
-        rmse \
-        rmse \
-        rmse \
-    --network-fp data/networks_verysmall.txt \
-    --output-dir plots/verysmall/ \
-    --output-fn network \
-    --hide-fliers
+# python network_evaluation/compare/visualize_comparisons.py \
+#     --data-fp plots/verysmall/agg_comp.csv \
+#     --generators \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#         ec-sbm-v2 \
+#         ec-sbm-v1.5 \
+#     --clusterings \
+#         leiden-cpm-0.1 \
+#         leiden-cpm-0.1 \
+#         "leiden-cpm-0.1+cm(log)" \
+#         "leiden-cpm-0.1+cm(log)" \
+#         leiden-cpm-0.01 \
+#         leiden-cpm-0.01 \
+#         "leiden-cpm-0.01+cm(log)" \
+#         "leiden-cpm-0.01+cm(log)" \
+#         leiden-cpm-0.001 \
+#         leiden-cpm-0.001 \
+#         "leiden-cpm-0.001+cm(log)" \
+#         "leiden-cpm-0.001+cm(log)" \
+#         leiden-mod \
+#         leiden-mod \
+#         "leiden-mod+cm(log)" \
+#         "leiden-mod+cm(log)" \
+#         "sbm-flat-best+cc" \
+#         "sbm-flat-best+cc" \
+#         "sbm-flat-best+wcc(log)" \
+#         "sbm-flat-best+wcc(log)" \
+#         "sbm-nested-best+cc" \
+#         "sbm-nested-best+cc" \
+#         "sbm-nested-best+wcc(log)" \
+#         "sbm-nested-best+wcc(log)" \
+#     --names \
+#         "EC-SBMv2 x Leiden-CPM(0.1)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.1)" \
+#         "EC-SBMv2 x Leiden-CPM(0.1)+CM(log)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(log)" \
+#         "EC-SBMv2 x Leiden-CPM(0.01)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.01)" \
+#         "EC-SBMv2 x Leiden-CPM(0.01)+CM(log)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(log)" \
+#         "EC-SBMv2 x Leiden-CPM(0.001)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.001)" \
+#         "EC-SBMv2 x Leiden-CPM(0.001)+CM(log)" \
+#         "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(log)" \
+#         "EC-SBMv2 x Leiden-Mod" \
+#         "EC-SBMv1.5 x Leiden-Mod" \
+#         "EC-SBMv2 x Leiden-Mod+CM(log)" \
+#         "EC-SBMv1.5 x Leiden-Mod+CM(log)" \
+#         "EC-SBMv2 x SBM(Flat)+CC" \
+#         "EC-SBMv1.5 x SBM(Flat)+CC" \
+#         "EC-SBMv2 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv2 x SBM(Nested)+CC" \
+#         "EC-SBMv1.5 x SBM(Nested)+CC" \
+#         "EC-SBMv2 x SBM(Nested)+WCC(log)" \
+#         "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
+#     --stats \
+#         pseudo_diameter \
+#         char_time \
+#         global_ccoeff \
+#         degree \
+#         n_edges \
+#         deg_assort \
+#         node_percolation_targeted \
+#         node_percolation_random \
+#         local_ccoeff \
+#         local_ccoeff_nodes \
+#         pagerank \
+#         kcore \
+#     --types \
+#         scalar \
+#         scalar \
+#         scalar \
+#         sequence \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         scalar \
+#         sequence \
+#         sequence \
+#         sequence \
+#     --metrics \
+#         rel_diff \
+#         rel_diff \
+#         abs_diff \
+#         rmse \
+#         rel_diff \
+#         abs_diff \
+#         abs_diff \
+#         abs_diff \
+#         abs_diff \
+#         rmse \
+#         rmse \
+#         rmse \
+#     --network-fp data/networks_verysmall.txt \
+#     --output-dir plots/verysmall/ \
+#     --output-fn network \
+#     --hide-fliers
 
 # Old list
 
