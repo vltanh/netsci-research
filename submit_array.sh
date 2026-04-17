@@ -20,6 +20,9 @@
 #   --constraint <name>      : Node constraint (default: AE7713).
 #   --dependency <cond...>   : One or more SLURM dependency conditions (e.g., afterok:123 afterany:456).
 #                              Multiple conditions are comma-joined: afterok:123,afterany:456.
+#   --concurrency <n>        : Max concurrent array tasks. Preferred if both are given.
+#   --total-mem <mem>        : Total memory budget (e.g., 256G). Used to compute concurrency as floor(total-mem / mem)
+#                              when --concurrency is not given. If neither is given, defaults to concurrency=4.
 #
 # MODES & SPECIFIC OPTIONS:
 #   --mode cd      : Run Community Detection (evaluates algorithms).
@@ -47,7 +50,6 @@
 #      ./submit_array.sh --mode cd --real --method leiden-cpm-0.1 --time 01:00:00 --mem 16G --dependency afterok:12345 afterany:67890
 # ==============================================================================
 
-CONCURRENCY_LIMIT=40
 MAX_JOB_PER_ARRAY=1000
 LOG_DIR_BASE="slurm_output"
 
@@ -66,6 +68,8 @@ time="04:00:00"
 mem="32G"
 partition="secondary"
 constraint="AE7713"
+concurrency=""
+total_mem=""
 
 # Arrays for multi-argument flags
 # [CONFIGURABLE] Add any additional arrays for multi-argument flags here
@@ -87,6 +91,8 @@ while [[ "$#" -gt 0 ]]; do
         --mem) mem="$2"; shift 2 ;;
         --partition) partition="$2"; shift 2 ;;
         --constraint) constraint="$2"; shift 2 ;;
+        --concurrency) concurrency="$2"; shift 2 ;;
+        --total-mem) total_mem="$2"; shift 2 ;;
         # [CONFIGURABLE] Add any additional single-argument flags here
 
         --dependency)
@@ -127,6 +133,41 @@ while [[ "$#" -gt 0 ]]; do
         *) echo "Unknown positional argument passed: $1. Please use flags (e.g., --method, --clustering)."; exit 1 ;;
     esac
 done
+
+# Compute concurrency from --total-mem / --mem if provided
+# Converts a mem string (e.g., 32G, 512M, 1T, or bare bytes) to MB
+mem_to_mb() {
+    local v="$1"
+    local num="${v%[KkMmGgTt]}"
+    local unit="${v:${#num}}"
+    case "$unit" in
+        K|k) awk -v n="$num" 'BEGIN{printf "%.0f", n/1024}' ;;
+        M|m|"") awk -v n="$num" 'BEGIN{printf "%.0f", n}' ;;
+        G|g) awk -v n="$num" 'BEGIN{printf "%.0f", n*1024}' ;;
+        T|t) awk -v n="$num" 'BEGIN{printf "%.0f", n*1024*1024}' ;;
+        *) echo "Error: unrecognized memory unit in '$v'." >&2; exit 1 ;;
+    esac
+}
+
+if [[ -n "${concurrency}" ]]; then
+    echo "Concurrency: ${concurrency}"
+elif [[ -n "${total_mem}" ]]; then
+    mem_mb=$(mem_to_mb "${mem}")
+    total_mb=$(mem_to_mb "${total_mem}")
+    if [[ "${mem_mb}" -le 0 ]]; then
+        echo "Error: --mem must be positive."
+        exit 1
+    fi
+    concurrency=$(( total_mb / mem_mb ))
+    if [[ "${concurrency}" -lt 1 ]]; then
+        echo "Error: --total-mem (${total_mem}) is smaller than --mem (${mem})."
+        exit 1
+    fi
+    echo "Computed concurrency: ${concurrency} (total-mem=${total_mem} / mem=${mem})"
+else
+    concurrency=4
+    echo "Concurrency: ${concurrency} (default)"
+fi
 
 # Validate network list
 if [[ ! -f "${network_list}" ]]; then
@@ -248,8 +289,8 @@ if [[ ${#dependencies[@]} -gt 0 ]]; then
 fi
 
 if [[ "$total_tasks" -le "$MAX_JOB_PER_ARRAY" ]]; then
-    echo "Submitting single array job for ${total_tasks} tasks (Max Concurrency: ${CONCURRENCY_LIMIT})..."
-    sbatch --array=1-${total_tasks}%${CONCURRENCY_LIMIT} "${sbatch_args[@]}" array_wrapper.sh "${TASK_FILE}"
+    echo "Submitting single array job for ${total_tasks} tasks (Max Concurrency: ${concurrency})..."
+    sbatch --array=1-${total_tasks}%${concurrency} "${sbatch_args[@]}" array_wrapper.sh "${TASK_FILE}"
 else
     echo "Total tasks exceed MAX_JOB_PER_ARRAY (${MAX_JOB_PER_ARRAY}). Splitting into multiple jobs..."
 
@@ -259,6 +300,6 @@ else
     for part_file in "${TASK_FILE}_part_"*; do
         part_tasks=$(wc -l < "${part_file}")
         echo "Submitting array for ${part_tasks} tasks from ${part_file}..."
-        sbatch --array=1-${part_tasks}%${CONCURRENCY_LIMIT} "${sbatch_args[@]}" array_wrapper.sh "${part_file}"
+        sbatch --array=1-${part_tasks}%${concurrency} "${sbatch_args[@]}" array_wrapper.sh "${part_file}"
     done
 fi
