@@ -290,7 +290,8 @@ def plot_boxplots(
         if xlim:
             ax.set_xlim(*xlim)
 
-        ax.set_xlabel(metric_name, fontsize=14)
+        n_networks = df_clean["network_id"].nunique()
+        ax.set_xlabel(f"{metric_name}\n({n_networks} networks)", fontsize=14)
 
         if idx == 0:
             ax.set_ylabel("Method", fontsize=14)
