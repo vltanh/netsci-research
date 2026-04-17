@@ -20,6 +20,11 @@ sh submit_array.sh \
     --mode gen --generator ec-sbm-v2 ec-sbm-v1.5 \
     --clustering leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 "leiden-cpm-0.1+cm(log)" "leiden-cpm-0.01+cm(log)" "leiden-cpm-0.001+cm(log)" leiden-mod "leiden-mod+cm(log)" sbm-flat-best+cc "sbm-flat-best+wcc(log)" sbm-nested-best+cc "sbm-nested-best+wcc(log)"
 
+# Update concurrency limit for <jobid> to <n>
+scontrol update JobId="<jobid>" ArrayTaskThrottle="<n>"
+# Remove dependency for <jobid>
+scontrol update JobId="<jobid>" Dependency=""
+
 # Custom computing network statistics
 ./compute_network_stats.sh \
     --input-edgelist test/input/dnc/dnc.csv \

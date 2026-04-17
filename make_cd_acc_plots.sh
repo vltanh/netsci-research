@@ -47,7 +47,7 @@ python visualize_acc.py \
         NMI \
     --output-dir plots/cd/ec-sbm-v2/verysmall/sbm-flat-best+cc/ \
     --output-fn acc \
-    --xlim 0.0 1.0
+    --xlim -0.1 1.1
 
 python aggregate_acc.py \
     --base-dir data/estimated_clusterings/ \
@@ -114,7 +114,7 @@ python visualize_acc.py \
         NMI \
     --output-dir plots/cd/ec-sbm-v2/verysmall/leiden-cpm-0.1/ \
     --output-fn acc \
-    --xlim 0.0 1.0
+    --xlim -0.1 1.1
 
 # Old (train)
 
@@ -165,7 +165,7 @@ python visualize_acc.py \
         NMI \
     --output-dir plots/cd/ec-sbm-v2/old/train/sbm-flat-best+cc/ \
     --output-fn acc \
-    --xlim 0.0 1.0
+    --xlim -0.1 1.1
 
 python aggregate_acc.py \
     --base-dir data/estimated_clusterings/ \
@@ -174,6 +174,8 @@ python aggregate_acc.py \
     --generator ec-sbm-v2 \
     --gt-clustering leiden-cpm-0.1 \
     --algos \
+        leiden-mod \
+        "leiden-mod+cm(log)" \
         sbm-flat-dc+cc \
         "sbm-flat-dc+wcc(log)" \
         sbm-flat-ndc+cc \
@@ -193,6 +195,8 @@ python visualize_acc.py \
     --data-fp plots/cd/ec-sbm-v2/old/train/leiden-cpm-0.1/agg_acc.csv \
     --network-fp data/networks_train_old.txt \
     --algos \
+        leiden-mod \
+        "leiden-mod+cm(log)" \
         sbm-flat-dc+cc \
         "sbm-flat-dc+wcc(log)" \
         sbm-flat-ndc+cc \
@@ -208,6 +212,8 @@ python visualize_acc.py \
         sbm-nested-best+cc \
         "sbm-nested-best+wcc(log)" \
     --names \
+        "Leiden-Mod" \
+        "Leiden-Mod+CM(log)" \
         "SBM-Flat-DC+CC" \
         "SBM-Flat-DC+WCC(log)" \
         "SBM-Flat-NDC+CC" \
@@ -232,4 +238,4 @@ python visualize_acc.py \
         NMI \
     --output-dir plots/cd/ec-sbm-v2/old/train/leiden-cpm-0.1/ \
     --output-fn acc \
-    --xlim 0.0 1.0
+    --xlim -0.1 1.1
