@@ -1,6 +1,0 @@
-845af1aad231ce64ed81a0b9cf025eff4057d3f7102e12d7ab74a8e4a9105b8d  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/edge.csv
-3cc186423df6c044e886ab7c0a5c302ad94fa4ec7335f2575f43d3341736abef  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/outlier/edges/edge_outlier.csv
-ef6fb73391cc1616b47f4e4a7113a1c421df435eda351d040c8a40a13236c807  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/outlier/edge.csv
-70da6a405f402603396416d53ca7d192f625a2f64c23130b9a8e9a779ec8acfa  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/outlier/run.log
-cb374a9c5f189b38b6cf25599601f7ff14cb94ecaec43be7c3ba34ac12be4317  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/outlier/sources.json
-c08f6fe91676490e73dec7f937991beaddb899958ab7cc720253565ea6059d72  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/outlier/time_and_err.log

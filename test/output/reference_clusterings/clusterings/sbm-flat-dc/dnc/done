@@ -1,5 +1,0 @@
-60e57ada6fc438cb448fb65c542cfd827a4509e4a5c9a13faa9d83c366d6bf76  test/input/dnc/dnc.csv
-3359a90a4fe30535da072ba8a86ce5cce09231d6b46d674cb19e381a3258f10e  test/output/reference_clusterings/clusterings/sbm-flat-dc/dnc/com.csv
-c4e0d48e52c94f87b50462dac2fa127f674b42a7419bb40f63f48326ad9db872  test/output/reference_clusterings/clusterings/sbm-flat-dc/dnc/entropy.txt
-6e27257b8fe3870f1d4937fb83dbc5a090f049152ffd40ecfdf659d72a90b9c4  test/output/reference_clusterings/clusterings/sbm-flat-dc/dnc/error.log
-2da76aad150b9a5578abeb77c36ef38471fa9b02cad972d236ecc10b628330bf  test/output/reference_clusterings/clusterings/sbm-flat-dc/dnc/run.log

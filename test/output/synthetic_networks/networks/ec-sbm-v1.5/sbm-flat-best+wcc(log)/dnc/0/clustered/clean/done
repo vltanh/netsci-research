@@ -1,6 +1,0 @@
-60e57ada6fc438cb448fb65c542cfd827a4509e4a5c9a13faa9d83c366d6bf76  test/input/dnc/dnc.csv
-7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv
-7c6d77def5a2957f4d1ca187cd75d0d0ac4989d8e67659e377e323957fc2c73d  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean/com.csv
-760aeffa8eb0805a8a02984aec2b3518a8e5456cab6e5e0b6b97d5348f2955a0  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean/edge.csv
-96d256b64ea642b92af407e99180aa0aa3fa11bec56f88d440fff2520de593fe  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean/run.log
-71136255a2e90070ba7c113194e2e013f9905f1b370c3127416c551f83e0c1cd  test/output/synthetic_networks//networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/clustered/clean/time_and_err.log

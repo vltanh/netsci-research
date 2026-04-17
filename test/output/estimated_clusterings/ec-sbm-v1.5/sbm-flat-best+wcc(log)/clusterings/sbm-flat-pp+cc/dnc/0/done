@@ -1,5 +1,0 @@
-1c987982d8b940e4edc8790c102076667c2c21787f0b9a58fc87064cabbe4d5e  test/output/synthetic_networks/networks/ec-sbm-v1.5/sbm-flat-best+wcc(log)/dnc/0/edge.csv
-cb84fbde53c49a569ba3407faf6ec6c342207b2715d3ca7018183904d5dc4422  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp/dnc/0/com.csv
-71ffcc3d07de0f961abb5339d2438cce37365bbe21781a8e93980661eb47a781  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp+cc/dnc/0/cc.log
-3bc91cece15a87c61963da7e4b973ab0abfb967d659e1b2caf0ef1f2f5f2eb06  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp+cc/dnc/0/com.csv
-6e151cf25af03bc10e54d9667ceba2ca59846ca7545fd31461b6a999c6f70daa  test/output/estimated_clusterings/ec-sbm-v1.5/sbm-flat-best+wcc(log)/clusterings/sbm-flat-pp+cc/dnc/0/error.log

@@ -1,5 +1,0 @@
-2026-03-30 17:10:11,813 - INFO - [TIME] Loading network: 0.01763857202604413
-2026-03-30 17:10:16,657 - INFO - [TIME] Initializing state: 4.843700973782688
-2026-03-30 17:10:16,710 - INFO - [TIME] Calculating entropy: 0.05294231604784727
-2026-03-30 17:10:16,739 - INFO - Removed 0 singleton nodes.
-2026-03-30 17:10:16,744 - INFO - [TIME] Storing refined partition: 0.03326719393953681

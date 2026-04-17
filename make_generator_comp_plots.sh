@@ -6,7 +6,7 @@
 #     --root data/synthetic_networks/stats/ \
 #     --output plots/verysmall/agg_comp.csv \
 #     --network-fp data/networks_verysmall.txt \
-#     --generators ec-sbm-v2 ec-sbm-v1.5 \
+#     --generators ec-sbm-v2 ec-sbm-v1 \
 #     --clusterings \
 #         leiden-cpm-0.1 \
 #         "leiden-cpm-0.1+cm(log)" \
@@ -25,29 +25,29 @@
 #     --data-fp plots/verysmall/agg_comp.csv \
 #     --generators \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #     --clusterings \
 #         leiden-cpm-0.1 \
 #         leiden-cpm-0.1 \
@@ -75,29 +75,29 @@
 #         "sbm-nested-best+wcc(log)" \
 #     --names \
 #         "EC-SBMv2 x Leiden-CPM(0.1)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.1)" \
+#         "EC-SBMv1 x Leiden-CPM(0.1)" \
 #         "EC-SBMv2 x Leiden-CPM(0.1)+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(log)" \
+#         "EC-SBMv1 x Leiden-CPM(0.1)+CM(log)" \
 #         "EC-SBMv2 x Leiden-CPM(0.01)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.01)" \
+#         "EC-SBMv1 x Leiden-CPM(0.01)" \
 #         "EC-SBMv2 x Leiden-CPM(0.01)+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(log)" \
+#         "EC-SBMv1 x Leiden-CPM(0.01)+CM(log)" \
 #         "EC-SBMv2 x Leiden-CPM(0.001)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.001)" \
+#         "EC-SBMv1 x Leiden-CPM(0.001)" \
 #         "EC-SBMv2 x Leiden-CPM(0.001)+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(log)" \
+#         "EC-SBMv1 x Leiden-CPM(0.001)+CM(log)" \
 #         "EC-SBMv2 x Leiden-Mod" \
-#         "EC-SBMv1.5 x Leiden-Mod" \
+#         "EC-SBMv1 x Leiden-Mod" \
 #         "EC-SBMv2 x Leiden-Mod+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-Mod+CM(log)" \
+#         "EC-SBMv1 x Leiden-Mod+CM(log)" \
 #         "EC-SBMv2 x SBM(Flat)+CC" \
-#         "EC-SBMv1.5 x SBM(Flat)+CC" \
+#         "EC-SBMv1 x SBM(Flat)+CC" \
 #         "EC-SBMv2 x SBM(Flat)+WCC(log)" \
-#         "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv1 x SBM(Flat)+WCC(log)" \
 #         "EC-SBMv2 x SBM(Nested)+CC" \
-#         "EC-SBMv1.5 x SBM(Nested)+CC" \
+#         "EC-SBMv1 x SBM(Nested)+CC" \
 #         "EC-SBMv2 x SBM(Nested)+WCC(log)" \
-#         "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
+#         "EC-SBMv1 x SBM(Nested)+WCC(log)" \
 #     --stats \
 #         pseudo_diameter \
 #         char_time \
@@ -148,7 +148,7 @@ python network_evaluation/compare/aggregate_comparisons.py \
     --root data/synthetic_networks/stats/ \
     --output plots/old/agg_comp.csv \
     --network-fp data/networks_all_old.txt \
-    --generators ec-sbm-v2 ec-sbm-v1.5 \
+    --generators ec-sbm-v2 ec-sbm-v1 \
     --clusterings \
         leiden-cpm-0.1 \
         "leiden-cpm-0.1+cm(log)" \
@@ -167,41 +167,41 @@ python network_evaluation/compare/aggregate_comparisons.py \
 #     --data-fp plots/old/agg_comp.csv \
 #     --generators \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #         ec-sbm-v2 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
 #     --clusterings \
 #         leiden-cpm-0.1 \
 #         leiden-cpm-0.1 \
@@ -241,41 +241,41 @@ python network_evaluation/compare/aggregate_comparisons.py \
 #         "sbm-nested-best+wcc(sqrt)" \
 #     --names \
 #         "EC-SBMv2 x Leiden-CPM(0.1)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.1)" \
+#         "EC-SBMv1 x Leiden-CPM(0.1)" \
 #         "EC-SBMv2 x Leiden-CPM(0.1)+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(log)" \
+#         "EC-SBMv1 x Leiden-CPM(0.1)+CM(log)" \
 #         "EC-SBMv2 x Leiden-CPM(0.1)+CM(sqrt)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.1)+CM(sqrt)" \
+#         "EC-SBMv1 x Leiden-CPM(0.1)+CM(sqrt)" \
 #         "EC-SBMv2 x Leiden-CPM(0.01)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.01)" \
+#         "EC-SBMv1 x Leiden-CPM(0.01)" \
 #         "EC-SBMv2 x Leiden-CPM(0.01)+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(log)" \
+#         "EC-SBMv1 x Leiden-CPM(0.01)+CM(log)" \
 #         "EC-SBMv2 x Leiden-CPM(0.01)+CM(sqrt)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.01)+CM(sqrt)" \
+#         "EC-SBMv1 x Leiden-CPM(0.01)+CM(sqrt)" \
 #         "EC-SBMv2 x Leiden-CPM(0.001)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.001)" \
+#         "EC-SBMv1 x Leiden-CPM(0.001)" \
 #         "EC-SBMv2 x Leiden-CPM(0.001)+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(log)" \
+#         "EC-SBMv1 x Leiden-CPM(0.001)+CM(log)" \
 #         "EC-SBMv2 x Leiden-CPM(0.001)+CM(sqrt)" \
-#         "EC-SBMv1.5 x Leiden-CPM(0.001)+CM(sqrt)" \
+#         "EC-SBMv1 x Leiden-CPM(0.001)+CM(sqrt)" \
 #         "EC-SBMv2 x Leiden-Mod" \
-#         "EC-SBMv1.5 x Leiden-Mod" \
+#         "EC-SBMv1 x Leiden-Mod" \
 #         "EC-SBMv2 x Leiden-Mod+CM(log)" \
-#         "EC-SBMv1.5 x Leiden-Mod+CM(log)" \
+#         "EC-SBMv1 x Leiden-Mod+CM(log)" \
 #         "EC-SBMv2 x Leiden-Mod+CM(sqrt)" \
-#         "EC-SBMv1.5 x Leiden-Mod+CM(sqrt)" \
+#         "EC-SBMv1 x Leiden-Mod+CM(sqrt)" \
 #         "EC-SBMv2 x SBM(Flat)+CC" \
-#         "EC-SBMv1.5 x SBM(Flat)+CC" \
+#         "EC-SBMv1 x SBM(Flat)+CC" \
 #         "EC-SBMv2 x SBM(Flat)+WCC(log)" \
-#         "EC-SBMv1.5 x SBM(Flat)+WCC(log)" \
+#         "EC-SBMv1 x SBM(Flat)+WCC(log)" \
 #         "EC-SBMv2 x SBM(Flat)+WCC(sqrt)" \
-#         "EC-SBMv1.5 x SBM(Flat)+WCC(sqrt)" \
+#         "EC-SBMv1 x SBM(Flat)+WCC(sqrt)" \
 #         "EC-SBMv2 x SBM(Nested)+CC" \
-#         "EC-SBMv1.5 x SBM(Nested)+CC" \
+#         "EC-SBMv1 x SBM(Nested)+CC" \
 #         "EC-SBMv2 x SBM(Nested)+WCC(log)" \
-#         "EC-SBMv1.5 x SBM(Nested)+WCC(log)" \
+#         "EC-SBMv1 x SBM(Nested)+WCC(log)" \
 #         "EC-SBMv2 x SBM(Nested)+WCC(sqrt)" \
-#         "EC-SBMv1.5 x SBM(Nested)+WCC(sqrt)" \
+#         "EC-SBMv1 x SBM(Nested)+WCC(sqrt)" \
 #     --stats \
 #         pseudo_diameter \
 #         char_time \
@@ -469,18 +469,18 @@ python network_evaluation/compare/visualize_comparisons.py \
 # python network_evaluation/compare/visualize_comparisons.py \
 #     --data-fp plots/old/agg_comp.csv \
 #     --generators \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
-#         ec-sbm-v1.5 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
+#         ec-sbm-v1 \
 #     --clusterings \
 #         leiden-cpm-0.1 \
 #         "leiden-cpm-0.1+cm(log)" \

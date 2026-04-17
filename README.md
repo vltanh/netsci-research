@@ -218,7 +218,7 @@ done < data/networks_all.txt
 ```bash
 ./submit_array.sh \
     --mode gen \
-    --generator ec-sbm-v2 ec-sbm-v1.5 \
+    --generator ec-sbm-v2 ec-sbm-v1 \
     --clustering "leiden-cpm-0.1+cm(log)" "sbm-flat-best+wcc(log)"
 ```
 
