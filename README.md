@@ -209,8 +209,7 @@ done < data/networks_all.txt
 ```bash
 ./submit_array.sh \
     --mode cd --real \
-    --criterion log \
-    --method leiden-cpm-0.1 sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc
+    --method leiden-cpm-0.0001 sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc
 ```
 
 ### 3. Generate synthetic networks (SLURM)
@@ -218,8 +217,8 @@ done < data/networks_all.txt
 ```bash
 ./submit_array.sh \
     --mode gen \
-    --generator ec-sbm-v2 ec-sbm-v1 \
-    --clustering "leiden-cpm-0.1+cm(log)" "sbm-flat-best+wcc(log)"
+    --generator ec-sbm-v2 sbm \
+    --clustering leiden-cpm-0.0001
 ```
 
 ### 4. Run community detection on synthetic networks (SLURM)
@@ -228,9 +227,8 @@ done < data/networks_all.txt
 ./submit_array.sh \
     --mode cd \
     --generator ec-sbm-v2 \
-    --gt-clustering "sbm-flat-best+wcc(log)" \
-    --criterion sqrt \
-    --method sbm-flat-best leiden-cpm-0.1
+    --gt-clustering leiden-cpm-0.0001 \
+    --method sbm-flat-best leiden-cpm-0.0001
 ```
 
 ### 5. Single-network test run (custom mode, no SLURM)
@@ -239,20 +237,20 @@ done < data/networks_all.txt
 # Generate
 ./network-generation/run_generator.sh \
     --generator ec-sbm-v2 --run-id 0 \
-    --input-edgelist test/input/dnc/dnc.csv \
-    --input-clustering "test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv" \
-    --output-dir test/output/synthetic_networks/ \
-    --network dnc --clustering-id "sbm-flat-best+wcc(log)" \
+    --input-edgelist examples/input/dnc/dnc.csv \
+    --input-clustering examples/output/reference_clusterings/clusterings/leiden-cpm-0.0001/dnc/com.csv \
+    --output-dir examples/output/synthetic_networks/ \
+    --network dnc --clustering-id leiden-cpm-0.0001 \
     --run-stats --run-comp
 
 # Detect communities
 ./community-detection/run_cd.sh \
-    --algo sbm-flat-best --criterion sqrt \
-    --input-edgelist "test/output/synthetic_networks/networks/ec-sbm-v2/sbm-flat-best+wcc(log)/dnc/0/edge.csv" \
-    --input-gt-clustering "test/output/reference_clusterings/clusterings/sbm-flat-best+wcc(log)/dnc/com.csv" \
-    --output-dir test/output/estimated_clusterings \
-    --network dnc --generator ec-sbm-v2 --gt-clustering-id "sbm-flat-best+wcc(log)" --run-id 0 \
-    --run-stats --run-acc --run-cc --run-wcc --run-cm
+    --algo sbm-flat-best \
+    --input-edgelist examples/output/synthetic_networks/networks/ec-sbm-v2/leiden-cpm-0.0001/dnc/0/edge.csv \
+    --input-gt-clustering examples/output/reference_clusterings/clusterings/leiden-cpm-0.0001/dnc/com.csv \
+    --output-dir examples/output/estimated_clusterings \
+    --network dnc --generator ec-sbm-v2 --gt-clustering-id leiden-cpm-0.0001 --run-id 0 \
+    --run-stats --run-acc --run-cc --run-cm
 ```
 
 ### 6. Verify state integrity
