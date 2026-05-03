@@ -260,7 +260,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
             for clustering_id in "${clusterings[@]}"; do
                 job_name="${mode}_${generator}_${network_id}_${clustering_id}_${run_id}"
                 script="network-generation/run_generator.sh"
-                args="--generator ${generator} --run-id ${run_id} --macro --network ${network_id} --clustering-id ${clustering_id} --run-stats --run-comp"
+                args="--generator ${generator} --run-id ${run_id} --seed $((run_id + 1)) --macro --network ${network_id} --clustering-id ${clustering_id} --run-stats --run-comp"
                 log_path="${LOG_DIR_BASE}/${mode}/${generator}/${network_id}/${clustering_id}/${run_id}"
 
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
