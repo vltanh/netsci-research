@@ -8,7 +8,7 @@
 # USAGE:
 #   python visualize_stats.py \
 #       --path-template <template> \
-#       --network-axis <name> --networks-list <file> \
+#       --network-axis <name> --networks <args...> \
 #       --method-axis <name> --methods <ids...> --method-names <names...> \
 #       [--set KEY=VALUE ...] \
 #       --stats <ids...> --stat-names <names...> \
@@ -20,7 +20,11 @@
 #                                  --network-axis, --method-axis); the rest
 #                                  are bound via --set KEY=VALUE.
 #   --network-axis <name>        : Placeholder iterated over networks.
-#   --networks-list <file>       : File with values for the network-axis placeholder.
+#   --networks <args...>         : One or more network sources for the network-axis
+#                                  placeholder. Each arg is either a file path
+#                                  (read line-by-line) or a literal network ID.
+#                                  Concatenated and deduplicated, preserving
+#                                  input order.
 #   --method-axis <name>         : Placeholder iterated over methods (y-axis).
 #   --methods <ids...>           : Values for the method-axis placeholder.
 #   --method-names <names...>    : Display names for each method.
@@ -37,7 +41,7 @@
 # EXAMPLES:
 #   python visualize_stats.py \
 #       --path-template "data/stats/{generator}/{clustering}/{network}/0/cluster" \
-#       --network-axis network --networks-list data/networks_val.txt \
+#       --network-axis network --networks data/networks_val.txt extra-net-1 \
 #       --method-axis clustering \
 #       --methods leiden-cpm-0.1 sbm-flat-best+cc \
 #       --method-names "Leiden-CPM(0.1)" "SBM+CC" \
@@ -270,10 +274,12 @@ def parse_args():
         help="Name of the placeholder in --path-template that iterates over networks.",
     )
     parser.add_argument(
-        "--networks-list",
-        type=str,
+        "--networks",
+        nargs="+",
         required=True,
-        help="File with list of values for the network-axis placeholder.",
+        help="One or more network sources for the network-axis placeholder. "
+        "Each arg is either a file path (read line-by-line) or a literal "
+        "network ID. Concatenated and deduplicated, preserving input order.",
     )
     parser.add_argument(
         "--method-axis",
@@ -388,8 +394,26 @@ def main():
     output_fp = Path(args.output)
     output_fp.mkdir(parents=True, exist_ok=True)
 
-    with open(args.networks_list) as f:
-        network_ids = [line.strip() for line in f if line.strip()]
+    network_ids: list[str] = []
+    seen: set[str] = set()
+    for arg in args.networks:
+        arg_path = Path(arg)
+        if arg_path.is_file():
+            with arg_path.open() as f:
+                items = [line.strip() for line in f if line.strip()]
+        else:
+            items = [arg]
+        for n in items:
+            if n not in seen:
+                seen.add(n)
+                network_ids.append(n)
+
+    if not network_ids:
+        print(
+            f"--networks resolved to an empty list: {args.networks}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     method_name_map = dict(zip(args.methods, args.method_names))
     all_method_names = args.method_names

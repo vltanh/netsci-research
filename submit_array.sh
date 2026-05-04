@@ -10,7 +10,10 @@
 #   ./submit_array.sh --mode <mode> [OPTIONS]
 #
 # COMMON OPTIONS:
-#   --network-list <file>    : Path to the list of network IDs (default: data/networks_all.txt).
+#   --networks <args...>     : One or more network sources. Each arg is either a file
+#                              path (read line-by-line) or a literal network ID.
+#                              Concatenated and deduplicated, preserving input order.
+#                              Defaults to "data/networks_all.txt".
 #   --run-id <id>            : Identifier for the run (default: 0). Used in both syn-cd and gen.
 #
 # SLURM OPTIONS:
@@ -63,7 +66,6 @@ mode=""
 run_id="0"
 is_real=0
 criterion=""
-network_list="data/networks_all.txt"
 time="04:00:00"
 mem="32G"
 partition="secondary"
@@ -78,13 +80,13 @@ gt_clusterings=()
 methods=()
 clusterings=()
 dependencies=()
+networks_args=()
 
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --mode) mode="$2"; shift 2 ;;
         --run-id) run_id="$2"; shift 2 ;;
-        --network-list) network_list="$2"; shift 2 ;;
         --criterion) criterion="$2"; shift 2 ;;
         --real) is_real=1; shift 1 ;;
         --time) time="$2"; shift 2 ;;
@@ -103,6 +105,12 @@ while [[ "$#" -gt 0 ]]; do
             ;;
 
         # Multi-argument parsing logic
+        --networks)
+            shift
+            while [[ "$#" -gt 0 && ! "$1" == --* ]]; do
+                networks_args+=("$1"); shift
+            done
+            ;;
         --generator)
             shift
             while [[ "$#" -gt 0 && ! "$1" == -* ]]; do
@@ -169,9 +177,34 @@ else
     echo "Concurrency: ${concurrency} (default)"
 fi
 
-# Validate network list
-if [[ ! -f "${network_list}" ]]; then
-    echo "Error: Network list file '${network_list}' not found."
+# Resolve --networks args into a deduplicated, ordered list of network IDs.
+# Each arg is either a file path (read line-by-line) or a literal network ID.
+if [[ ${#networks_args[@]} -eq 0 ]]; then
+    networks_args=("data/networks_all.txt")
+fi
+
+declare -A net_seen
+network_ids=()
+add_network() {
+    local n="$1"
+    [[ -z "${n}" ]] && return
+    if [[ -z "${net_seen[$n]}" ]]; then
+        net_seen["${n}"]=1
+        network_ids+=("${n}")
+    fi
+}
+for arg in "${networks_args[@]}"; do
+    if [[ -f "${arg}" ]]; then
+        while IFS= read -r line || [[ -n "${line}" ]]; do
+            add_network "${line}"
+        done < "${arg}"
+    else
+        add_network "${arg}"
+    fi
+done
+
+if [[ ${#network_ids[@]} -eq 0 ]]; then
+    echo "Error: No networks resolved from --networks args: ${networks_args[*]}"
     exit 1
 fi
 
@@ -219,10 +252,8 @@ fi
 
 : > "$TASK_FILE"
 
-echo "Generating task list..."
-while IFS= read -r network_id || [[ -n "$network_id" ]]; do
-    if [[ -z "$network_id" ]]; then continue; fi
-
+echo "Generating task list for ${#network_ids[@]} networks..."
+for network_id in "${network_ids[@]}"; do
     if [[ "${mode}" == "cd" ]]; then
         crit_arg=""
         crit_suffix=""
@@ -235,7 +266,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
             for method in "${methods[@]}"; do
                 script="community-detection/run_cd.sh"
                 job_name="${mode}_real_${network_id}_${method}${crit_suffix}"
-                args="--algo ${method} --network ${network_id} --real ${crit_arg} --run-stats --run-cc --run-wcc --run-cm"
+                args="--algo ${method} --network ${network_id} --real ${crit_arg} --run-stats --run-cc"
                 log_path="${LOG_DIR_BASE}/${mode}/real/${method}${crit_suffix}/${network_id}"
 
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
@@ -246,7 +277,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
                     for method in "${methods[@]}"; do
                         script="community-detection/run_cd.sh"
                         job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
-                        args="--algo ${method} --network ${network_id} --synthetic --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg} --run-stats --run-acc --run-cc --run-wcc --run-cm"
+                        args="--algo ${method} --network ${network_id} --synthetic --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg} --run-stats --run-acc --run-cc"
                         log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
 
                         echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
@@ -269,7 +300,7 @@ while IFS= read -r network_id || [[ -n "$network_id" ]]; do
 
     # [CONFIGURABLE] Add any additional modes and their corresponding task generation logic here
     fi
-done < "${network_list}"
+done
 
 total_tasks=$(wc -l < "$TASK_FILE")
 
