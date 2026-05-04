@@ -2,23 +2,26 @@
 
 # Submission
 sh submit_array.sh \
-    --time 04:00:00 --partition secondary --mem 32G \
-    --network-list data/networks_all.txt \
+    --time 04:00:00 --partition secondary --mem 32G --total-mem 1024G \
+    --networks data/networks_all.txt \
     --mode cd --criterion log --real \
-    --method leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 leiden-mod sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc
+    --method leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 leiden-mod sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc \
+    --extra-args --run-stats --run-cc --run-wcc --run-cm --timeout 7d
 
 sh submit_array.sh \
-    --time 04:00:00 --partition secondary --mem 32G \
-    --network-list data/networks_all.txt \
-    --mode cd --criterion log --synthetic \
-    --generator ec-sbm-v2 --gt-clustering-id sbm-flat-best+cc --run-id 0 \
-    --method leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 leiden-mod sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc
+    --time 04:00:00 --partition secondary --mem 32G --total-mem 1024G \
+    --networks data/networks_all.txt \
+    --mode cd --criterion log \
+    --generator ec-sbm-v2 --gt-clustering sbm-flat-best+cc --run-id 0 \
+    --method leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 leiden-mod sbm-flat-dc sbm-flat-ndc sbm-flat-pp sbm-nested-dc sbm-nested-ndc \
+    --extra-args --run-stats --run-acc --run-cc --run-wcc --run-cm --timeout 7d
 
 sh submit_array.sh \
-    --time 04:00:00 --partition secondary --mem 32G \
-    --network-list data/networks_all.txt \
+    --time 04:00:00 --partition secondary --mem 32G --total-mem 1024G \
+    --networks data/networks_all.txt \
     --mode gen --generator ec-sbm-v2 ec-sbm-v1 \
-    --clustering leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 "leiden-cpm-0.1+cm(log)" "leiden-cpm-0.01+cm(log)" "leiden-cpm-0.001+cm(log)" leiden-mod "leiden-mod+cm(log)" sbm-flat-best+cc "sbm-flat-best+wcc(log)" sbm-nested-best+cc "sbm-nested-best+wcc(log)"
+    --clustering leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 "leiden-cpm-0.1+cm(log)" "leiden-cpm-0.01+cm(log)" "leiden-cpm-0.001+cm(log)" leiden-mod "leiden-mod+cm(log)" sbm-flat-best+cc "sbm-flat-best+wcc(log)" sbm-nested-best+cc "sbm-nested-best+wcc(log)" \
+    --extra-args --run-stats --run-comp --timeout 7d
 
 # Update concurrency limit for <jobid> to <n>
 scontrol update JobId="<jobid>" ArrayTaskThrottle="<n>"

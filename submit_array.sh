@@ -26,6 +26,15 @@
 #   --concurrency <n>        : Max concurrent array tasks. Preferred if both are given.
 #   --total-mem <mem>        : Total memory budget (e.g., 256G). Used to compute concurrency as floor(total-mem / mem)
 #                              when --concurrency is not given. If neither is given, defaults to concurrency=4.
+#   --extra-args <args...>   : Pass-through args appended verbatim to every per-task command line.
+#                              Use to forward downstream flags. Greedy: consumes everything remaining,
+#                              so place this flag last on the command line.
+#                              For 'cd' mode (run_cd.sh): --run-stats, --run-cc, --run-acc, --run-wcc,
+#                              --run-cm, --timeout <sec>, etc. Without these, run_cd.sh runs the algo
+#                              but skips stats/accuracy/connectivity passes.
+#                              For 'gen' mode (run_generator.sh): --run-stats, --run-comp, --keep-state,
+#                              --n-threads, --outlier-mode, etc.
+#                              Note: --seed is set by this script as (run_id + 1); don't override it here.
 #
 # MODES & SPECIFIC OPTIONS:
 #   --mode cd      : Run Community Detection (evaluates algorithms).
@@ -41,16 +50,21 @@
 #
 # EXAMPLES:
 #   1. Community Detection on Real Networks:
-#      ./submit_array.sh --mode cd --real --criterion sqrt --method leiden-cpm-0.1 sbm-flat-ndc
+#      ./submit_array.sh --mode cd --real --criterion sqrt --method leiden-cpm-0.1 sbm-flat-ndc \
+#          --extra-args --run-stats --run-cc
 #
 #   2. Community Detection on Synthetic Networks (Multiple Generators/Methods):
-#      ./submit_array.sh --mode cd --generator ec-sbm dc-sbm --gt-clustering leiden-cpm-0.1 --method leiden-cpm-0.1 sbm-flat-ndc
+#      ./submit_array.sh --mode cd --generator ec-sbm dc-sbm --gt-clustering leiden-cpm-0.1 --method leiden-cpm-0.1 sbm-flat-ndc \
+#          --extra-args --run-stats --run-acc --run-cc
 #
 #   3. Synthetic Network Generation (specific run-id):
-#      ./submit_array.sh --mode gen --generator ec-sbm dc-sbm --clustering leiden-cpm-0.5+cm
+#      ./submit_array.sh --mode gen --generator ec-sbm dc-sbm --clustering leiden-cpm-0.5+cm \
+#          --extra-args --run-stats --run-comp
 #
 #   4. With SLURM overrides and dependencies:
-#      ./submit_array.sh --mode cd --real --method leiden-cpm-0.1 --time 01:00:00 --mem 16G --dependency afterok:12345 afterany:67890
+#      ./submit_array.sh --mode cd --real --method leiden-cpm-0.1 --time 01:00:00 --mem 16G \
+#          --dependency afterok:12345 afterany:67890 \
+#          --extra-args --run-stats --run-cc --run-wcc --run-cm --timeout 3600
 # ==============================================================================
 
 MAX_JOB_PER_ARRAY=1000
@@ -81,6 +95,7 @@ methods=()
 clusterings=()
 dependencies=()
 networks_args=()
+extra_args=()
 
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
@@ -133,6 +148,13 @@ while [[ "$#" -gt 0 ]]; do
             shift
             while [[ "$#" -gt 0 && ! "$1" == -* ]]; do
                 clusterings+=("$1"); shift
+            done
+            ;;
+        # Greedy pass-through: consumes everything remaining. Place last on the command line.
+        --extra-args)
+            shift
+            while [[ "$#" -gt 0 ]]; do
+                extra_args+=("$1"); shift
             done
             ;;
         # [CONFIGURABLE] Add any additional flags here following the same pattern
@@ -252,6 +274,12 @@ fi
 
 : > "$TASK_FILE"
 
+extra_arg_str=""
+if [[ ${#extra_args[@]} -gt 0 ]]; then
+    extra_arg_str=" ${extra_args[*]}"
+    echo "Pass-through extra args: ${extra_args[*]}"
+fi
+
 echo "Generating task list for ${#network_ids[@]} networks..."
 for network_id in "${network_ids[@]}"; do
     if [[ "${mode}" == "cd" ]]; then
@@ -266,7 +294,7 @@ for network_id in "${network_ids[@]}"; do
             for method in "${methods[@]}"; do
                 script="community-detection/run_cd.sh"
                 job_name="${mode}_real_${network_id}_${method}${crit_suffix}"
-                args="--algo ${method} --network ${network_id} --real ${crit_arg} --run-stats --run-cc"
+                args="--algo ${method} --network ${network_id} --real ${crit_arg}${extra_arg_str}"
                 log_path="${LOG_DIR_BASE}/${mode}/real/${method}${crit_suffix}/${network_id}"
 
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
@@ -277,7 +305,7 @@ for network_id in "${network_ids[@]}"; do
                     for method in "${methods[@]}"; do
                         script="community-detection/run_cd.sh"
                         job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
-                        args="--algo ${method} --network ${network_id} --synthetic --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg} --run-stats --run-acc --run-cc"
+                        args="--algo ${method} --network ${network_id} --synthetic --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg}${extra_arg_str}"
                         log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
 
                         echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
@@ -291,7 +319,7 @@ for network_id in "${network_ids[@]}"; do
             for clustering_id in "${clusterings[@]}"; do
                 job_name="${mode}_${generator}_${network_id}_${clustering_id}_${run_id}"
                 script="network-generation/run_generator.sh"
-                args="--generator ${generator} --run-id ${run_id} --seed $((run_id + 1)) --macro --network ${network_id} --clustering-id ${clustering_id} --run-stats --run-comp"
+                args="--generator ${generator} --run-id ${run_id} --seed $((run_id + 1)) --macro --network ${network_id} --clustering-id ${clustering_id}${extra_arg_str}"
                 log_path="${LOG_DIR_BASE}/${mode}/${generator}/${network_id}/${clustering_id}/${run_id}"
 
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
