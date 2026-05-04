@@ -67,6 +67,14 @@
 #          --extra-args --run-stats --run-cc --run-wcc --run-cm --timeout 3600
 # ==============================================================================
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/_common/state.sh"
+
+log() {
+    builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
 MAX_JOB_PER_ARRAY=1000
 LOG_DIR_BASE="slurm_output"
 

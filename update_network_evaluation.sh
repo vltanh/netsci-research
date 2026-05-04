@@ -3,7 +3,14 @@ set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-echo "==> Pulling network_evaluation in all checkouts..."
+# shellcheck disable=SC1091
+source "${ROOT}/_common/state.sh"
+
+log() {
+    builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
+log "==> Pulling network_evaluation in all checkouts..."
 git -C "$ROOT/network_evaluation" checkout main
 git -C "$ROOT/network_evaluation" pull
 

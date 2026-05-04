@@ -2,6 +2,14 @@
 
 # Usage: ./verify_state.sh [directory_to_scan]
 # Defaults to the current directory if none is provided.
+#
+# Independent of _common/state.sh today (uses sha256sum --quiet -c directly
+# for streamed-progress UX); shares the done/done.tmp.* convention managed by
+# state.sh's mark_done. Future: harmonize via is_state_tree_consistent.
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/_common/state.sh"
 
 TARGET_DIR="${1:-.}"
 

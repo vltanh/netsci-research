@@ -310,7 +310,7 @@ def plot_boxplots(
 
 # --- Main Execution ---
 
-if __name__ == "__main__":
+def main():
     args = parse_args()
 
     # 1. Validation
@@ -382,3 +382,11 @@ if __name__ == "__main__":
     )
 
     logger.info("Processing complete.")
+
+
+if __name__ == "__main__":
+    sys.path.insert(0, str(Path(__file__).resolve().parent / "_common"))
+    from pipeline_common import timed  # noqa: E402
+
+    with timed("visualize_acc"):
+        main()

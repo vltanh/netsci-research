@@ -50,6 +50,9 @@ from typing import Any, Dict, List
 import pandas as pd
 from tqdm import tqdm
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / "_common"))
+from pipeline_common import timed  # noqa: E402
+
 # Configure Logging
 logging.basicConfig(
     level=logging.INFO,
@@ -282,7 +285,7 @@ def print_completion_summary(
 
 # --- Main Execution ---
 
-if __name__ == "__main__":
+def main():
     args = parse_args()
 
     base_dir = Path(args.base_dir)
@@ -323,3 +326,8 @@ if __name__ == "__main__":
     )
 
     logger.info("Processing complete.")
+
+
+if __name__ == "__main__":
+    with timed("aggregate_acc"):
+        main()

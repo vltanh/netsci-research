@@ -4,6 +4,17 @@
 #SBATCH --error=/dev/null
 #SBATCH --signal=B:SIGUSR1@60
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+if [[ "${SCRIPT_DIR}" == *"/slurmd/job"* ]]; then
+    SCRIPT_DIR="${SLURM_SUBMIT_DIR}"
+fi
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/_common/state.sh"
+
+log() {
+    builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
 TASK_FILE=$1
 
 if [[ -z "${TASK_FILE}" ]] || [[ ! -f "${TASK_FILE}" ]]; then

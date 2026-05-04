@@ -53,8 +53,12 @@ if [[ "${SCRIPT_DIR}" == *"/slurmd/job"* ]]; then
 fi
 
 # ==========================================
-# Helper Functions: Logging
+# Shared helpers (state.sh sourced for log_invocation_header + future
+# is_step_done guards; Python-side StateTracker handles compute caching).
 # ==========================================
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/_common/state.sh"
+
 log() {
     builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
 }
@@ -141,8 +145,9 @@ log "============================"
 log "Computing Cluster Stats for: ${dataset_name}"
 log "============================"
 
-log "Evaluating cluster stats state via Python StateTracker..."
 mkdir -p "${OUT_DIR}"
+log_invocation_header "${OUT_DIR}/run.log" "n/a" "0"
+log "Evaluating cluster stats state via Python StateTracker..."
 
 { /usr/bin/time -v python "${SCRIPT_DIR}/network_evaluation/network_stats/compute_cluster_stats.py" \
     --network "${INP_EDGE}" \

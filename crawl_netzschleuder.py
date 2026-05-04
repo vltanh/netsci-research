@@ -330,4 +330,10 @@ if __name__ == "__main__":
     os.makedirs(args.output_dir, exist_ok=True)
     setup_logging(args.output_dir)
 
-    crawl_networks(output_dir=args.output_dir, save_interval=args.save_interval)
+    import sys as _sys
+    from pathlib import Path as _Path
+    _sys.path.insert(0, str(_Path(__file__).resolve().parent / "_common"))
+    from pipeline_common import timed  # noqa: E402
+
+    with timed("crawl_netzschleuder"):
+        crawl_networks(output_dir=args.output_dir, save_interval=args.save_interval)

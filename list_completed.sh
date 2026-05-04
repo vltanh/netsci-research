@@ -32,6 +32,14 @@
 #                              only the <done>/<total> summary line.
 # ==============================================================================
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/_common/state.sh"
+
+log() {
+    builtin echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
 mode=""
 networks_args=()
 clusterings_args=()
