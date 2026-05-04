@@ -6,7 +6,7 @@ slurm_output
 slurm_locks
 
 # Runtime logs
-*.log
+complete.log
 
 # Python artifacts
 __pycache__

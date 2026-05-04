@@ -21,7 +21,7 @@ sh submit_array.sh \
     --networks data/networks_all.txt \
     --mode gen --generator ec-sbm-v2 ec-sbm-v1 \
     --clustering leiden-cpm-0.1 leiden-cpm-0.01 leiden-cpm-0.001 "leiden-cpm-0.1+cm(log)" "leiden-cpm-0.01+cm(log)" "leiden-cpm-0.001+cm(log)" leiden-mod "leiden-mod+cm(log)" sbm-flat-best+cc "sbm-flat-best+wcc(log)" sbm-nested-best+cc "sbm-nested-best+wcc(log)" \
-    --extra-args --run-stats --run-comp --timeout 7d
+    --extra-args --keep-state --run-stats --run-comp --timeout 7d
 
 # Update concurrency limit for <jobid> to <n>
 scontrol update JobId="<jobid>" ArrayTaskThrottle="<n>"
@@ -80,10 +80,12 @@ scontrol update JobId="<jobid>" Dependency=""
     --input-cluster-stats "test/output/reference_clusterings/stats/sbm-flat-best+wcc(log)/dnc" \
     --output-dir test/output/synthetic_networks/ \
     --network dnc --clustering-id "sbm-flat-best+wcc(log)"  \
+    --keep-state \
     --run-stats --run-comp
 
 ./network-generation/run_generator.sh \
     --generator ec-sbm-v2 --run-id 0 \
     --macro \
     --network dnc --clustering-id "sbm-flat-best+wcc(log)"  \
+    --keep-state \
     --run-stats --run-comp
