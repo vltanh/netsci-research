@@ -1,6 +1,6 @@
-# EC-SBM v2
+# Network Science Research
 
-This repository implements a benchmark pipeline for evaluating synthetic network generators based on the Edge-Connected Stochastic Block Model (EC-SBM). The pipeline covers empirical data acquisition, synthetic network generation, community detection, and statistical comparison.
+This repository hosts a network-science research workspace covering empirical data acquisition, synthetic network generation, community detection, and statistical comparison. The synthetic-generator side spans EC-SBM (v1/v2/v3), SBM, ABCD, ABCD+o, LFR, and nPSO; the community-detection side spans Leiden, Louvain, Infomap, IKC, SBM (flat + nested), and the CC/WCC/CM connectedness post-processors. The pipeline glues these into a reproducible benchmark across empirical and synthetic networks.
 
 ## Setup
 
