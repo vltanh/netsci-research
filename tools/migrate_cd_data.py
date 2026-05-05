@@ -4,11 +4,11 @@
 Walks <root>/clusterings/<algo>/<network>/ leaf dirs and, for each one that
 already has a com.csv, regenerates the metadata that the post-Phase-1
 single_stage_pipeline.sh would have written: params.txt, done, pipeline.log,
-time_and_err.log. Existing com.csv + run.log + error.log are left untouched.
+error.log. Existing com.csv + run.log + error.log are left untouched.
 
 After migration, the new dispatcher's is_step_done check passes (cache hit) and
 no recompute is needed. Idempotent: rerun on already-migrated dirs is a no-op
-modulo timestamps in pipeline.log / time_and_err.log.
+modulo timestamps in pipeline.log / error.log.
 
 Algos handled (path-encoded as <algo>[+<postproc>[(<criterion>)]] / <network>):
   leiden-{cpm-X | mod}                  base (input = edge.csv)
@@ -186,41 +186,46 @@ def _prefix(label, lines):
                    for ln in lines.splitlines(keepends=True)) if lines else ""
 
 
-def write_time_and_err_log(path, stage_name, leaf_dir, host="cc-login.campuscluster.illinois.edu"):
-    """Build a script-shaped time_and_err.log from the legacy error.log.
+def write_error_log(path, stage_name, leaf_dir, host="cc-login.campuscluster.illinois.edu"):
+    """Frame the legacy error.log content with run_stage's EXECUTED/exit markers.
 
     Real run_stage layout:
         === <UTC> | pid=N | host=H | EXECUTED ===
         <time -v output (the legacy error.log content)>
         === exit=0 ===
+
+    Idempotent: if `path` already starts with `=== ... | EXECUTED ===`, the
+    file is already in script-shape; skip re-wrapping.
     """
     err = leaf_dir / "error.log"
     now_z = _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    if err.exists():
-        ts = _ts_from_mtime(err, now_z)
-        body = err.read_text(errors="replace")
-        if body and not body.endswith("\n"):
-            body += "\n"
-        content = (
-            f"=== {ts} | pid=0 | host={host} | EXECUTED ===\n"
-            f"{body}"
-            f"=== exit=0 ===\n"
+    if not err.exists():
+        path.write_text(
+            f"=== {now_z} | pid=0 | host={host} | SKIPPED (legacy migration; no error.log) ===\n"
         )
-    else:
-        # No error.log to fold; emit a minimal SKIPPED entry like
-        # note_stage_skipped would.
-        content = f"=== {now_z} | pid=0 | host={host} | SKIPPED (legacy migration; no error.log) ===\n"
+        return
+    body = err.read_text(errors="replace")
+    if body.lstrip().startswith("===") and "EXECUTED" in body[:200]:
+        return
+    ts = _ts_from_mtime(err, now_z)
+    if body and not body.endswith("\n"):
+        body += "\n"
+    content = (
+        f"=== {ts} | pid=0 | host={host} | EXECUTED ===\n"
+        f"{body}"
+        f"=== exit=0 ===\n"
+    )
     path.write_text(content)
 
 
-def write_pipeline_log(path, stage_name, seed, leaf_dir, time_log_path,
+def write_pipeline_log(path, stage_name, seed, leaf_dir, err_log_path,
                        host="cc-login.campuscluster.illinois.edu"):
     """Build a pipeline.log shaped like single_stage_pipeline.sh would have.
 
     Layout:
-        === Invocation <UTC> | seed=N | keep_state=1 | pid=0 | host=H ===
-        === [stage] <abs path to time_and_err.log> ===
-        [stage] <synthesized time_and_err.log lines>
+        === Invocation <UTC> | seed=N | keep_state=0 | pid=0 | host=H ===
+        === [stage] <abs path to error.log> ===
+        [stage] <error.log lines>
 
         === [stage (python)] <abs path to run.log> ===
         [stage (python)] <run.log lines>
@@ -230,17 +235,15 @@ def write_pipeline_log(path, stage_name, seed, leaf_dir, time_log_path,
     inv_ts = _ts_from_mtime(run_log if run_log.exists() else (leaf_dir / "com.csv"), now_z)
 
     parts = [
-        f"=== Invocation {inv_ts} | seed={seed} | keep_state=1 | "
+        f"=== Invocation {inv_ts} | seed={seed} | keep_state=0 | "
         f"pid=0 | host={host} ===\n"
     ]
 
-    # Fold the synthesized time_and_err.log
-    time_body = time_log_path.read_text(errors="replace") if time_log_path.exists() else ""
-    parts.append(f"=== [{stage_name}] {time_log_path} ===\n")
-    parts.append(_prefix(stage_name, time_body))
+    err_body = err_log_path.read_text(errors="replace") if err_log_path.exists() else ""
+    parts.append(f"=== [{stage_name}] {err_log_path} ===\n")
+    parts.append(_prefix(stage_name, err_body))
     parts.append("\n")
 
-    # Fold the algo-side run.log if it exists
     if run_log.exists():
         run_body = run_log.read_text(errors="replace")
         parts.append(f"=== [{stage_name} (python)] {run_log} ===\n")
@@ -295,13 +298,13 @@ def migrate_one(leaf_dir, inputs_root, clusterings_dir, algo, network, dry_run, 
     params_path = leaf_dir / "params.txt"
     done_path = leaf_dir / "done"
     pipeline_log = leaf_dir / "pipeline.log"
-    time_log = leaf_dir / "time_and_err.log"
+    err_log_path = leaf_dir / "error.log"
 
     stage_name = base if not postproc else postproc
 
     write_params(params_path, params)
-    write_time_and_err_log(time_log, stage_name, leaf_dir)
-    write_pipeline_log(pipeline_log, stage_name, seed, leaf_dir, time_log)
+    write_error_log(err_log_path, stage_name, leaf_dir)
+    write_pipeline_log(pipeline_log, stage_name, seed, leaf_dir, err_log_path)
 
     # done = sha256(inputs + params.txt + outputs), in that order
     manifest = list(inputs) + [params_path] + outputs
