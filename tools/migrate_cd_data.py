@@ -119,11 +119,11 @@ def deduce_params(algo_name, base, postproc, crit):
             params.update(k=k, seed="1")
         elif base in (SBM_FLAT_VARIANTS + SBM_NESTED_VARIANTS):
             method = base[len("sbm-"):]
-            params.update(method=method, seed="1", n_threads="1")
+            params.update(method=method, seed="0", n_threads="1")
         elif base == "sbm-flat-best":
-            params.update(variants="flat-dc,flat-ndc,flat-pp", seed="1")
+            params.update(variants="flat-dc,flat-ndc,flat-pp", seed="0")
         elif base == "sbm-nested-best":
-            params.update(variants="nested-dc,nested-ndc", seed="1")
+            params.update(variants="nested-dc,nested-ndc", seed="0")
         else:
             params.update(legacy="true", seed="1")
     else:
@@ -304,26 +304,44 @@ def transform_run_log(text, base, postproc):
 def write_aggregated_run_log(leaf_dir, base, postproc, stage_name, seed,
                               host="cc-login.campuscluster.illinois.edu"):
     """Build the leaf's run.log = invocation header + EXECUTED-framed legacy
-    error.log content + transformed legacy run.log content. Removes the
-    leftover error.log after fold-in. Idempotent: if leaf/run.log already
-    starts with '=== Invocation', treat as already-migrated and no-op.
+    error.log + transformed legacy run.log + per-stage post-proc logs
+    (cm.log/history.log/cc.log/wcc.log) folded in append_stage_log style.
+    Removes all folded artifacts. Idempotent: if leaf/run.log already starts
+    with '=== Invocation', cleans up any straggler peers and returns.
 
     Mirrors single_stage_pipeline.sh's runtime output: the only log artifact
-    at the leaf is run.log; per-stage shell + python traces no longer live
-    on disk after the run.
+    at the leaf is run.log; per-stage shell + python + extra traces
+    (cm/history/cc/wcc) no longer live on disk after the run.
     """
     target = leaf_dir / "run.log"
     err_legacy = leaf_dir / "error.log"
     pipeline_legacy = leaf_dir / "pipeline.log"
+    extra_log_paths = [leaf_dir / name for name in _POSTPROC_EXTRA_LOGS]
 
     legacy_run_body = ""
     legacy_run_path = leaf_dir / "run.log"
     if target.exists():
         body = target.read_text(errors="replace")
         if body.lstrip().startswith("=== Invocation"):
-            # Already in current-script shape; clean up any leftover legacy
-            # peers and return.
-            for stale in (err_legacy, pipeline_legacy):
+            # Already in current-script shape. Two cases:
+            # - First migration handled this leaf already (no extras present)
+            #   -> just clean up any straggler legacy peers and return.
+            # - First migration predates the postproc-log fold-in code; a
+            #   later re-migration brought cm.log/cc.log/etc. over to dest
+            #   via _LEAF_DATA_FILES. Append them to the existing run.log
+            #   in-place so their content is preserved.
+            present_extras = [p for p in extra_log_paths if p.exists()]
+            if present_extras:
+                appended = []
+                for log_path in present_extras:
+                    body_extra = log_path.read_text(errors="replace")
+                    label = f"{stage_name} ({log_path.stem})"
+                    appended.append(f"=== [{label}] {log_path} ===\n")
+                    appended.append(_prefix(label, body_extra))
+                    appended.append("\n")
+                with open(target, "a") as f:
+                    f.write("".join(appended))
+            for stale in [err_legacy, pipeline_legacy, *extra_log_paths]:
                 if stale.exists():
                     stale.unlink()
             return
@@ -354,15 +372,30 @@ def write_aggregated_run_log(leaf_dir, base, postproc, stage_name, seed,
         parts.append(_prefix(f"{stage_name} (python)", legacy_run_body))
         parts.append("\n")
 
+    # Fold in post-proc per-stage logs (cm.log, history.log, cc.log, wcc.log).
+    # Frame matches single_stage_pipeline.sh's append_stage_log:
+    #   === [{stage} ({basename})] {path} ===
+    #   [{stage} ({basename})] <line>
+    #   ...
+    #   <blank>
+    # CC, WCC produce cc.log / wcc.log; CM produces cm.log + history.log.
+    for log_path in extra_log_paths:
+        if not log_path.exists():
+            continue
+        body = log_path.read_text(errors="replace")
+        label = f"{stage_name} ({log_path.stem})"
+        parts.append(f"=== [{label}] {log_path} ===\n")
+        parts.append(_prefix(label, body))
+        parts.append("\n")
+
     tmp = target.with_suffix(target.suffix + ".tmp")
     tmp.write_text("".join(parts))
     tmp.replace(target)
 
     # Remove now-folded leftover artifacts.
-    if err_legacy.exists():
-        err_legacy.unlink()
-    if pipeline_legacy.exists():
-        pipeline_legacy.unlink()
+    for stale in [err_legacy, pipeline_legacy, *extra_log_paths]:
+        if stale.exists():
+            stale.unlink()
 
 
 def fix_best_symlink(leaf_dir, base, network, dest_clusterings_dir):
@@ -387,6 +420,45 @@ def fix_best_symlink(leaf_dir, base, network, dest_clusterings_dir):
     com.symlink_to(new_target)
 
 
+# sbm-{flat,nested}-best+<pp>[(<crit>)]: per-network leaves are themselves
+# directory symlinks pointing at the winner variant's <winner>+<pp>/<network>.
+# At dest under --output-root, we need to recreate that as a symlink (not a
+# materialized dir) so the leaf and the variant stay in sync.
+_BEST_PP_RE = re.compile(r"^sbm-(?:flat|nested)-best\+[a-z]+(?:\(.+\))?$")
+
+
+def is_best_pp_algo(algo):
+    return bool(_BEST_PP_RE.match(algo))
+
+
+def materialize_best_pp_symlink(src_leaf, dest_leaf, dest_clusterings_dir):
+    """Recreate sbm-*-best+pp/<network> as a directory symlink at dest.
+
+    Reads the source leaf's symlink target (an absolute path under the
+    legacy clusterings tree like .../<winner>+<pp>/<network>), keeps the
+    <winner>+<pp>/<network> tail, and points dest_leaf at
+    dest_clusterings_dir / <winner>+<pp> / <network>.
+
+    Returns "migrated_best_pp_symlink" on success, a skip reason otherwise.
+    Idempotent: if dest_leaf already exists as a symlink, leaves it.
+    """
+    if dest_leaf.is_symlink() or dest_leaf.exists():
+        return "skip_dest_exists"
+    if not src_leaf.is_symlink():
+        return "skip_not_symlink"
+    raw_target = os.readlink(src_leaf)
+    target = Path(raw_target)
+    # Need at least .../<winner+pp>/<network>; take last two components.
+    if len(target.parts) < 2:
+        return "skip_bad_symlink_target"
+    winner_pp = target.parts[-2]
+    network_name = target.parts[-1]
+    new_target = dest_clusterings_dir / winner_pp / network_name
+    dest_leaf.parent.mkdir(parents=True, exist_ok=True)
+    os.symlink(new_target.resolve(), dest_leaf)
+    return "migrated_best_pp_symlink"
+
+
 # ---------- output-root materialization ----------
 
 # Files we copy/hardlink from a source leaf to a dest leaf before running the
@@ -397,7 +469,17 @@ def fix_best_symlink(leaf_dir, base, network, dest_clusterings_dir):
 _LEAF_DATA_FILES = (
     "com.csv", "run.log", "error.log", "done",
     "entropy.txt", "best_model.txt", "models.txt", "out.log",
+    # Post-proc per-stage logs. Current single_stage_pipeline.sh folds these
+    # into run.log and deletes them; mirror that during migration so dest
+    # leaves match fresh-run shape.
+    "cm.log", "history.log", "cc.log", "wcc.log",
 )
+
+# Post-proc logs to fold into the synthesized run.log at the leaf, in a
+# form matching single_stage_pipeline.sh's append_stage_log frames:
+# "=== [{stage} ({basename})] {path} ===" + per-line "[{stage} ({basename})] "
+# prefix. Files are deleted after fold-in.
+_POSTPROC_EXTRA_LOGS = ("cm.log", "history.log", "cc.log", "wcc.log")
 
 
 def materialize_source_to_dest(source_leaf, dest_leaf, mode):
@@ -431,13 +513,16 @@ def materialize_source_to_dest(source_leaf, dest_leaf, mode):
 
 
 def _phase(algo_name):
-    """Sort key: bases (0) before *-best (1) before post-procs (2).
+    """Sort key: bases (0) -> *-best meta (1) -> post-procs (2) -> *-best+pp (3).
 
-    Ensures dest tree's bases are materialized before *-best meta-models look
-    up variant inputs and before post-procs look up base com.csv inputs.
+    Phase 3 is reserved for sbm-*-best+<pp> dir symlinks: their target is
+    <winner>+<pp>/<network> at dest, which is materialized in phase 2, so
+    we must process them after that.
     """
     base, postproc, _crit = decode_algo(algo_name)
     if postproc:
+        if base in ("sbm-flat-best", "sbm-nested-best"):
+            return 3
         return 2
     if base in ("sbm-flat-best", "sbm-nested-best"):
         return 1
@@ -576,6 +661,23 @@ def main():
 
     counts = {}
     for algo, network, src_leaf in entries:
+        # Whole-leaf directory symlinks (sbm-*-best+pp/<network>) only make
+        # sense under --output-root: in-place mode leaves them alone since
+        # the legacy target string still resolves. At dest we recreate the
+        # symlink pointing at the dest tree's variant; no metadata
+        # synthesis runs because no real leaf exists there.
+        if args.output_root and is_best_pp_algo(algo) and src_leaf.is_symlink():
+            dest_leaf = dest_clusterings_dir / algo / network
+            if args.dry_run:
+                status = "would_migrate_best_pp_symlink"
+            else:
+                status = materialize_best_pp_symlink(
+                    src_leaf, dest_leaf, dest_clusterings_dir)
+            counts[status] = counts.get(status, 0) + 1
+            if args.verbose:
+                print(f"  {status} {algo}/{network} (best+pp dir symlink)")
+            continue
+
         if args.output_root:
             dest_leaf = dest_clusterings_dir / algo / network
             if not args.dry_run:
