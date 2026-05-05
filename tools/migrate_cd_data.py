@@ -171,24 +171,83 @@ def write_done(path, paths_in_order):
     tmp.replace(path)
 
 
-def write_pipeline_log(path, stage_name, seed):
-    ts = _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    pid = os.getpid()
-    host = socket.gethostname()
-    header = (f"=== Invocation {ts} | seed={seed} | keep_state=1 | pid={pid} | "
-              f"host={host} | source=migrate_cd_data ===\n"
-              f"=== [{stage_name}] migrated from pre-Phase-1 layout ===\n"
-              f"[{stage_name}] no recompute performed; com.csv preserved as-is\n")
-    path.write_text(header)
+def _ts_from_mtime(path, fallback):
+    """ISO-Z UTC timestamp from path's mtime, or now() if path missing."""
+    try:
+        m = path.stat().st_mtime
+        return _dt.datetime.utcfromtimestamp(m).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except (OSError, ValueError):
+        return fallback
 
 
-def write_time_and_err_log(path, stage_name):
-    ts = _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    pid = os.getpid()
-    host = socket.gethostname()
-    path.write_text(
-        f"=== {ts} | pid={pid} | host={host} | SKIPPED (legacy migration) ===\n"
-    )
+def _prefix(label, lines):
+    """[label] <line> for each line; empty input -> empty output."""
+    return "".join(f"[{label}] {ln}" if ln else f"[{label}]\n"
+                   for ln in lines.splitlines(keepends=True)) if lines else ""
+
+
+def write_time_and_err_log(path, stage_name, leaf_dir, host="cc-login.campuscluster.illinois.edu"):
+    """Build a script-shaped time_and_err.log from the legacy error.log.
+
+    Real run_stage layout:
+        === <UTC> | pid=N | host=H | EXECUTED ===
+        <time -v output (the legacy error.log content)>
+        === exit=0 ===
+    """
+    err = leaf_dir / "error.log"
+    now_z = _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    if err.exists():
+        ts = _ts_from_mtime(err, now_z)
+        body = err.read_text(errors="replace")
+        if body and not body.endswith("\n"):
+            body += "\n"
+        content = (
+            f"=== {ts} | pid=0 | host={host} | EXECUTED ===\n"
+            f"{body}"
+            f"=== exit=0 ===\n"
+        )
+    else:
+        # No error.log to fold; emit a minimal SKIPPED entry like
+        # note_stage_skipped would.
+        content = f"=== {now_z} | pid=0 | host={host} | SKIPPED (legacy migration; no error.log) ===\n"
+    path.write_text(content)
+
+
+def write_pipeline_log(path, stage_name, seed, leaf_dir, time_log_path,
+                       host="cc-login.campuscluster.illinois.edu"):
+    """Build a pipeline.log shaped like single_stage_pipeline.sh would have.
+
+    Layout:
+        === Invocation <UTC> | seed=N | keep_state=1 | pid=0 | host=H ===
+        === [stage] <abs path to time_and_err.log> ===
+        [stage] <synthesized time_and_err.log lines>
+
+        === [stage (python)] <abs path to run.log> ===
+        [stage (python)] <run.log lines>
+    """
+    run_log = leaf_dir / "run.log"
+    now_z = _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    inv_ts = _ts_from_mtime(run_log if run_log.exists() else (leaf_dir / "com.csv"), now_z)
+
+    parts = [
+        f"=== Invocation {inv_ts} | seed={seed} | keep_state=1 | "
+        f"pid=0 | host={host} ===\n"
+    ]
+
+    # Fold the synthesized time_and_err.log
+    time_body = time_log_path.read_text(errors="replace") if time_log_path.exists() else ""
+    parts.append(f"=== [{stage_name}] {time_log_path} ===\n")
+    parts.append(_prefix(stage_name, time_body))
+    parts.append("\n")
+
+    # Fold the algo-side run.log if it exists
+    if run_log.exists():
+        run_body = run_log.read_text(errors="replace")
+        parts.append(f"=== [{stage_name} (python)] {run_log} ===\n")
+        parts.append(_prefix(f"{stage_name} (python)", run_body))
+        parts.append("\n")
+
+    path.write_text("".join(parts))
 
 
 # ---------- main ----------
@@ -238,9 +297,11 @@ def migrate_one(leaf_dir, inputs_root, clusterings_dir, algo, network, dry_run, 
     pipeline_log = leaf_dir / "pipeline.log"
     time_log = leaf_dir / "time_and_err.log"
 
+    stage_name = base if not postproc else postproc
+
     write_params(params_path, params)
-    write_pipeline_log(pipeline_log, base if not postproc else postproc, seed)
-    write_time_and_err_log(time_log, base if not postproc else postproc)
+    write_time_and_err_log(time_log, stage_name, leaf_dir)
+    write_pipeline_log(pipeline_log, stage_name, seed, leaf_dir, time_log)
 
     # done = sha256(inputs + params.txt + outputs), in that order
     manifest = list(inputs) + [params_path] + outputs
