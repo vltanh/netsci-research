@@ -3,8 +3,10 @@
 
 Walks <root>/clusterings/<algo>/<network>/ leaf dirs and, for each one that
 already has a com.csv, regenerates the metadata that the post-Phase-1
-single_stage_pipeline.sh would have written: params.txt, done, pipeline.log,
-error.log. Existing com.csv + run.log + error.log are left untouched.
+single_stage_pipeline.sh would have written: params.txt, done, run.log.
+The new run.log is the only log artifact at the leaf; legacy error.log
+content + legacy run.log content are folded into it. com.csv stays
+untouched.
 
 Modes:
   In-place (default): rewrite source leaves with new metadata.
@@ -15,7 +17,7 @@ Modes:
 
 After migration, the new dispatcher's is_step_done check passes (cache hit) and
 no recompute is needed. Idempotent: rerun on already-migrated dirs is a no-op
-modulo timestamps in pipeline.log / error.log.
+modulo timestamps in the synthesized run.log invocation header.
 
 Algos handled (path-encoded as <algo>[+<postproc>[(<criterion>)]] / <network>):
   leiden-{cpm-X | mod}                  base (input = edge.csv)
@@ -151,6 +153,9 @@ def deduce_outputs(algo_name, base, postproc, leaf_dir):
         elif base in ("sbm-flat-best", "sbm-nested-best"):
             outs.append(leaf_dir / "best_model.txt")
             outs.append(leaf_dir / "models.txt")
+            out_log = leaf_dir / "out.log"
+            if out_log.exists():
+                outs.append(out_log)
     return outs
 
 
@@ -195,36 +200,17 @@ def _prefix(label, lines):
                    for ln in lines.splitlines(keepends=True)) if lines else ""
 
 
-def write_error_log(path, stage_name, leaf_dir, host="cc-login.campuscluster.illinois.edu"):
-    """Frame the legacy error.log content with run_stage's EXECUTED/exit markers.
-
-    Real run_stage layout:
-        === <UTC> | pid=N | host=H | EXECUTED ===
-        <time -v output (the legacy error.log content)>
-        === exit=0 ===
-
-    Idempotent: if `path` already starts with `=== ... | EXECUTED ===`, the
-    file is already in script-shape; skip re-wrapping.
-    """
-    err = leaf_dir / "error.log"
-    now_z = _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    if not err.exists():
-        path.write_text(
-            f"=== {now_z} | pid=0 | host={host} | SKIPPED (legacy migration; no error.log) ===\n"
-        )
-        return
-    body = err.read_text(errors="replace")
+def _frame_legacy_error_body(body, ts, host):
+    """Wrap legacy /usr/bin/time -v output in run_stage's EXECUTED frame."""
     if body.lstrip().startswith("===") and "EXECUTED" in body[:200]:
-        return
-    ts = _ts_from_mtime(err, now_z)
+        return body if body.endswith("\n") else body + "\n"
     if body and not body.endswith("\n"):
         body += "\n"
-    content = (
+    return (
         f"=== {ts} | pid=0 | host={host} | EXECUTED ===\n"
         f"{body}"
         f"=== exit=0 ===\n"
     )
-    path.write_text(content)
 
 
 _LEIDEN_RUN_LOG_MAP = [
@@ -315,62 +301,102 @@ def transform_run_log(text, base, postproc):
     return "".join(out)
 
 
-def write_run_log_inplace(leaf_dir, base, postproc):
-    """Rewrite the leaf's run.log to match current-script wording. Idempotent."""
-    run_log = leaf_dir / "run.log"
-    if not run_log.exists():
-        return
-    body = run_log.read_text(errors="replace")
-    new_body = transform_run_log(body, base, postproc)
-    if new_body != body:
-        run_log.write_text(new_body)
+def write_aggregated_run_log(leaf_dir, base, postproc, stage_name, seed,
+                              host="cc-login.campuscluster.illinois.edu"):
+    """Build the leaf's run.log = invocation header + EXECUTED-framed legacy
+    error.log content + transformed legacy run.log content. Removes the
+    leftover error.log after fold-in. Idempotent: if leaf/run.log already
+    starts with '=== Invocation', treat as already-migrated and no-op.
 
-
-def write_pipeline_log(path, stage_name, seed, leaf_dir, err_log_path,
-                       host="cc-login.campuscluster.illinois.edu"):
-    """Build a pipeline.log shaped like single_stage_pipeline.sh would have.
-
-    Layout:
-        === Invocation <UTC> | seed=N | keep_state=0 | pid=0 | host=H ===
-        === [stage] <abs path to error.log> ===
-        [stage] <error.log lines>
-
-        === [stage (python)] <abs path to run.log> ===
-        [stage (python)] <run.log lines>
+    Mirrors single_stage_pipeline.sh's runtime output: the only log artifact
+    at the leaf is run.log; per-stage shell + python traces no longer live
+    on disk after the run.
     """
-    run_log = leaf_dir / "run.log"
+    target = leaf_dir / "run.log"
+    err_legacy = leaf_dir / "error.log"
+    pipeline_legacy = leaf_dir / "pipeline.log"
+
+    legacy_run_body = ""
+    legacy_run_path = leaf_dir / "run.log"
+    if target.exists():
+        body = target.read_text(errors="replace")
+        if body.lstrip().startswith("=== Invocation"):
+            # Already in current-script shape; clean up any leftover legacy
+            # peers and return.
+            for stale in (err_legacy, pipeline_legacy):
+                if stale.exists():
+                    stale.unlink()
+            return
+        legacy_run_body = transform_run_log(body, base, postproc)
+
+    legacy_err_body = err_legacy.read_text(errors="replace") if err_legacy.exists() else ""
+
     now_z = _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    inv_ts = _ts_from_mtime(run_log if run_log.exists() else (leaf_dir / "com.csv"), now_z)
+    inv_ts = now_z
+    for cand in (legacy_run_path, err_legacy, leaf_dir / "com.csv"):
+        if cand.exists():
+            inv_ts = _ts_from_mtime(cand, now_z)
+            break
 
     parts = [
         f"=== Invocation {inv_ts} | seed={seed} | keep_state=0 | "
         f"pid=0 | host={host} ===\n"
     ]
 
-    err_body = err_log_path.read_text(errors="replace") if err_log_path.exists() else ""
-    parts.append(f"=== [{stage_name}] {err_log_path} ===\n")
-    parts.append(_prefix(stage_name, err_body))
-    parts.append("\n")
-
-    if run_log.exists():
-        run_body = run_log.read_text(errors="replace")
-        parts.append(f"=== [{stage_name} (python)] {run_log} ===\n")
-        parts.append(_prefix(f"{stage_name} (python)", run_body))
+    if legacy_err_body:
+        framed = _frame_legacy_error_body(legacy_err_body, inv_ts, host)
+        parts.append(f"=== [{stage_name}] {err_legacy} ===\n")
+        parts.append(_prefix(stage_name, framed))
         parts.append("\n")
 
-    path.write_text("".join(parts))
+    if legacy_run_body:
+        parts.append(f"=== [{stage_name} (python)] {legacy_run_path} ===\n")
+        parts.append(_prefix(f"{stage_name} (python)", legacy_run_body))
+        parts.append("\n")
+
+    tmp = target.with_suffix(target.suffix + ".tmp")
+    tmp.write_text("".join(parts))
+    tmp.replace(target)
+
+    # Remove now-folded leftover artifacts.
+    if err_legacy.exists():
+        err_legacy.unlink()
+    if pipeline_legacy.exists():
+        pipeline_legacy.unlink()
+
+
+def fix_best_symlink(leaf_dir, base, network, dest_clusterings_dir):
+    """Recreate sbm-*-best com.csv symlink to point at dest tree's winner.
+
+    Legacy server symlink target was the server's reference_clusterings/
+    path. After migration into a different tree, the target string must be
+    rewritten so the symlink resolves locally. No-op for non-best leaves.
+    """
+    if base not in ("sbm-flat-best", "sbm-nested-best"):
+        return
+    best_path = leaf_dir / "best_model.txt"
+    if not best_path.exists():
+        return
+    winner = best_path.read_text().strip()
+    if not winner:
+        return
+    new_target = (dest_clusterings_dir / winner / network / "com.csv").resolve()
+    com = leaf_dir / "com.csv"
+    if com.is_symlink() or com.exists():
+        com.unlink()
+    com.symlink_to(new_target)
 
 
 # ---------- output-root materialization ----------
 
 # Files we copy/hardlink from a source leaf to a dest leaf before running the
 # in-place migration logic at the dest. Anything not in this list is either
-# regenerated by migrate_one (params.txt, done, pipeline.log) or considered
-# stage output that doesn't ride along with com.csv (stats/, acc/ trees are
+# regenerated by migrate_one (params.txt, done, run.log) or considered stage
+# output that doesn't ride along with com.csv (stats/, acc/ trees are
 # migrated separately by their own tooling).
 _LEAF_DATA_FILES = (
     "com.csv", "run.log", "error.log", "done",
-    "entropy.txt", "best_model.txt", "models.txt",
+    "entropy.txt", "best_model.txt", "models.txt", "out.log",
 )
 
 
@@ -379,15 +405,21 @@ def materialize_source_to_dest(source_leaf, dest_leaf, mode):
 
     Hardlink keeps source byte-pristine (com.csv NEVER touched binding) and
     costs ~zero disk on same filesystem. Falls back to copy on cross-FS.
-    Idempotent: existing dest files are left as-is.
+    Symlinks (e.g. sbm-*-best com.csv pointing at the winner variant) are
+    recreated as symlinks at dest with the same target string; rewriting
+    targets is the caller's responsibility. Idempotent: existing dest files
+    are left as-is.
     """
     dest_leaf.mkdir(parents=True, exist_ok=True)
     for name in _LEAF_DATA_FILES:
         src = source_leaf / name
-        if not src.exists():
+        if not src.exists() and not src.is_symlink():
             continue
         dst = dest_leaf / name
-        if dst.exists():
+        if dst.exists() or dst.is_symlink():
+            continue
+        if src.is_symlink():
+            os.symlink(os.readlink(src), dst)
             continue
         if mode == "hardlink":
             try:
@@ -414,20 +446,29 @@ def _phase(algo_name):
 
 # ---------- main ----------
 
-def migrate_one(leaf_dir, inputs_root, clusterings_dir, algo, network, dry_run, verbose):
+def migrate_one(leaf_dir, source_leaf, inputs_root, clusterings_dir,
+                algo, network, dry_run, verbose):
+    """leaf_dir = where to write metadata; source_leaf = where legacy done
+    + com.csv live (== leaf_dir for in-place mode, source tree for output-root)."""
     com = leaf_dir / "com.csv"
-    if not com.exists():
+    if not com.exists() and not com.is_symlink():
         if verbose:
             print(f"  skip {algo}/{network}: no com.csv")
         return "skip_no_com"
-    # Require legacy done file too: a dir without done is an incomplete server
+    # Require a legacy done file: a dir without one is an incomplete server
     # run + we can't safely produce a valid current-state done.
-    if not (leaf_dir / "done").exists():
+    if not (source_leaf / "done").exists():
         if verbose:
             print(f"  skip {algo}/{network}: no legacy done")
         return "skip_no_done"
 
     base, postproc, crit = decode_algo(algo)
+
+    # Best-meta com.csv is a symlink whose target string was baked at server
+    # time. Rewrite it to point at the dest tree's variant before deduce_outputs
+    # / write_done try to hash through it.
+    if not dry_run:
+        fix_best_symlink(leaf_dir, base, network, clusterings_dir)
 
     # Inputs
     if postproc:
@@ -447,7 +488,7 @@ def migrate_one(leaf_dir, inputs_root, clusterings_dir, algo, network, dry_run, 
 
     # Outputs
     outputs = deduce_outputs(algo, base, postproc, leaf_dir)
-    missing_outputs = [p for p in outputs if not p.exists()]
+    missing_outputs = [p for p in outputs if not (p.exists() or p.is_symlink())]
     if missing_outputs:
         if verbose:
             print(f"  skip {algo}/{network}: missing outputs {missing_outputs[0]}")
@@ -462,15 +503,10 @@ def migrate_one(leaf_dir, inputs_root, clusterings_dir, algo, network, dry_run, 
 
     params_path = leaf_dir / "params.txt"
     done_path = leaf_dir / "done"
-    pipeline_log = leaf_dir / "pipeline.log"
-    err_log_path = leaf_dir / "error.log"
-
     stage_name = base if not postproc else postproc
 
     write_params(params_path, params)
-    write_error_log(err_log_path, stage_name, leaf_dir)
-    write_run_log_inplace(leaf_dir, base, postproc)
-    write_pipeline_log(pipeline_log, stage_name, seed, leaf_dir, err_log_path)
+    write_aggregated_run_log(leaf_dir, base, postproc, stage_name, seed)
 
     # done = sha256(inputs + params.txt + outputs), in that order
     manifest = list(inputs) + [params_path] + outputs
@@ -552,7 +588,7 @@ def main():
         check_clusterings = (src_clusterings_dir
                              if (args.output_root and args.dry_run)
                              else dest_clusterings_dir)
-        status = migrate_one(check_leaf, inputs_root, check_clusterings,
+        status = migrate_one(check_leaf, src_leaf, inputs_root, check_clusterings,
                              algo, network, args.dry_run, args.verbose)
         counts[status] = counts.get(status, 0) + 1
 
