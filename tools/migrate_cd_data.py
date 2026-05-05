@@ -218,6 +218,105 @@ def write_error_log(path, stage_name, leaf_dir, host="cc-login.campuscluster.ill
     path.write_text(content)
 
 
+_LEIDEN_RUN_LOG_MAP = [
+    (r"\[TIME\] Loading network: ", "load_network elapsed: "),
+    (r"\[TIME\] Running Leiden algorithm: ", "leiden_run elapsed: "),
+    (r"\[TIME\] Saving results: ", "save_results elapsed: "),
+]
+_INFOMAP_RUN_LOG_MAP = [
+    (r"\[TIME\] Loading network: ", "load_network elapsed: "),
+    (r"\[TIME\] Running Infomap algorithm: ", "infomap_run elapsed: "),
+    (r"\[TIME\] Saving results: ", "save_results elapsed: "),
+]
+_IKC_RUN_LOG_MAP = [
+    (r"\[TIME\] Loading network: ", "load_network elapsed: "),
+    (r"\[TIME\] Running IKC algorithm: ", "ikc_run elapsed: "),
+    (r"\[TIME\] Saving results: ", "save_results elapsed: "),
+]
+_SBM_RUN_LOG_MAP = [
+    (r"\[TIME\] Loading network: ", "load_network elapsed: "),
+    (r"\[TIME\] Initializing state: ", "sbm_init_state elapsed: "),
+    (r"\[TIME\] Calculating entropy: ", "entropy elapsed: "),
+    (r"\[TIME\] Storing refined partition: ", "save_results elapsed: "),
+]
+
+
+def _algo_run_log_mappings(base):
+    if base.startswith("leiden-cpm-") or base == "leiden-mod":
+        return _LEIDEN_RUN_LOG_MAP, "leiden"
+    if base == "infomap":
+        return _INFOMAP_RUN_LOG_MAP, "infomap"
+    if base.startswith("ikc-"):
+        return _IKC_RUN_LOG_MAP, "ikc"
+    if base in (SBM_FLAT_VARIANTS + SBM_NESTED_VARIANTS):
+        return _SBM_RUN_LOG_MAP, "sbm"
+    return None, None
+
+
+def transform_run_log(text, base, postproc):
+    """Rewrite a server-era run.log into current-script wording.
+
+    Preserves timestamps + numerical values; only swaps log message strings:
+      [TIME] Loading network: X            -> load_network elapsed: X seconds
+      [TIME] Running Leiden algorithm: X   -> leiden_run elapsed: X seconds
+      [TIME] Initializing state: X         -> sbm_init_state elapsed: X seconds
+      [TIME] Calculating entropy: X        -> entropy elapsed: X seconds
+      [TIME] Storing refined partition: X  -> save_results elapsed: X seconds
+      [TIME] Saving results: X             -> save_results elapsed: X seconds
+      Removed N singleton nodes.           -> drop if N=0; rewrite to
+                                              "Dropping N singleton cluster(s) from com.csv"
+                                              if N>0 (matches drop_singleton_clusters)
+
+    ikc-only line "Removed N singleton clusters." stays verbatim (the IKC
+    print_clusters function is unchanged across the refactor).
+
+    Idempotent: if no patterns match, content is returned unchanged.
+    Post-procs (cc / wcc / cm / *-best) don't have an algo run.log on server
+    so this function is not invoked for them.
+    """
+    if not text or postproc:
+        return text
+    mappings, family = _algo_run_log_mappings(base)
+    if mappings is None:
+        return text
+
+    out = []
+    for line in text.splitlines(keepends=True):
+        for pat, repl in mappings:
+            new_line, n = re.subn(pat, repl, line)
+            if n:
+                stripped = new_line.rstrip("\n")
+                if "elapsed:" in stripped and not stripped.endswith("seconds"):
+                    new_line = stripped + " seconds\n"
+                line = new_line
+                break
+
+        # Singleton-drop wording change for leiden / infomap / sbm.
+        # ikc keeps its own "Removed N singleton clusters." line verbatim.
+        if family in ("leiden", "infomap", "sbm"):
+            m = re.match(r"^(.*? - INFO - )Removed (\d+) singleton nodes\.\s*\n?$", line)
+            if m:
+                n = int(m.group(2))
+                if n == 0:
+                    continue  # drop_singleton_clusters skips logging when n=0
+                line = f"{m.group(1)}Dropping {n} singleton cluster(s) from com.csv\n"
+
+        out.append(line)
+
+    return "".join(out)
+
+
+def write_run_log_inplace(leaf_dir, base, postproc):
+    """Rewrite the leaf's run.log to match current-script wording. Idempotent."""
+    run_log = leaf_dir / "run.log"
+    if not run_log.exists():
+        return
+    body = run_log.read_text(errors="replace")
+    new_body = transform_run_log(body, base, postproc)
+    if new_body != body:
+        run_log.write_text(new_body)
+
+
 def write_pipeline_log(path, stage_name, seed, leaf_dir, err_log_path,
                        host="cc-login.campuscluster.illinois.edu"):
     """Build a pipeline.log shaped like single_stage_pipeline.sh would have.
@@ -261,6 +360,12 @@ def migrate_one(leaf_dir, inputs_root, clusterings_dir, algo, network, dry_run, 
         if verbose:
             print(f"  skip {algo}/{network}: no com.csv")
         return "skip_no_com"
+    # Require legacy done file too: a dir without done is an incomplete server
+    # run + we can't safely produce a valid current-state done.
+    if not (leaf_dir / "done").exists():
+        if verbose:
+            print(f"  skip {algo}/{network}: no legacy done")
+        return "skip_no_done"
 
     base, postproc, crit = decode_algo(algo)
 
@@ -304,6 +409,7 @@ def migrate_one(leaf_dir, inputs_root, clusterings_dir, algo, network, dry_run, 
 
     write_params(params_path, params)
     write_error_log(err_log_path, stage_name, leaf_dir)
+    write_run_log_inplace(leaf_dir, base, postproc)
     write_pipeline_log(pipeline_log, stage_name, seed, leaf_dir, err_log_path)
 
     # done = sha256(inputs + params.txt + outputs), in that order
