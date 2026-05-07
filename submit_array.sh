@@ -26,6 +26,21 @@
 #   --concurrency <n>        : Max concurrent array tasks. Preferred if both are given.
 #   --total-mem <mem>        : Total memory budget (e.g., 256G). Used to compute concurrency as floor(total-mem / mem)
 #                              when --concurrency is not given. If neither is given, defaults to concurrency=4.
+#   --n-threads <n>          : Shorthand: sets BOTH base and postproc thread counts to <n>.
+#                              See --n-threads-base / --n-threads-postproc for the split.
+#   --n-threads-base <n>     : CPUs for base CD stages (leiden/sbm/louvain/infomap/ikc).
+#                              Default 1. Forwarded to run_cd.sh (cd mode) and run_generator.sh (gen mode).
+#                              Pinning to 1 preserves byte-level determinism via OMP_NUM_THREADS=1;
+#                              with n>1, run_cd.sh raises OMP_NUM_THREADS to n, breaking byte
+#                              reproducibility in OpenMP stages (graph-tool, BLAS).
+#   --n-threads-postproc <n> : CPUs for post-processing stages (cc/wcc/cm via constrained_clustering).
+#                              Default: inherits --n-threads-base. cd mode only.
+#                              constrained_clustering is non-deterministic in multi-thread mode
+#                              regardless of OMP, so determinism is given up here once n>1 anyway.
+#                              Slurm --cpus-per-task is set to max(base, postproc).
+#                              Note: --mem is per task, NOT per CPU — bump it if your workload's
+#                              memory scales with threads. (constrained_clustering threads share
+#                              the graph, so memory typically does not scale linearly.)
 #   --extra-args <args...>   : Pass-through args appended verbatim to every per-task command line.
 #                              Use to forward downstream flags. Greedy: consumes everything remaining,
 #                              so place this flag last on the command line.
@@ -33,8 +48,11 @@
 #                              --run-cm, --timeout <sec>, etc. Without these, run_cd.sh runs the algo
 #                              but skips stats/accuracy/connectivity passes.
 #                              For 'gen' mode (run_generator.sh): --run-stats, --run-comp, --keep-state,
-#                              --n-threads, --outlier-mode, etc.
+#                              --outlier-mode, etc.
 #                              Note: --seed is set by this script as (run_id + 1); don't override it here.
+#                              Note: --n-threads / --n-threads-base / --n-threads-postproc are set
+#                              by this script's flags; passing them again here overrides
+#                              (last-flag-wins in downstream parsers).
 #
 # MODES & SPECIFIC OPTIONS:
 #   --mode cd      : Run Community Detection (evaluates algorithms).
@@ -94,6 +112,8 @@ partition="secondary"
 constraint="AE7713"
 concurrency=""
 total_mem=""
+n_threads_base=""
+n_threads_postproc=""
 
 # Arrays for multi-argument flags
 # [CONFIGURABLE] Add any additional arrays for multi-argument flags here
@@ -118,6 +138,9 @@ while [[ "$#" -gt 0 ]]; do
         --constraint) constraint="$2"; shift 2 ;;
         --concurrency) concurrency="$2"; shift 2 ;;
         --total-mem) total_mem="$2"; shift 2 ;;
+        --n-threads) n_threads_base="$2"; n_threads_postproc="$2"; shift 2 ;;
+        --n-threads-base) n_threads_base="$2"; shift 2 ;;
+        --n-threads-postproc) n_threads_postproc="$2"; shift 2 ;;
         # [CONFIGURABLE] Add any additional single-argument flags here
 
         --dependency)
@@ -186,6 +209,18 @@ mem_to_mb() {
         *) echo "Error: unrecognized memory unit in '$v'." >&2; exit 1 ;;
     esac
 }
+
+n_threads_base="${n_threads_base:-1}"
+n_threads_postproc="${n_threads_postproc:-${n_threads_base}}"
+for v_name in n_threads_base n_threads_postproc; do
+    v="${!v_name}"
+    if ! [[ "${v}" =~ ^[0-9]+$ ]] || [[ "${v}" -lt 1 ]]; then
+        echo "Error: --${v_name//_/-} must be a positive integer (got '${v}')."
+        exit 1
+    fi
+done
+cpus_per_task=$(( n_threads_base > n_threads_postproc ? n_threads_base : n_threads_postproc ))
+echo "CPUs per task: ${cpus_per_task} (base=${n_threads_base}, postproc=${n_threads_postproc})"
 
 if [[ -n "${concurrency}" ]]; then
     echo "Concurrency: ${concurrency}"
@@ -282,9 +317,12 @@ fi
 
 : > "$TASK_FILE"
 
-extra_arg_str=""
+# Thread args differ by mode: cd supports the base/postproc split, gen only --n-threads.
+cd_thread_str=" --n-threads-base ${n_threads_base} --n-threads-postproc ${n_threads_postproc}"
+gen_thread_str=" --n-threads ${n_threads_base}"
+extra_user_str=""
 if [[ ${#extra_args[@]} -gt 0 ]]; then
-    extra_arg_str=" ${extra_args[*]}"
+    extra_user_str=" ${extra_args[*]}"
     echo "Pass-through extra args: ${extra_args[*]}"
 fi
 
@@ -302,7 +340,7 @@ for network_id in "${network_ids[@]}"; do
             for method in "${methods[@]}"; do
                 script="community-detection/run_cd.sh"
                 job_name="${mode}_real_${network_id}_${method}${crit_suffix}"
-                args="--algo ${method} --network ${network_id} --real ${crit_arg}${extra_arg_str}"
+                args="--algo ${method} --network ${network_id} --real ${crit_arg}${cd_thread_str}${extra_user_str}"
                 log_path="${LOG_DIR_BASE}/${mode}/real/${method}${crit_suffix}/${network_id}"
 
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
@@ -313,7 +351,7 @@ for network_id in "${network_ids[@]}"; do
                     for method in "${methods[@]}"; do
                         script="community-detection/run_cd.sh"
                         job_name="${mode}_${generator}_${gt_clustering}_${network_id}_${run_id}_${method}${crit_suffix}"
-                        args="--algo ${method} --network ${network_id} --synthetic --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg}${extra_arg_str}"
+                        args="--algo ${method} --network ${network_id} --synthetic --generator ${generator} --gt-clustering-id ${gt_clustering} --run-id ${run_id} ${crit_arg}${cd_thread_str}${extra_user_str}"
                         log_path="${LOG_DIR_BASE}/${mode}/${generator}/${gt_clustering}/${method}${crit_suffix}/${network_id}/${run_id}"
 
                         echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
@@ -327,7 +365,7 @@ for network_id in "${network_ids[@]}"; do
             for clustering_id in "${clusterings[@]}"; do
                 job_name="${mode}_${generator}_${network_id}_${clustering_id}_${run_id}"
                 script="network-generation/run_generator.sh"
-                args="--generator ${generator} --run-id ${run_id} --seed $((run_id + 1)) --macro --network ${network_id} --clustering-id ${clustering_id}${extra_arg_str}"
+                args="--generator ${generator} --run-id ${run_id} --seed $((run_id + 1)) --macro --network ${network_id} --clustering-id ${clustering_id}${gen_thread_str}${extra_user_str}"
                 log_path="${LOG_DIR_BASE}/${mode}/${generator}/${network_id}/${clustering_id}/${run_id}"
 
                 echo "${script}|${args}|${log_path}|${job_name}" >> "$TASK_FILE"
@@ -348,7 +386,7 @@ fi
 
 echo "Generated ${total_tasks} total tasks."
 
-sbatch_args=(--time="${time}" --mem="${mem}" --partition="${partition}" --constraint="${constraint}")
+sbatch_args=(--time="${time}" --mem="${mem}" --partition="${partition}" --constraint="${constraint}" --cpus-per-task="${cpus_per_task}")
 if [[ ${#dependencies[@]} -gt 0 ]]; then
     dep_str=$(IFS=,; echo "${dependencies[*]}")
     sbatch_args+=(--dependency="${dep_str}")
