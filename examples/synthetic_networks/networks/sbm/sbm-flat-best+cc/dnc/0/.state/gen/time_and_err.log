@@ -1,0 +1,25 @@
+=== 2026-05-07T19:29:05Z | pid=2389603 | host=nah-popos | EXECUTED ===
+	Command being timed: "python /home/vltanh/Documents/netsci-research/network-generation/src/sbm/gen.py --node-id /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/node_id.csv --cluster-id /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/cluster_id.csv --assignment /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/assignment.csv --degree /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/degree.csv --edge-counts /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/edge_counts.csv --input-clustering /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best+cc/dnc/com.csv --n-threads 1 --output-folder /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/gen --seed 1"
+	User time (seconds): 3.05
+	System time (seconds): 0.19
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.26
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 262992
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 37942
+	Voluntary context switches: 226
+	Involuntary context switches: 318
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 144
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+=== exit=0 ===

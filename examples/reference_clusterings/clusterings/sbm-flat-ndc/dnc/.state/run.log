@@ -1,0 +1,5 @@
+2026-05-07 14:28:40,987 - INFO - load_network elapsed: 0.0140 seconds
+2026-05-07 14:28:42,348 - INFO - sbm_init_state elapsed: 1.3608 seconds
+2026-05-07 14:28:42,349 - INFO - entropy elapsed: 0.0007 seconds
+2026-05-07 14:28:42,353 - INFO - Dropping 3 singleton cluster(s) from com.csv
+2026-05-07 14:28:42,393 - INFO - save_results elapsed: 0.0445 seconds

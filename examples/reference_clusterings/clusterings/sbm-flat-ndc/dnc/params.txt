@@ -1,0 +1,3 @@
+method=flat-ndc
+n_threads=1
+seed=1

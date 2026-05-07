@@ -1,0 +1,147 @@
+=== Invocation 2026-05-07T19:29:05Z | seed=1 | keep_state=1 | pid=2389603 | host=nah-popos ===
+=== [Stage 1 (profile)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/time_and_err.log ===
+[Stage 1 (profile)] === 2026-05-07T19:29:05Z | pid=2389603 | host=nah-popos | EXECUTED ===
+[Stage 1 (profile)] 	Command being timed: "python /home/vltanh/Documents/netsci-research/network-generation/src/sbm/profile.py --edgelist /home/vltanh/Documents/netsci-research/examples/empirical_networks/networks/dnc/dnc.csv --clustering /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best+cc/dnc/com.csv --output-folder /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup --params-file /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/params.txt"
+[Stage 1 (profile)] 	User time (seconds): 0.34
+[Stage 1 (profile)] 	System time (seconds): 0.05
+[Stage 1 (profile)] 	Percent of CPU this job got: 98%
+[Stage 1 (profile)] 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.40
+[Stage 1 (profile)] 	Average shared text size (kbytes): 0
+[Stage 1 (profile)] 	Average unshared data size (kbytes): 0
+[Stage 1 (profile)] 	Average stack size (kbytes): 0
+[Stage 1 (profile)] 	Average total size (kbytes): 0
+[Stage 1 (profile)] 	Maximum resident set size (kbytes): 86160
+[Stage 1 (profile)] 	Average resident set size (kbytes): 0
+[Stage 1 (profile)] 	Major (requiring I/O) page faults: 0
+[Stage 1 (profile)] 	Minor (reclaiming a frame) page faults: 13830
+[Stage 1 (profile)] 	Voluntary context switches: 21
+[Stage 1 (profile)] 	Involuntary context switches: 84
+[Stage 1 (profile)] 	Swaps: 0
+[Stage 1 (profile)] 	File system inputs: 0
+[Stage 1 (profile)] 	File system outputs: 48
+[Stage 1 (profile)] 	Socket messages sent: 0
+[Stage 1 (profile)] 	Socket messages received: 0
+[Stage 1 (profile)] 	Signals delivered: 0
+[Stage 1 (profile)] 	Page size (bytes): 4096
+[Stage 1 (profile)] 	Exit status: 0
+[Stage 1 (profile)] === exit=0 ===
+
+=== [Stage 1 (profile)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/run.log ===
+[Stage 1 (profile)] 2026-05-07 14:29:05,402 - INFO - Input reading elapsed: 0.0151 seconds
+[Stage 1 (profile)] 2026-05-07 14:29:05,402 - INFO - Outlier transform elapsed: 0.0002 seconds
+[Stage 1 (profile)] 2026-05-07 14:29:05,403 - INFO - Mappings computation elapsed: 0.0006 seconds
+[Stage 1 (profile)] 2026-05-07 14:29:05,412 - INFO - Outputs export elapsed: 0.0092 seconds
+
+=== [Stage 2 (gen)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/gen/time_and_err.log ===
+[Stage 2 (gen)] === 2026-05-07T19:29:05Z | pid=2389603 | host=nah-popos | EXECUTED ===
+[Stage 2 (gen)] 	Command being timed: "python /home/vltanh/Documents/netsci-research/network-generation/src/sbm/gen.py --node-id /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/node_id.csv --cluster-id /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/cluster_id.csv --assignment /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/assignment.csv --degree /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/degree.csv --edge-counts /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/setup/edge_counts.csv --input-clustering /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best+cc/dnc/com.csv --n-threads 1 --output-folder /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/gen --seed 1"
+[Stage 2 (gen)] 	User time (seconds): 3.05
+[Stage 2 (gen)] 	System time (seconds): 0.19
+[Stage 2 (gen)] 	Percent of CPU this job got: 99%
+[Stage 2 (gen)] 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.26
+[Stage 2 (gen)] 	Average shared text size (kbytes): 0
+[Stage 2 (gen)] 	Average unshared data size (kbytes): 0
+[Stage 2 (gen)] 	Average stack size (kbytes): 0
+[Stage 2 (gen)] 	Average total size (kbytes): 0
+[Stage 2 (gen)] 	Maximum resident set size (kbytes): 262992
+[Stage 2 (gen)] 	Average resident set size (kbytes): 0
+[Stage 2 (gen)] 	Major (requiring I/O) page faults: 0
+[Stage 2 (gen)] 	Minor (reclaiming a frame) page faults: 37942
+[Stage 2 (gen)] 	Voluntary context switches: 226
+[Stage 2 (gen)] 	Involuntary context switches: 318
+[Stage 2 (gen)] 	Swaps: 0
+[Stage 2 (gen)] 	File system inputs: 0
+[Stage 2 (gen)] 	File system outputs: 144
+[Stage 2 (gen)] 	Socket messages sent: 0
+[Stage 2 (gen)] 	Socket messages received: 0
+[Stage 2 (gen)] 	Signals delivered: 0
+[Stage 2 (gen)] 	Page size (bytes): 4096
+[Stage 2 (gen)] 	Exit status: 0
+[Stage 2 (gen)] === exit=0 ===
+
+=== [Stage 2 (gen)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/gen/run.log ===
+[Stage 2 (gen)] 2026-05-07 14:29:07,429 - INFO - Starting SBM Generation...
+[Stage 2 (gen)] 2026-05-07 14:29:07,429 - INFO - Seed: 1 n_threads: 1
+[Stage 2 (gen)] 2026-05-07 14:29:07,510 - INFO - N=906 clusters=66
+[Stage 2 (gen)] 2026-05-07 14:29:07,510 - INFO - Input loading elapsed: 0.0803 seconds
+[Stage 2 (gen)] 2026-05-07 14:29:07,512 - INFO - Generation elapsed: 0.0021 seconds
+[Stage 2 (gen)] 2026-05-07 14:29:08,558 - INFO - simplify_edges: dropped 2802 self-loops / parallel edges from edge.csv
+[Stage 2 (gen)] 2026-05-07 14:29:08,564 - INFO - Export elapsed: 1.0514 seconds
+[Stage 2 (gen)] 2026-05-07 14:29:08,564 - INFO - SBM generation complete.
+
+=== [Stage 3a (match_degree)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/match_degree/edges/time_and_err.log ===
+[Stage 3a (match_degree)] === 2026-05-07T19:29:08Z | pid=2389603 | host=nah-popos | EXECUTED ===
+[Stage 3a (match_degree)] 	Command being timed: "python /home/vltanh/Documents/netsci-research/network-generation/src/match_degree.py --input-edgelist /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/gen/edge.csv --ref-edgelist /home/vltanh/Documents/netsci-research/examples/empirical_networks/networks/dnc/dnc.csv --degree-matcher cluster_preserving_true_greedy --input-clustering /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/gen/com.csv --ref-clustering /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best+cc/dnc/com.csv --outlier-mode combined --output-folder /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/match_degree/edges --seed 2"
+[Stage 3a (match_degree)] 	User time (seconds): 0.92
+[Stage 3a (match_degree)] 	System time (seconds): 0.06
+[Stage 3a (match_degree)] 	Percent of CPU this job got: 98%
+[Stage 3a (match_degree)] 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.00
+[Stage 3a (match_degree)] 	Average shared text size (kbytes): 0
+[Stage 3a (match_degree)] 	Average unshared data size (kbytes): 0
+[Stage 3a (match_degree)] 	Average stack size (kbytes): 0
+[Stage 3a (match_degree)] 	Average total size (kbytes): 0
+[Stage 3a (match_degree)] 	Maximum resident set size (kbytes): 88424
+[Stage 3a (match_degree)] 	Average resident set size (kbytes): 0
+[Stage 3a (match_degree)] 	Major (requiring I/O) page faults: 0
+[Stage 3a (match_degree)] 	Minor (reclaiming a frame) page faults: 15538
+[Stage 3a (match_degree)] 	Voluntary context switches: 21
+[Stage 3a (match_degree)] 	Involuntary context switches: 126
+[Stage 3a (match_degree)] 	Swaps: 0
+[Stage 3a (match_degree)] 	File system inputs: 0
+[Stage 3a (match_degree)] 	File system outputs: 64
+[Stage 3a (match_degree)] 	Socket messages sent: 0
+[Stage 3a (match_degree)] 	Socket messages received: 0
+[Stage 3a (match_degree)] 	Signals delivered: 0
+[Stage 3a (match_degree)] 	Page size (bytes): 4096
+[Stage 3a (match_degree)] 	Exit status: 0
+[Stage 3a (match_degree)] === exit=0 ===
+
+=== [Stage 3a (match_degree)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/match_degree/edges/run.log ===
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,183 - INFO - --- Starting Degree Matching (stack=cluster_preserving_true_greedy) ---
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,215 - INFO - Loaded reference topologies elapsed: 0.0317 seconds
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,231 - INFO - Subtracted existing edges elapsed: 0.0154 seconds
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,265 - INFO - Built per-bp budget (direct mode) elapsed: 0.0342 seconds
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,265 - INFO - Starting Cluster-Preserving True Greedy matching algorithm...
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,265 - INFO - Initial missing stubs: 5972 (Target edges: 2986)
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,720 - WARNING - Finished with 119 gridlocked nodes.
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,721 - INFO - Stack step 'cluster_preserving_true_greedy': placed 2706 edges
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,722 - INFO - Added 2706 edges total across 1 step(s)
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,722 - INFO - Degree matching (stacked) elapsed: 0.4568 seconds
+[Stage 3a (match_degree)] 2026-05-07 14:29:09,726 - INFO - Exported edgelist elapsed: 0.0045 seconds
+
+=== [Stage 3b (match_degree/combine)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/match_degree/time_and_err.log ===
+[Stage 3b (match_degree/combine)] === 2026-05-07T19:29:09Z | pid=2389603 | host=nah-popos | EXECUTED ===
+[Stage 3b (match_degree/combine)] 	Command being timed: "python /home/vltanh/Documents/netsci-research/network-generation/src/combine_edgelists.py --edgelist-1 /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/gen/edge.csv --name-1 gen --edgelist-2 /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/match_degree/edges/degree_matching_edge.csv --name-2 match_degree --output-folder /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/match_degree --output-filename edge.csv"
+[Stage 3b (match_degree/combine)] 	User time (seconds): 0.34
+[Stage 3b (match_degree/combine)] 	System time (seconds): 0.06
+[Stage 3b (match_degree/combine)] 	Percent of CPU this job got: 97%
+[Stage 3b (match_degree/combine)] 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.41
+[Stage 3b (match_degree/combine)] 	Average shared text size (kbytes): 0
+[Stage 3b (match_degree/combine)] 	Average unshared data size (kbytes): 0
+[Stage 3b (match_degree/combine)] 	Average stack size (kbytes): 0
+[Stage 3b (match_degree/combine)] 	Average total size (kbytes): 0
+[Stage 3b (match_degree/combine)] 	Maximum resident set size (kbytes): 85968
+[Stage 3b (match_degree/combine)] 	Average resident set size (kbytes): 0
+[Stage 3b (match_degree/combine)] 	Major (requiring I/O) page faults: 0
+[Stage 3b (match_degree/combine)] 	Minor (reclaiming a frame) page faults: 13706
+[Stage 3b (match_degree/combine)] 	Voluntary context switches: 23
+[Stage 3b (match_degree/combine)] 	Involuntary context switches: 106
+[Stage 3b (match_degree/combine)] 	Swaps: 0
+[Stage 3b (match_degree/combine)] 	File system inputs: 0
+[Stage 3b (match_degree/combine)] 	File system outputs: 176
+[Stage 3b (match_degree/combine)] 	Socket messages sent: 0
+[Stage 3b (match_degree/combine)] 	Socket messages received: 0
+[Stage 3b (match_degree/combine)] 	Signals delivered: 0
+[Stage 3b (match_degree/combine)] 	Page size (bytes): 4096
+[Stage 3b (match_degree/combine)] 	Exit status: 0
+[Stage 3b (match_degree/combine)] === exit=0 ===
+
+=== [Stage 3b (match_degree/combine)] /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/.state/match_degree/run.log ===
+[Stage 3b (match_degree/combine)] 2026-05-07 14:29:10,151 - INFO - --- Starting Edgelist Combination & Provenance Tracking ---
+[Stage 3b (match_degree/combine)] 2026-05-07 14:29:10,160 - INFO - Loaded 10149 total edges prior to deduplication.
+[Stage 3b (match_degree/combine)] 2026-05-07 14:29:10,167 - INFO - Retained 10149 unique undirected edges.
+[Stage 3b (match_degree/combine)] 2026-05-07 14:29:10,175 - INFO - Exported combined edgelist to edge.csv
+[Stage 3b (match_degree/combine)] 2026-05-07 14:29:10,175 - INFO - Exported provenance map to sources.json
+[Stage 3b (match_degree/combine)] 2026-05-07 14:29:10,175 - INFO - Combination elapsed: 0.0235 seconds
+[Stage 3b (match_degree/combine)] 2026-05-07 14:29:10,175 - INFO - --- Combination Complete ---
+

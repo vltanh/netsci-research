@@ -1,0 +1,12 @@
+c1275b06dc0bf13623ad9e61d8ff42d044ec37ee68d998ee611feddc82ae4f14  /home/vltanh/Documents/netsci-research/examples/synthetic_networks/networks/sbm/sbm-flat-best+cc/dnc/0/edge.csv
+d4276aa63a9cde3e5ce36a129d4c4a00af02cbf3a2d652333e028b5ddedf714f  /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best+cc/dnc/com.csv
+65f672ab45378996435b89e0dfc7c243fcfdbe56bd732eca569eeb1bbfeff095  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/clusterings/leiden-cpm-0.1/dnc/0/com.csv
+e269b8d9610943c135fd5651d6aad77fddf2fda68f2b6c2345e8e2d58aa8d2ee  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.node_coverage
+31fdececda026a5ae6e0ff05fd43a7a3fd90303ccabc1f6ef445b5c7f71e3769  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.nmi
+778b499306507c885855e5e5ca288f3f8796f16369153020857fc6a8a5b48046  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.ami
+9c0d2ad9e02c2f2fae9d46afc4ad5454661994980b1caccc9738464541708427  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.ari
+9abd536d67dbf553d020b2013ab51197891f28d1e36093abef25fc52a462f064  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.fnr
+6721ba886b0777defe63962f90797034b88a4c3c2f4e5ba7530fae96674a2098  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.fpr
+9182491309c618ae9acdcd32204357cbbf6339b16d124e7c11aa82b0751bc3c2  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.precision
+34d4ef5ecd8e204fcab67a35f2e800f7e9993f07fa3ea167494242ac7182231a  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.recall
+0dd0ac730eb6b45119e7c8bf8ece54de9539a51b9495d5a0c71450f7d4f65ba2  /home/vltanh/Documents/netsci-research/examples/estimated_clusterings/sbm/sbm-flat-best+cc/acc/leiden-cpm-0.1/dnc/0/result.f1_score

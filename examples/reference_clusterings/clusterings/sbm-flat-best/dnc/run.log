@@ -1,0 +1,32 @@
+=== Invocation 2026-05-07T19:28:54Z | seed=1 | keep_state=1 | pid=2388747 | host=nah-popos ===
+=== [sbm-flat-best] /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best/dnc/.state/time_and_err.log ===
+[sbm-flat-best] === 2026-05-07T19:28:54Z | pid=2388747 | host=nah-popos | EXECUTED ===
+[sbm-flat-best] 	Command being timed: "python /home/vltanh/Documents/netsci-research/community-detection/src/sbm/choose_best_sbm.py --entropy_files /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-dc/dnc/entropy.txt /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-ndc/dnc/entropy.txt /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-pp/dnc/entropy.txt --com_files /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-dc/dnc/com.csv /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-ndc/dnc/com.csv /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-pp/dnc/com.csv --model_names flat-dc flat-ndc flat-pp --out_dir /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best/dnc --log-file /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best/dnc/.state/run.log"
+[sbm-flat-best] 	User time (seconds): 0.35
+[sbm-flat-best] 	System time (seconds): 0.05
+[sbm-flat-best] 	Percent of CPU this job got: 97%
+[sbm-flat-best] 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.41
+[sbm-flat-best] 	Average shared text size (kbytes): 0
+[sbm-flat-best] 	Average unshared data size (kbytes): 0
+[sbm-flat-best] 	Average stack size (kbytes): 0
+[sbm-flat-best] 	Average total size (kbytes): 0
+[sbm-flat-best] 	Maximum resident set size (kbytes): 84840
+[sbm-flat-best] 	Average resident set size (kbytes): 0
+[sbm-flat-best] 	Major (requiring I/O) page faults: 0
+[sbm-flat-best] 	Minor (reclaiming a frame) page faults: 12988
+[sbm-flat-best] 	Voluntary context switches: 22
+[sbm-flat-best] 	Involuntary context switches: 68
+[sbm-flat-best] 	Swaps: 0
+[sbm-flat-best] 	File system inputs: 0
+[sbm-flat-best] 	File system outputs: 24
+[sbm-flat-best] 	Socket messages sent: 0
+[sbm-flat-best] 	Socket messages received: 0
+[sbm-flat-best] 	Signals delivered: 0
+[sbm-flat-best] 	Page size (bytes): 4096
+[sbm-flat-best] 	Exit status: 0
+[sbm-flat-best] === exit=0 ===
+
+=== [sbm-flat-best (python)] /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-best/dnc/.state/run.log ===
+[sbm-flat-best (python)] 2026-05-07 14:28:55,255 - INFO - Best model selected: flat-dc
+[sbm-flat-best (python)] 2026-05-07 14:28:55,255 - INFO - choose_best_sbm elapsed: 0.0052 seconds
+

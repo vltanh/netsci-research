@@ -1,0 +1,4 @@
+2026-05-07 14:28:47,786 - INFO - load_network elapsed: 0.0159 seconds
+2026-05-07 14:28:50,611 - INFO - sbm_init_state elapsed: 2.8250 seconds
+2026-05-07 14:28:50,612 - INFO - entropy elapsed: 0.0012 seconds
+2026-05-07 14:28:50,664 - INFO - save_results elapsed: 0.0514 seconds

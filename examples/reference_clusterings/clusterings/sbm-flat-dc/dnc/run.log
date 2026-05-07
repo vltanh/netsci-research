@@ -1,0 +1,35 @@
+=== Invocation 2026-05-07T19:28:29Z | seed=1 | keep_state=1 | pid=2386090 | host=nah-popos ===
+=== [sbm-flat-dc] /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-dc/dnc/.state/time_and_err.log ===
+[sbm-flat-dc] === 2026-05-07T19:28:29Z | pid=2386090 | host=nah-popos | EXECUTED ===
+[sbm-flat-dc] 	Command being timed: "python /home/vltanh/Documents/netsci-research/community-detection/src/sbm/run_sbm.py --edgelist /home/vltanh/Documents/netsci-research/examples/empirical_networks/networks/dnc/dnc.csv --output-directory /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-dc/dnc --method flat-dc --seed 1 --log-file /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-dc/dnc/.state/run.log"
+[sbm-flat-dc] 	User time (seconds): 5.66
+[sbm-flat-dc] 	System time (seconds): 0.52
+[sbm-flat-dc] 	Percent of CPU this job got: 99%
+[sbm-flat-dc] 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:06.22
+[sbm-flat-dc] 	Average shared text size (kbytes): 0
+[sbm-flat-dc] 	Average unshared data size (kbytes): 0
+[sbm-flat-dc] 	Average stack size (kbytes): 0
+[sbm-flat-dc] 	Average total size (kbytes): 0
+[sbm-flat-dc] 	Maximum resident set size (kbytes): 1063104
+[sbm-flat-dc] 	Average resident set size (kbytes): 0
+[sbm-flat-dc] 	Major (requiring I/O) page faults: 0
+[sbm-flat-dc] 	Minor (reclaiming a frame) page faults: 237201
+[sbm-flat-dc] 	Voluntary context switches: 227
+[sbm-flat-dc] 	Involuntary context switches: 891
+[sbm-flat-dc] 	Swaps: 0
+[sbm-flat-dc] 	File system inputs: 0
+[sbm-flat-dc] 	File system outputs: 48
+[sbm-flat-dc] 	Socket messages sent: 0
+[sbm-flat-dc] 	Socket messages received: 0
+[sbm-flat-dc] 	Signals delivered: 0
+[sbm-flat-dc] 	Page size (bytes): 4096
+[sbm-flat-dc] 	Exit status: 0
+[sbm-flat-dc] === exit=0 ===
+
+=== [sbm-flat-dc (python)] /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-dc/dnc/.state/run.log ===
+[sbm-flat-dc (python)] 2026-05-07 14:28:31,131 - INFO - load_network elapsed: 0.0361 seconds
+[sbm-flat-dc (python)] 2026-05-07 14:28:35,061 - INFO - sbm_init_state elapsed: 3.9301 seconds
+[sbm-flat-dc (python)] 2026-05-07 14:28:35,062 - INFO - entropy elapsed: 0.0013 seconds
+[sbm-flat-dc (python)] 2026-05-07 14:28:35,070 - INFO - Dropping 3 singleton cluster(s) from com.csv
+[sbm-flat-dc (python)] 2026-05-07 14:28:35,120 - INFO - save_results elapsed: 0.0580 seconds
+

@@ -1,0 +1,34 @@
+=== Invocation 2026-05-07T19:28:46Z | seed=1 | keep_state=1 | pid=2388235 | host=nah-popos ===
+=== [sbm-flat-pp] /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-pp/dnc/.state/time_and_err.log ===
+[sbm-flat-pp] === 2026-05-07T19:28:46Z | pid=2388235 | host=nah-popos | EXECUTED ===
+[sbm-flat-pp] 	Command being timed: "python /home/vltanh/Documents/netsci-research/community-detection/src/sbm/run_sbm.py --edgelist /home/vltanh/Documents/netsci-research/examples/empirical_networks/networks/dnc/dnc.csv --output-directory /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-pp/dnc --method flat-pp --seed 1 --log-file /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-pp/dnc/.state/run.log"
+[sbm-flat-pp] 	User time (seconds): 4.07
+[sbm-flat-pp] 	System time (seconds): 0.49
+[sbm-flat-pp] 	Percent of CPU this job got: 99%
+[sbm-flat-pp] 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:04.58
+[sbm-flat-pp] 	Average shared text size (kbytes): 0
+[sbm-flat-pp] 	Average unshared data size (kbytes): 0
+[sbm-flat-pp] 	Average stack size (kbytes): 0
+[sbm-flat-pp] 	Average total size (kbytes): 0
+[sbm-flat-pp] 	Maximum resident set size (kbytes): 1048536
+[sbm-flat-pp] 	Average resident set size (kbytes): 0
+[sbm-flat-pp] 	Major (requiring I/O) page faults: 0
+[sbm-flat-pp] 	Minor (reclaiming a frame) page faults: 234340
+[sbm-flat-pp] 	Voluntary context switches: 231
+[sbm-flat-pp] 	Involuntary context switches: 511
+[sbm-flat-pp] 	Swaps: 0
+[sbm-flat-pp] 	File system inputs: 0
+[sbm-flat-pp] 	File system outputs: 48
+[sbm-flat-pp] 	Socket messages sent: 0
+[sbm-flat-pp] 	Socket messages received: 0
+[sbm-flat-pp] 	Signals delivered: 0
+[sbm-flat-pp] 	Page size (bytes): 4096
+[sbm-flat-pp] 	Exit status: 0
+[sbm-flat-pp] === exit=0 ===
+
+=== [sbm-flat-pp (python)] /home/vltanh/Documents/netsci-research/examples/reference_clusterings/clusterings/sbm-flat-pp/dnc/.state/run.log ===
+[sbm-flat-pp (python)] 2026-05-07 14:28:47,786 - INFO - load_network elapsed: 0.0159 seconds
+[sbm-flat-pp (python)] 2026-05-07 14:28:50,611 - INFO - sbm_init_state elapsed: 2.8250 seconds
+[sbm-flat-pp (python)] 2026-05-07 14:28:50,612 - INFO - entropy elapsed: 0.0012 seconds
+[sbm-flat-pp (python)] 2026-05-07 14:28:50,664 - INFO - save_results elapsed: 0.0514 seconds
+
